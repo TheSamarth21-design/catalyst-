@@ -648,26 +648,13 @@
             const bgMat = new THREE.MeshBasicMaterial({
                 map: bgTexture,
                 transparent: true,
-                opacity: 0.1, // Subtle opacity
+                opacity: 0.4, // Subtle opacity
                 depthWrite: false
             });
             const bgMesh = new THREE.Mesh(bgGeo, bgMat);
             bgMesh.position.z = -25; // Pushed way to the back
             scene.add(bgMesh);
 
-
-            // --- 2. Tech Wireframe (Replacing the old frame) ---
-            const knotGeo = new THREE.TorusKnotGeometry(12, 1.5, 200, 32);
-            const knotMat = new THREE.MeshBasicMaterial({
-                color: 0x0078D7,
-                wireframe: true,
-                transparent: true,
-                opacity: 0.15,
-                blending: THREE.AdditiveBlending
-            });
-            const knotMesh = new THREE.Mesh(knotGeo, knotMat);
-            knotMesh.position.z = -5;
-            coreGroup.add(knotMesh);
 
             // --- 3. Particle System (Data Flow) ---
             const particlesGeo = new THREE.BufferGeometry();
@@ -713,7 +700,7 @@
                     knotMat.opacity = isDark ? 0.15 : 0.3;
                     
                     // The background image visibility
-                    bgMat.opacity = isDark ? 0.08 : 0.15; 
+                    bgMat.opacity = isDark ? 0.4 : 0.8; 
                     
                     particlesMat.blending = isDark ? THREE.AdditiveBlending : THREE.NormalBlending;
                     particlesMat.color.setHex(isDark ? 0x88B04B : 0x2B7A0B); // Switch to Eco Green in light mode
@@ -897,4 +884,5 @@
         });
     </script>
 </body>
+
 </html>
