@@ -608,7 +608,7 @@
         document.getElementById('theme-toggle-mobile').addEventListener('click', toggleTheme);
 
         // --------------------------------------------------------
-        // Premium 3D Background (Image Watermark + Particles)
+        // Premium 3D Background (Torus Knot Core + Particles)
         // --------------------------------------------------------
         let sceneFog;
 
@@ -633,23 +633,36 @@
             renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2)); // Perf optimization
             container.appendChild(renderer.domElement);
 
-            // --- 1. Background Image Watermark ---
-            const textureLoader = new THREE.TextureLoader();
-            const bgTexture = textureLoader.load('1772605589123.jpg');
-            bgTexture.minFilter = THREE.LinearFilter;
-            
-            // Huge plane to act as the deep background
-            const bgGeo = new THREE.PlaneGeometry(160, 90); 
-            const bgMat = new THREE.MeshBasicMaterial({
-                map: bgTexture,
-                transparent: true,
-                opacity: 0.4, // Increased initial opacity
-                depthWrite: false
-            });
-            const bgMesh = new THREE.Mesh(bgGeo, bgMat);
-            bgMesh.position.z = -25; // Pushed way to the back
-            scene.add(bgMesh);
+            // Group for central interactive elements
+            const coreGroup = new THREE.Group();
+            scene.add(coreGroup);
 
+            // --- 1. The Tech Core (Torus Knot) ---
+            const knotGeo = new THREE.TorusKnotGeometry(8, 2.5, 200, 32);
+            const colorPrimary = new THREE.Color(0x00CFFF); // Vivid Cyan
+            const colorSecondary = new THREE.Color(0x0078D7); // Electric Blue
+
+            const knotMat = new THREE.MeshBasicMaterial({
+                color: colorPrimary,
+                wireframe: true,
+                transparent: true,
+                opacity: 0.15,
+                blending: THREE.AdditiveBlending
+            });
+            const knotMesh = new THREE.Mesh(knotGeo, knotMat);
+            coreGroup.add(knotMesh);
+
+            // Inner Core (Icosahedron)
+            const innerGeo = new THREE.IcosahedronGeometry(6, 1);
+            const innerMat = new THREE.MeshBasicMaterial({
+                color: colorSecondary,
+                wireframe: true,
+                transparent: true,
+                opacity: 0.2,
+                blending: THREE.AdditiveBlending
+            });
+            const innerMesh = new THREE.Mesh(innerGeo, innerMat);
+            coreGroup.add(innerMesh);
 
             // --- 2. Particle System (Data Flow) ---
             const particlesGeo = new THREE.BufferGeometry();
@@ -690,8 +703,11 @@
                 if(sceneFog) {
                     sceneFog.color.setHex(isDark ? 0x1a1a1a : 0xf8fafc);
                     
-                    // The background image visibility (Significantly Brightened)
-                    bgMat.opacity = isDark ? 0.4 : 0.8; 
+                    // Adjust blending/opacity based on light/dark mode for better visibility
+                    knotMat.blending = isDark ? THREE.AdditiveBlending : THREE.NormalBlending;
+                    knotMat.opacity = isDark ? 0.15 : 0.3;
+                    innerMat.blending = isDark ? THREE.AdditiveBlending : THREE.NormalBlending;
+                    innerMat.opacity = isDark ? 0.2 : 0.4;
                     
                     particlesMat.blending = isDark ? THREE.AdditiveBlending : THREE.NormalBlending;
                     particlesMat.color.setHex(isDark ? 0x88B04B : 0x2B7A0B); // Switch to Eco Green in light mode
@@ -725,9 +741,13 @@
                 requestAnimationFrame(animate);
                 const elapsedTime = clock.getElapsedTime();
 
-                // 1. Parallax the Background Image slightly based on mouse and scroll
-                bgMesh.position.x = -(mouseX * 0.005);
-                bgMesh.position.y = (mouseY * 0.005) + (scrollY * 0.01);
+                // 1. Rotate Tech Core
+                coreGroup.rotation.y += 0.002;
+                coreGroup.rotation.x += 0.001;
+
+                // Pulsate inner core
+                const scale = 1 + Math.sin(elapsedTime * 2) * 0.05;
+                innerMesh.scale.set(scale, scale, scale);
 
                 // 2. Rotate Particles
                 particleMesh.rotation.y = elapsedTime * 0.05;
