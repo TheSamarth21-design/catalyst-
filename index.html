@@ -633,13 +633,8 @@
             renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2)); // Perf optimization
             container.appendChild(renderer.domElement);
 
-            // Group for central interactive elements
-            const coreGroup = new THREE.Group();
-            scene.add(coreGroup);
-
             // --- 1. Background Image Watermark ---
             const textureLoader = new THREE.TextureLoader();
-            // Using your actual filename. It will load when running locally!
             const bgTexture = textureLoader.load('1772605589123.jpg');
             bgTexture.minFilter = THREE.LinearFilter;
             
@@ -648,7 +643,7 @@
             const bgMat = new THREE.MeshBasicMaterial({
                 map: bgTexture,
                 transparent: true,
-                opacity: 0.4, // Subtle opacity
+                opacity: 0.4, // Increased initial opacity
                 depthWrite: false
             });
             const bgMesh = new THREE.Mesh(bgGeo, bgMat);
@@ -656,7 +651,7 @@
             scene.add(bgMesh);
 
 
-            // --- 3. Particle System (Data Flow) ---
+            // --- 2. Particle System (Data Flow) ---
             const particlesGeo = new THREE.BufferGeometry();
             const particleCount = 900;
             const posArray = new Float32Array(particleCount * 3);
@@ -695,11 +690,7 @@
                 if(sceneFog) {
                     sceneFog.color.setHex(isDark ? 0x1a1a1a : 0xf8fafc);
                     
-                    // Adjust blending/opacity based on light/dark mode for better visibility
-                    knotMat.blending = isDark ? THREE.AdditiveBlending : THREE.NormalBlending;
-                    knotMat.opacity = isDark ? 0.15 : 0.3;
-                    
-                    // The background image visibility
+                    // The background image visibility (Significantly Brightened)
                     bgMat.opacity = isDark ? 0.4 : 0.8; 
                     
                     particlesMat.blending = isDark ? THREE.AdditiveBlending : THREE.NormalBlending;
@@ -734,15 +725,11 @@
                 requestAnimationFrame(animate);
                 const elapsedTime = clock.getElapsedTime();
 
-                // 1. Rotate Tech Wireframe
-                coreGroup.rotation.y += 0.002;
-                coreGroup.rotation.x += 0.001;
-
-                // 2. Parallax the Background Image slightly based on mouse and scroll
+                // 1. Parallax the Background Image slightly based on mouse and scroll
                 bgMesh.position.x = -(mouseX * 0.005);
                 bgMesh.position.y = (mouseY * 0.005) + (scrollY * 0.01);
 
-                // 3. Rotate Particles
+                // 2. Rotate Particles
                 particleMesh.rotation.y = elapsedTime * 0.05;
                 // Add slight vertical wave to particles
                 const positions = particleMesh.geometry.attributes.position.array;
@@ -751,7 +738,7 @@
                 }
                 particleMesh.geometry.attributes.position.needsUpdate = true;
 
-                // 4. Parallax Camera & Scroll Effect
+                // 3. Parallax Camera & Scroll Effect
                 // Parallax based on mouse
                 camera.position.x += (mouseX * 0.01 - camera.position.x) * 0.05;
                 
@@ -884,5 +871,4 @@
         });
     </script>
 </body>
-
 </html>
