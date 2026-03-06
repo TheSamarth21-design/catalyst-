@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Catalyst Corps | Gallery</title>
+    <title>Catalyst Corps | Projects</title>
     
     <!-- Google Fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -64,8 +64,7 @@
             width: 100vw;
             height: 100vh;
             z-index: -2;
-            pointer-events: none; /* Prevents 3D canvas from blocking clicks */
-            /* Add a subtle radial gradient to focus the center */
+            pointer-events: none;
             background: radial-gradient(circle at center, rgba(0,120,215,0.05) 0%, transparent 70%);
         }
 
@@ -163,54 +162,6 @@
             transform: scale(1.05);
         }
 
-        /* Abstract Background Elements */
-        .blob {
-            position: absolute;
-            filter: blur(100px);
-            z-index: -1;
-            opacity: 0.15;
-            border-radius: 50%;
-            animation: float 12s infinite alternate ease-in-out;
-        }
-        html.dark .blob {
-            opacity: 0.25;
-        }
-
-        @keyframes float {
-            0% { transform: translate(0, 0) scale(1); }
-            100% { transform: translate(30px, -50px) scale(1.1); }
-        }
-
-        /* Image Overlay */
-        .image-container {
-            position: relative;
-            overflow: hidden;
-            border-radius: 0.5rem;
-        }
-        
-        .image-overlay {
-            position: absolute;
-            inset: 0;
-            background: linear-gradient(to top, rgba(26,26,26, 0.95), transparent);
-            opacity: 0;
-            transition: opacity 0.3s ease;
-            display: flex;
-            align-items: flex-end;
-            padding: 1.5rem;
-        }
-
-        .image-container:hover .image-overlay {
-            opacity: 1;
-        }
-        
-        .image-container img {
-            transition: transform 0.5s ease;
-        }
-        
-        .image-container:hover img {
-            transform: scale(1.1);
-        }
-
         /* Animations on Scroll */
         .fade-in {
             opacity: 0;
@@ -235,26 +186,6 @@
             background: rgba(26, 26, 26, 0.85);
             border-bottom: 1px solid rgba(255,255,255,0.05);
         }
-
-        /* Custom Modal */
-        #contact-modal {
-            opacity: 0;
-            visibility: hidden;
-            transition: all 0.3s ease;
-        }
-        #contact-modal.show {
-            opacity: 1;
-            visibility: visible;
-        }
-        
-        select option {
-            background: var(--dark-charcoal);
-            color: #fff;
-        }
-        html:not(.dark) select option {
-            background: #fff;
-            color: #333;
-        }
     </style>
 </head>
 <body class="antialiased selection:bg-vivid-cyan selection:text-white bg-gray-50 dark:bg-dark-charcoal text-gray-900 dark:text-white transition-colors duration-300">
@@ -273,7 +204,7 @@
             <!-- Desktop Menu -->
             <div class="hidden md:flex items-center gap-6 lg:gap-8 font-medium">
                 <a href="index.html#about" class="text-gray-700 dark:text-gray-200 hover:text-vivid-cyan dark:hover:text-vivid-cyan transition-colors drop-shadow-md">About</a>
-                <a href="projects.html" class="text-gray-700 dark:text-gray-200 hover:text-vivid-cyan dark:hover:text-vivid-cyan transition-colors drop-shadow-md">Projects</a>
+                <a href="projects.html" class="text-vivid-cyan transition-colors drop-shadow-md">Projects</a>
                 <a href="gallery.html" class="text-gray-700 dark:text-gray-200 hover:text-vivid-cyan dark:hover:text-vivid-cyan transition-colors drop-shadow-md">Gallery</a>
                 <a href="vision.html" class="text-gray-700 dark:text-gray-200 hover:text-vivid-cyan dark:hover:text-vivid-cyan transition-colors drop-shadow-md">Vision</a>
                 
@@ -301,16 +232,17 @@
         <!-- Mobile Menu -->
         <div id="mobile-menu" class="hidden absolute top-full left-0 w-full bg-white/95 dark:bg-darker-charcoal/95 backdrop-blur-md border-b border-gray-200 dark:border-white/10 flex flex-col items-center py-6 gap-6 shadow-2xl">
             <a href="index.html#about" class="text-gray-800 dark:text-gray-200 hover:text-vivid-cyan dark:hover:text-vivid-cyan transition-colors mobile-link font-medium">About</a>
-            <a href="projects.html" class="text-gray-800 dark:text-gray-200 hover:text-vivid-cyan dark:hover:text-vivid-cyan transition-colors mobile-link font-medium">Projects</a>
+            <a href="projects.html" class="text-vivid-cyan transition-colors mobile-link font-medium">Projects</a>
             <a href="gallery.html" class="text-gray-800 dark:text-gray-200 hover:text-vivid-cyan dark:hover:text-vivid-cyan transition-colors mobile-link font-medium">Gallery</a>
             <a href="vision.html" class="text-gray-800 dark:text-gray-200 hover:text-vivid-cyan dark:hover:text-vivid-cyan transition-colors mobile-link font-medium">Vision</a>
             <a href="index.html#contact" class="text-gray-800 dark:text-gray-200 hover:text-vivid-cyan dark:hover:text-vivid-cyan transition-colors mobile-link font-medium">Contact Us</a>
         </div>
     </nav>
 
-  <!-- WRAPPER FOR PROJECTS PAGE -->
+    <!-- WRAPPER FOR PROJECTS PAGE -->
     <div id="page-projects">
         
+        <!-- Page Header -->
         <section class="pt-32 pb-16 relative overflow-hidden">
             <div class="max-w-7xl mx-auto px-6 lg:px-12 relative z-10 text-center fade-in">
                 <span class="text-electric-blue dark:text-vivid-cyan font-semibold tracking-wider uppercase text-sm mb-2 block drop-shadow-sm dark:drop-shadow-md">Portfolio</span>
@@ -319,29 +251,14 @@
             </div>
         </section>
 
-        <!-- 3. Solutions / Projects Section -->
+        <!-- Solutions / Projects Section Grid -->
         <section id="projects" class="pb-24 relative bg-transparent">
             <div class="max-w-7xl mx-auto px-6 lg:px-12 relative z-10">
-                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-                  <!-- 3. Solutions / Projects Section -->
-        <section id="projects" class="pb-24 relative bg-transparent">
-            <div class="max-w-7xl mx-auto px-6 lg:px-12 relative z-10">
-                
-                <!-- If this is on the projects.html page, you might not need this header again, but it's good for index.html -->
-                <div class="flex flex-col md:flex-row justify-between items-end mb-16 fade-in glass-card p-8 rounded-2xl shadow-lg dark:shadow-none border-l-4 border-l-vivid-cyan">
-                    <div class="max-w-2xl">
-                        <span class="text-electric-blue dark:text-vivid-cyan font-semibold tracking-wider uppercase text-sm mb-2 block drop-shadow-sm dark:drop-shadow-md">Our Arsenal</span>
-                        <h2 class="font-display text-4xl md:text-5xl font-bold drop-shadow-sm dark:drop-shadow-lg text-gray-900 dark:text-white">Featured Solutions</h2>
-                    </div>
-                    <p class="text-gray-600 dark:text-gray-200 mt-4 md:mt-0 pb-2 drop-shadow-sm dark:drop-shadow-md">Explore our hackathon-winning products.</p>
-                </div>
-
                 <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
                     
-                    <!-- 🟢 YOUR NEW PROJECT: HERITAGE VERSE -->
+                    <!-- 🟢 PROJECT 1: HERITAGE VERSE -->
                     <div class="glass-card rounded-2xl overflow-hidden group flex flex-col fade-in shadow-md dark:shadow-none">
                         <div class="h-48 bg-gray-100/80 dark:bg-darker-charcoal/80 border-b border-gray-200 dark:border-white/5 relative overflow-hidden flex items-center justify-center transition-colors">
-                            <!-- Landmark/Fort Icon -->
                             <i class="fa-solid fa-landmark text-6xl text-electric-blue opacity-50 dark:opacity-70 group-hover:scale-125 transition-transform duration-700 drop-shadow-[0_0_10px_rgba(0,120,215,0.4)] dark:drop-shadow-[0_0_10px_rgba(0,120,215,0.8)]"></i>
                             <div class="absolute top-4 right-4 bg-white/90 dark:bg-dark-charcoal/90 px-3 py-1 rounded-full text-xs font-bold text-gray-800 dark:text-white border border-gray-200 dark:border-white/10 backdrop-blur-md">Live</div>
                         </div>
@@ -353,9 +270,9 @@
                                 <span class="text-xs px-2 py-1 rounded bg-electric-blue/10 dark:bg-electric-blue/20 text-electric-blue dark:text-blue-200 border border-electric-blue/20 dark:border-electric-blue/40">React</span>
                                 <span class="text-xs px-2 py-1 rounded bg-electric-blue/10 dark:bg-electric-blue/20 text-electric-blue dark:text-blue-200 border border-electric-blue/20 dark:border-electric-blue/40">QR Tech</span>
                             </div>
-                           <a href="https://thesamarth21-design.github.io/heritage-verse/" target="_blank" class="w-full py-3 rounded-lg bg-gray-100 dark:bg-white/5 hover:bg-electric-blue dark:hover:bg-electric-blue text-gray-800 dark:text-white hover:text-white font-medium transition-colors border border-gray-200 dark:border-white/20 hover:border-transparent flex justify-center items-center gap-2 backdrop-blur-sm group">
-    View Details <i class="fa-solid fa-arrow-right text-sm group-hover:translate-x-1 transition-transform"></i>
-</a>
+                            <a href="https://thesamarth21-design.github.io/heritage-verse/" target="_blank" class="w-full py-3 rounded-lg bg-gray-100 dark:bg-white/5 hover:bg-electric-blue dark:hover:bg-electric-blue text-gray-800 dark:text-white hover:text-white font-medium transition-colors border border-gray-200 dark:border-white/20 hover:border-transparent flex justify-center items-center gap-2 backdrop-blur-sm group">
+                                View Details <i class="fa-solid fa-arrow-right text-sm group-hover:translate-x-1 transition-transform"></i>
+                            </a>
                         </div>
                     </div>
 
@@ -400,23 +317,10 @@
                 </div>
             </div>
         </section>
-
-    <!-- Success Modal -->
-    <div id="contact-modal" class="fixed inset-0 z-[100] flex items-center justify-center bg-black/50 backdrop-blur-sm">
-        <div class="bg-white dark:bg-dark-charcoal p-8 rounded-2xl max-w-sm w-full mx-4 shadow-2xl border border-gray-200 dark:border-white/10 transform scale-95 transition-transform duration-300 text-center relative" id="contact-modal-content">
-            <div class="w-16 h-16 rounded-full bg-eco-green/20 text-eco-green flex items-center justify-center text-3xl mx-auto mb-4">
-                <i class="fa-solid fa-check"></i>
-            </div>
-            <h3 class="text-2xl font-display font-bold text-gray-900 dark:text-white mb-2">Message Sent!</h3>
-            <p class="text-gray-600 dark:text-gray-300 mb-6">Thank you for reaching out. The Catalyst Corps team will get back to you shortly.</p>
-            <button onclick="closeModal()" class="w-full btn-green py-3 rounded-lg font-bold text-white transition-transform hover:scale-105">
-                Awesome
-            </button>
-        </div>
     </div>
 
     <!-- 8. Footer -->
-    <footer class="bg-gray-100 dark:bg-darker-charcoal pt-16 pb-8 border-t border-gray-200 dark:border-white/10 relative z-10 transition-colors duration-300">
+    <footer class="bg-gray-100 dark:bg-darker-charcoal pt-16 pb-8 border-t border-gray-200 dark:border-white/10 relative z-10 transition-colors duration-300 mt-20">
         <div class="max-w-7xl mx-auto px-6 lg:px-12">
             <div class="grid grid-cols-1 md:grid-cols-4 gap-12 mb-12">
                 <div class="md:col-span-2">
@@ -427,6 +331,20 @@
                     <p class="text-gray-600 dark:text-gray-400 text-sm max-w-sm">
                         Engineering innovation and solving tomorrow's problems today. We build, we deploy, we conquer.
                     </p>
+                    
+                    <!-- ADD SOCIAL LINKS HERE -->
+                    <div class="flex gap-4 mt-8 pt-8 border-t border-gray-200 dark:border-white/10 max-w-sm">
+                        <a href="https://github.com/TheSamarth21-design" target="_blank" class="w-12 h-12 rounded-full bg-gray-100 dark:bg-white/5 flex items-center justify-center text-gray-600 dark:text-gray-300 hover:bg-electric-blue dark:hover:bg-electric-blue hover:text-white transition-all border border-gray-200 dark:border-white/10 hover:border-transparent hover:shadow-[0_0_15px_rgba(0,120,215,0.4)] dark:hover:shadow-[0_0_15px_rgba(0,120,215,0.6)] backdrop-blur-sm">
+                            <i class="fa-brands fa-github text-xl"></i>
+                        </a>
+                        <a href="https://linkedin.com/in/YOUR_LINKEDIN_ID" target="_blank" class="w-12 h-12 rounded-full bg-gray-100 dark:bg-white/5 flex items-center justify-center text-gray-600 dark:text-gray-300 hover:bg-electric-blue dark:hover:bg-electric-blue hover:text-white transition-all border border-gray-200 dark:border-white/10 hover:border-transparent hover:shadow-[0_0_15px_rgba(0,120,215,0.4)] dark:hover:shadow-[0_0_15px_rgba(0,120,215,0.6)] backdrop-blur-sm">
+                            <i class="fa-brands fa-linkedin-in text-xl"></i>
+                        </a>
+                        <a href="https://instagram.com/YOUR_INSTAGRAM_ID" target="_blank" class="w-12 h-12 rounded-full bg-gray-100 dark:bg-white/5 flex items-center justify-center text-gray-600 dark:text-gray-300 hover:bg-electric-blue dark:hover:bg-vivid-cyan hover:text-white dark:hover:text-darker-charcoal transition-all border border-gray-200 dark:border-white/10 hover:border-transparent hover:shadow-[0_0_15px_rgba(0,120,215,0.4)] dark:hover:shadow-[0_0_15px_rgba(0,207,255,0.6)] backdrop-blur-sm">
+                            <i class="fa-brands fa-instagram text-xl"></i>
+                        </a>
+                    </div>
+
                 </div>
                 <div>
                     <h4 class="font-bold mb-4 text-gray-900 dark:text-white">Quick Links</h4>
@@ -460,7 +378,6 @@
         // Theme Toggle Logic
         // --------------------------------------------------------
         const initTheme = () => {
-            // Check local storage or default to dark
             const savedTheme = localStorage.getItem('theme');
             if (savedTheme === 'light') {
                 document.documentElement.classList.remove('dark');
@@ -472,8 +389,6 @@
         const toggleTheme = () => {
             const isDark = document.documentElement.classList.toggle('dark');
             localStorage.setItem('theme', isDark ? 'dark' : 'light');
-            
-            // Notify 3D Background if function exists
             if(typeof window.update3DTheme === 'function') {
                 window.update3DTheme(isDark);
             }
@@ -485,68 +400,57 @@
         document.getElementById('theme-toggle-mobile').addEventListener('click', toggleTheme);
 
         // --------------------------------------------------------
-        // Premium 3D Background (Image Watermark + Particles)
+        // Premium 3D Background (Torus Knot Core + Particles)
         // --------------------------------------------------------
         let sceneFog;
 
         const init3DBackground = () => {
             const container = document.getElementById('canvas-container');
-            
-            // Setup scene
             const scene = new THREE.Scene();
             
-            // Fog for depth
             const isDark = document.documentElement.classList.contains('dark');
             sceneFog = new THREE.FogExp2(isDark ? 0x1a1a1a : 0xf8fafc, 0.015);
             scene.fog = sceneFog;
 
-            // Camera setup
             const camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
             camera.position.z = 30;
 
-            // Renderer setup
             const renderer = new THREE.WebGLRenderer({ alpha: true, antialias: true });
             renderer.setSize(window.innerWidth, window.innerHeight);
-            renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2)); // Perf optimization
+            renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
             container.appendChild(renderer.domElement);
 
-            // Group for central interactive elements
             const coreGroup = new THREE.Group();
             scene.add(coreGroup);
 
-            // --- 1. Background Image Watermark ---
-            const textureLoader = new THREE.TextureLoader();
-            // Using your actual filename. It will load when running locally!
-            const bgTexture = textureLoader.load('1772605589123.jpg');
-            bgTexture.minFilter = THREE.LinearFilter;
-            
-            // Huge plane to act as the deep background
-            const bgGeo = new THREE.PlaneGeometry(160, 90); 
-            const bgMat = new THREE.MeshBasicMaterial({
-                map: bgTexture,
-                transparent: true,
-                opacity: 0.1, // Subtle opacity
-                depthWrite: false
-            });
-            const bgMesh = new THREE.Mesh(bgGeo, bgMat);
-            bgMesh.position.z = -25; // Pushed way to the back
-            scene.add(bgMesh);
+            // --- 1. The Tech Core (Torus Knot) ---
+            const knotGeo = new THREE.TorusKnotGeometry(8, 2.5, 200, 32);
+            const colorPrimary = new THREE.Color(0x00CFFF);
+            const colorSecondary = new THREE.Color(0x0078D7);
 
-
-            // --- 2. Tech Wireframe (Replacing the old frame) ---
-            const knotGeo = new THREE.TorusKnotGeometry(12, 1.5, 200, 32);
             const knotMat = new THREE.MeshBasicMaterial({
-                color: 0x0078D7,
+                color: colorPrimary,
                 wireframe: true,
                 transparent: true,
                 opacity: 0.15,
                 blending: THREE.AdditiveBlending
             });
             const knotMesh = new THREE.Mesh(knotGeo, knotMat);
-            knotMesh.position.z = -5;
             coreGroup.add(knotMesh);
 
-            // --- 3. Particle System (Data Flow) ---
+            // Inner Core
+            const innerGeo = new THREE.IcosahedronGeometry(6, 1);
+            const innerMat = new THREE.MeshBasicMaterial({
+                color: colorSecondary,
+                wireframe: true,
+                transparent: true,
+                opacity: 0.2,
+                blending: THREE.AdditiveBlending
+            });
+            const innerMesh = new THREE.Mesh(innerGeo, innerMat);
+            coreGroup.add(innerMesh);
+
+            // --- 2. Particle System ---
             const particlesGeo = new THREE.BufferGeometry();
             const particleCount = 900;
             const posArray = new Float32Array(particleCount * 3);
@@ -557,7 +461,6 @@
             
             particlesGeo.setAttribute('position', new THREE.BufferAttribute(posArray, 3));
             
-            // Circular particle texture
             const canvas = document.createElement('canvas');
             canvas.width = 16; canvas.height = 16;
             const ctx = canvas.getContext('2d');
@@ -572,7 +475,7 @@
                 map: texture,
                 transparent: true,
                 opacity: 0.5,
-                color: 0x88B04B, // Harvest Green
+                color: 0x88B04B,
                 blending: THREE.AdditiveBlending,
                 depthWrite: false
             });
@@ -580,31 +483,23 @@
             const particleMesh = new THREE.Points(particlesGeo, particlesMat);
             scene.add(particleMesh);
 
-            // Global function to update fog and blending from Theme Toggle
             window.update3DTheme = (isDark) => {
                 if(sceneFog) {
                     sceneFog.color.setHex(isDark ? 0x1a1a1a : 0xf8fafc);
-                    
-                    // Adjust blending/opacity based on light/dark mode for better visibility
                     knotMat.blending = isDark ? THREE.AdditiveBlending : THREE.NormalBlending;
                     knotMat.opacity = isDark ? 0.15 : 0.3;
-                    
-                    // The background image visibility
-                    bgMat.opacity = isDark ? 0.08 : 0.15; 
-                    
+                    innerMat.blending = isDark ? THREE.AdditiveBlending : THREE.NormalBlending;
+                    innerMat.opacity = isDark ? 0.2 : 0.4;
                     particlesMat.blending = isDark ? THREE.AdditiveBlending : THREE.NormalBlending;
-                    particlesMat.color.setHex(isDark ? 0x88B04B : 0x2B7A0B); // Switch to Eco Green in light mode
+                    particlesMat.color.setHex(isDark ? 0x88B04B : 0x2B7A0B);
                 }
             };
 
-            // Initial theme configuration application
             window.update3DTheme(isDark);
 
-            // Tracking Interactions
             let mouseX = 0;
             let mouseY = 0;
             let scrollY = window.scrollY;
-
             const windowHalfX = window.innerWidth / 2;
             const windowHalfY = window.innerHeight / 2;
 
@@ -617,46 +512,35 @@
                 scrollY = window.scrollY;
             });
 
-            // Smooth animation loop
             const clock = new THREE.Clock();
 
             const animate = () => {
                 requestAnimationFrame(animate);
                 const elapsedTime = clock.getElapsedTime();
 
-                // 1. Rotate Tech Wireframe
                 coreGroup.rotation.y += 0.002;
                 coreGroup.rotation.x += 0.001;
 
-                // 2. Parallax the Background Image slightly based on mouse and scroll
-                bgMesh.position.x = -(mouseX * 0.005);
-                bgMesh.position.y = (mouseY * 0.005) + (scrollY * 0.01);
+                const scale = 1 + Math.sin(elapsedTime * 2) * 0.05;
+                innerMesh.scale.set(scale, scale, scale);
 
-                // 3. Rotate Particles
                 particleMesh.rotation.y = elapsedTime * 0.05;
-                // Add slight vertical wave to particles
                 const positions = particleMesh.geometry.attributes.position.array;
                 for(let i = 1; i < particleCount * 3; i+=3) {
                    positions[i] += Math.sin(elapsedTime + positions[i-1]) * 0.01;
                 }
                 particleMesh.geometry.attributes.position.needsUpdate = true;
 
-                // 4. Parallax Camera & Scroll Effect
-                // Parallax based on mouse
                 camera.position.x += (mouseX * 0.01 - camera.position.x) * 0.05;
-                
-                // Add scroll interactivity: Objects move up as you scroll down
                 const scrollEffect = scrollY * 0.015;
                 camera.position.y += (-mouseY * 0.01 - camera.position.y - scrollEffect) * 0.05;
                 
                 camera.lookAt(scene.position);
-
                 renderer.render(scene, camera);
             };
 
             animate();
 
-            // Handle browser resize
             window.addEventListener('resize', () => {
                 camera.aspect = window.innerWidth / window.innerHeight;
                 camera.updateProjectionMatrix();
@@ -664,14 +548,11 @@
             });
         };
 
-        // Initialize 3D Background when DOM is fully loaded
         window.addEventListener('DOMContentLoaded', init3DBackground);
 
         // --------------------------------------------------------
-        // UI & Scroll Interactions
+        // UI Navigation Logic
         // --------------------------------------------------------
-
-        // Mobile Menu Toggle
         const mobileMenuBtn = document.getElementById('mobile-menu-btn');
         const mobileMenu = document.getElementById('mobile-menu');
         const mobileLinks = document.querySelectorAll('.mobile-link');
@@ -686,7 +567,6 @@
             });
         });
 
-        // Navbar Scroll Effect
         const navbar = document.getElementById('navbar');
         window.addEventListener('scroll', () => {
             if (window.scrollY > 50) {
@@ -700,36 +580,6 @@
             }
         });
 
-        // Custom Modal Logic
-        const modal = document.getElementById('contact-modal');
-        const modalContent = document.getElementById('contact-modal-content');
-
-        window.handleFormSubmit = (e) => {
-            e.preventDefault();
-            modal.classList.add('show');
-            setTimeout(() => {
-                modalContent.classList.remove('scale-95');
-                modalContent.classList.add('scale-100');
-            }, 10);
-            e.target.reset(); // clear form
-        };
-
-        window.closeModal = () => {
-            modalContent.classList.remove('scale-100');
-            modalContent.classList.add('scale-95');
-            setTimeout(() => {
-                modal.classList.remove('show');
-            }, 300);
-        };
-
-        // Close modal on outside click
-        modal.addEventListener('click', (e) => {
-            if (e.target === modal) {
-                closeModal();
-            }
-        });
-
-        // Intersection Observer for Fade-In Animations
         const observerOptions = {
             root: null,
             rootMargin: '0px',
@@ -740,30 +590,6 @@
             entries.forEach(entry => {
                 if (entry.isIntersecting) {
                     entry.target.classList.add('visible');
-                    
-                    // Trigger counters if they are inside this section
-                    const counters = entry.target.querySelectorAll('.counter');
-                    if (counters.length > 0) {
-                        counters.forEach(counter => {
-                            const target = +counter.getAttribute('data-target');
-                            const duration = 2000; // ms
-                            const increment = target / (duration / 16); // 60fps
-                            
-                            let current = 0;
-                            const updateCounter = () => {
-                                current += increment;
-                                if (current < target) {
-                                    counter.innerText = Math.ceil(current);
-                                    requestAnimationFrame(updateCounter);
-                                } else {
-                                    counter.innerText = target;
-                                }
-                            };
-                            updateCounter();
-                            // remove class so it only animates once
-                            counter.classList.remove('counter'); 
-                        });
-                    }
                     observer.unobserve(entry.target);
                 }
             });
@@ -774,6 +600,4 @@
         });
     </script>
 </body>
-
 </html>
-
