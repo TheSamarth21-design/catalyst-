@@ -42,7 +42,7 @@
         }
     </script>
 
-    <!-- Navigation styling -->
+    <!-- Navigation & Core Styling -->
     <style>
         :root {
             --eco-green: #2B7A0B;
@@ -95,19 +95,6 @@
             border: 1px solid rgba(0, 207, 255, 0.15);
         }
 
-        .glass-card:hover {
-            transform: translateY(-10px);
-            border-color: var(--electric-blue);
-            box-shadow: 0 10px 30px -10px rgba(0, 120, 215, 0.2);
-            background: rgba(255, 255, 255, 0.85);
-        }
-
-        html.dark .glass-card:hover {
-            border-color: var(--vivid-cyan);
-            box-shadow: 0 10px 30px -10px rgba(0, 207, 255, 0.3);
-            background: rgba(46, 46, 46, 0.6);
-        }
-
         /* Custom Buttons */
         .btn-primary {
             background: linear-gradient(135deg, var(--electric-blue), var(--vivid-cyan));
@@ -118,11 +105,11 @@
             color: white !important;
         }
 
-        /* Image Overlay */
+        /* Image Overlay & Animations */
         .image-container {
             position: relative;
             overflow: hidden;
-            border-radius: 0.5rem;
+            border-radius: 1rem; /* Rounded corners for timeline photos */
         }
         
         .image-overlay {
@@ -145,19 +132,65 @@
         }
         
         .image-container:hover img {
-            transform: scale(1.1);
+            transform: scale(1.05);
         }
 
         /* Animations on Scroll */
         .fade-in {
             opacity: 0;
-            transform: translateY(30px);
+            transform: translateY(40px);
             transition: opacity 0.8s ease-out, transform 0.8s ease-out;
         }
 
         .fade-in.visible {
             opacity: 1;
             transform: translateY(0);
+        }
+
+        /* 3D Pull Forward Animation for Images & Rows */
+        .pull-forward {
+            opacity: 0;
+            /* Starts pushed deep into the screen for the rope-pull effect */
+            transform: perspective(1500px) translateZ(-800px) translateY(100px) scale(0.5);
+            transition: opacity 1.2s ease-out, transform 1.5s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+        }
+
+        .pull-forward.visible {
+            opacity: 1;
+            /* Pops forward to its normal position */
+            transform: perspective(1500px) translateZ(0) translateY(0) scale(1);
+        }
+
+        /* 3D Tapered Rope / Track */
+        .timeline-rope {
+            position: absolute;
+            left: 50%;
+            transform: translateX(-50%);
+            top: 0;
+            bottom: 0;
+            width: 24px;
+            /* Gradient fades out at the top to simulate extreme distance */
+            background: linear-gradient(to bottom, rgba(0, 207, 255, 0) 0%, rgba(0, 207, 255, 0.3) 15%, rgba(0, 120, 215, 0.8) 80%, rgba(0, 120, 215, 0) 100%);
+            /* Triangle/Taper shape to force 1-point perspective */
+            clip-path: polygon(45% 0, 55% 0, 100% 100%, 0 100%);
+            z-index: 0;
+        }
+
+        html.dark .timeline-rope {
+            background: linear-gradient(to bottom, rgba(0, 207, 255, 0) 0%, rgba(0, 207, 255, 0.2) 15%, rgba(0, 120, 215, 0.6) 80%, rgba(0, 120, 215, 0) 100%);
+        }
+
+        /* Vanishing point glow at the very back */
+        .vanishing-point {
+            position: absolute;
+            left: 50%;
+            top: -50px;
+            transform: translateX(-50%);
+            width: 200px;
+            height: 200px;
+            background: radial-gradient(circle, rgba(0, 207, 255, 0.3) 0%, transparent 60%);
+            border-radius: 50%;
+            z-index: 1;
         }
         
         /* Navigation styling */
@@ -228,63 +261,135 @@
 
     <!-- WRAPPER FOR GALLERY PAGE -->
     <div id="page-gallery">
-        <section class="pt-32 pb-16 relative overflow-hidden">
+        <section class="pt-32 pb-12 relative overflow-hidden">
             <div class="max-w-7xl mx-auto px-6 lg:px-12 relative z-10 text-center fade-in">
-                <span class="text-electric-blue dark:text-vivid-cyan font-semibold tracking-wider uppercase text-sm mb-2 block drop-shadow-sm dark:drop-shadow-md">Gallery</span>
-                <h1 class="font-display text-5xl md:text-6xl font-bold mb-6 drop-shadow-sm dark:drop-shadow-lg text-gray-900 dark:text-white">Inside the <span class="text-gradient-green">Corps</span></h1>
-                <p class="text-lg text-gray-600 dark:text-gray-300 max-w-2xl mx-auto drop-shadow-sm">Glimpses of our team in action, hackathons, and prototype development.</p>
+                <span class="text-electric-blue dark:text-vivid-cyan font-semibold tracking-wider uppercase text-sm mb-2 block drop-shadow-sm dark:drop-shadow-md">Our Timeline</span>
+                <h1 class="font-display text-5xl md:text-6xl font-bold mb-6 drop-shadow-sm dark:drop-shadow-lg text-gray-900 dark:text-white">The <span class="text-gradient-green">Journey</span></h1>
+                <p class="text-lg text-gray-600 dark:text-gray-300 max-w-2xl mx-auto drop-shadow-sm">Scroll to explore the evolution of Catalyst Corps, step by step.</p>
             </div>
         </section>
 
-        <!-- Gallery Section Grid -->
-        <section id="gallery" class="pb-24 relative bg-transparent">
-            <div class="max-w-7xl mx-auto px-6 lg:px-12 relative z-10">
-                <!-- Change grid-cols based on how many images you want per row -->
-                <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+        <!-- Timeline Section -->
+        <section id="timeline" class="pb-24 relative bg-transparent overflow-hidden">
+            <div class="max-w-5xl mx-auto px-6 lg:px-12 relative z-10">
+                
+                <!-- 3D Rope and Vanishing Point for Desktop -->
+                <div class="hidden md:block">
+                    <div class="vanishing-point"></div>
+                    <div class="timeline-rope"></div>
+                </div>
+
+                <!-- Timeline Container (Increased spacing for the 3D zoom effect) -->
+                <div class="relative space-y-24 mt-12">
                     
-                    <!-- Image 1 -->
-                    <div class="image-container h-64 fade-in rounded-xl border border-gray-200 dark:border-white/10 shadow-lg">
-                        <!-- It looks for gallery-1.jpg in your main GitHub folder -->
-                        <img src="gallery-1.jpg" alt="Hackathon" class="w-full h-full object-cover" onerror="this.src='https://images.unsplash.com/photo-1504384308090-c894fdcc538d?auto=format&fit=crop&q=80&w=400'">
-                        <div class="image-overlay">
-                            <div>
-                                <h4 class="font-bold text-lg text-vivid-cyan drop-shadow-md">Hackathon Action</h4>
-                                <p class="text-sm text-gray-200">48 hours of intense coding.</p>
+                    <!-- Node 1 -->
+                    <!-- We apply pull-forward to the WHOLE ROW so it flies out together -->
+                    <div class="flex flex-col md:flex-row items-center w-full relative pull-forward">
+                        <!-- Image Left -->
+                        <div class="w-full md:w-1/2 md:pr-12 mb-6 md:mb-0 order-1">
+                            <div class="image-container h-64 shadow-[0_0_20px_rgba(0,120,215,0.15)] dark:shadow-[0_0_20px_rgba(0,120,215,0.3)] border border-gray-200 dark:border-white/10">
+                                <img src="YOUR_IMAGE_1.jpg" alt="Event 1" class="w-full h-full object-cover" onerror="this.src='https://images.unsplash.com/photo-1504384308090-c894fdcc538d?auto=format&fit=crop&q=80&w=600'">
+                                <div class="image-overlay">
+                                    <h4 class="font-bold text-lg text-white drop-shadow-md">[Image 1 Caption]</h4>
+                                </div>
                             </div>
                         </div>
+                        
+                        <!-- Center Marker (Desktop Only) -->
+                        <div class="hidden md:flex absolute left-1/2 transform -translate-x-1/2 w-14 h-14 rounded-full bg-white dark:bg-darker-charcoal border-4 border-electric-blue items-center justify-center z-10 shadow-lg shadow-electric-blue/30">
+                            <i class="fa-solid fa-rocket text-xl text-electric-blue dark:text-vivid-cyan"></i>
+                        </div>
+                        
+                        <!-- Text Right -->
+                        <div class="w-full md:w-1/2 md:pl-12 text-left order-2">
+                            <div class="inline-block px-4 py-1 rounded-full bg-electric-blue/10 text-electric-blue dark:bg-electric-blue/20 dark:text-cyan-300 text-sm font-bold tracking-widest mb-3 uppercase">August 16, 2025</div>
+                            <h3 class="font-display text-3xl font-bold text-gray-900 dark:text-white mb-3 drop-shadow-sm">[Event Title 1]</h3>
+                            <p class="text-gray-600 dark:text-gray-300 text-lg leading-relaxed">[Enter your description here...]</p>
+                        </div>
                     </div>
-                    
-                    <!-- Image 2 -->
-                    <div class="image-container h-64 fade-in rounded-xl border border-gray-200 dark:border-white/10 shadow-lg" style="transition-delay: 100ms;">
-                        <img src="gallery-2.jpg" alt="Team" class="w-full h-full object-cover" onerror="this.src='https://images.unsplash.com/photo-1522071820081-009f0129c71c?auto=format&fit=crop&q=80&w=400'">
-                        <div class="image-overlay">
-                            <div>
-                                <h4 class="font-bold text-lg text-electric-blue drop-shadow-md">Team Collaboration</h4>
-                                <p class="text-sm text-gray-200">Whiteboarding scalable architectures.</p>
+
+                    <!-- Node 2 -->
+                    <div class="flex flex-col md:flex-row items-center w-full relative pull-forward">
+                        <!-- Text Left (Desktop: left, Mobile: stacked below image) -->
+                        <div class="w-full md:w-1/2 md:pr-12 text-left md:text-right mb-6 md:mb-0 order-2 md:order-1">
+                            <div class="inline-block px-4 py-1 rounded-full bg-vivid-cyan/10 text-vivid-cyan dark:bg-vivid-cyan/20 dark:text-vivid-cyan text-sm font-bold tracking-widest mb-3 uppercase">[Date 2]</div>
+                            <h3 class="font-display text-3xl font-bold text-gray-900 dark:text-white mb-3 drop-shadow-sm">[Event Title 2]</h3>
+                            <p class="text-gray-600 dark:text-gray-300 text-lg leading-relaxed">[Enter your description here...]</p>
+                        </div>
+                        
+                        <!-- Center Marker (Desktop Only) -->
+                        <div class="hidden md:flex absolute left-1/2 transform -translate-x-1/2 w-14 h-14 rounded-full bg-white dark:bg-darker-charcoal border-4 border-vivid-cyan items-center justify-center z-10 shadow-lg shadow-vivid-cyan/30">
+                            <i class="fa-solid fa-users-viewfinder text-xl text-vivid-cyan"></i>
+                        </div>
+
+                        <!-- Image Right -->
+                        <div class="w-full md:w-1/2 md:pl-12 order-1 md:order-2">
+                            <div class="image-container h-64 shadow-[0_0_20px_rgba(0,207,255,0.15)] dark:shadow-[0_0_20px_rgba(0,207,255,0.3)] border border-gray-200 dark:border-white/10">
+                                <img src="YOUR_IMAGE_2.jpg" alt="Event 2" class="w-full h-full object-cover" onerror="this.src='https://images.unsplash.com/photo-1522071820081-009f0129c71c?auto=format&fit=crop&q=80&w=600'">
+                                <div class="image-overlay">
+                                    <h4 class="font-bold text-lg text-white drop-shadow-md">[Image 2 Caption]</h4>
+                                </div>
                             </div>
                         </div>
                     </div>
 
-                    <!-- Image 3 -->
-                    <div class="image-container h-64 fade-in rounded-xl border border-gray-200 dark:border-white/10 shadow-lg" style="transition-delay: 200ms;">
-                        <img src="gallery-3.jpg" alt="Prototype" class="w-full h-full object-cover" onerror="this.src='https://images.unsplash.com/photo-1518770660439-4636190af475?auto=format&fit=crop&q=80&w=400'">
-                        <div class="image-overlay">
-                            <div>
-                                <h4 class="font-bold text-lg text-harvest-green drop-shadow-md">Hardware Prototyping</h4>
-                                <p class="text-sm text-gray-200">Wiring sensors and microcontrollers.</p>
+                    <!-- Node 3 -->
+                    <div class="flex flex-col md:flex-row items-center w-full relative pull-forward">
+                        <!-- Image Left -->
+                        <div class="w-full md:w-1/2 md:pr-12 mb-6 md:mb-0 order-1">
+                            <div class="image-container h-64 shadow-[0_0_20px_rgba(136,176,75,0.15)] dark:shadow-[0_0_20px_rgba(136,176,75,0.3)] border border-gray-200 dark:border-white/10">
+                                <img src="YOUR_IMAGE_3.jpg" alt="Event 3" class="w-full h-full object-cover" onerror="this.src='https://images.unsplash.com/photo-1518770660439-4636190af475?auto=format&fit=crop&q=80&w=600'">
+                                <div class="image-overlay">
+                                    <h4 class="font-bold text-lg text-white drop-shadow-md">[Image 3 Caption]</h4>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <!-- Center Marker -->
+                        <div class="hidden md:flex absolute left-1/2 transform -translate-x-1/2 w-14 h-14 rounded-full bg-white dark:bg-darker-charcoal border-4 border-harvest-green items-center justify-center z-10 shadow-lg shadow-harvest-green/30">
+                            <i class="fa-solid fa-microchip text-xl text-harvest-green"></i>
+                        </div>
+                        
+                        <!-- Text Right -->
+                        <div class="w-full md:w-1/2 md:pl-12 text-left order-2">
+                            <div class="inline-block px-4 py-1 rounded-full bg-harvest-green/10 text-harvest-green dark:bg-harvest-green/20 dark:text-green-300 text-sm font-bold tracking-widest mb-3 uppercase">[Date 3]</div>
+                            <h3 class="font-display text-3xl font-bold text-gray-900 dark:text-white mb-3 drop-shadow-sm">[Event Title 3]</h3>
+                            <p class="text-gray-600 dark:text-gray-300 text-lg leading-relaxed">[Enter your description here...]</p>
+                        </div>
+                    </div>
+
+                    <!-- Node 4 -->
+                    <div class="flex flex-col md:flex-row items-center w-full relative pull-forward">
+                        <!-- Text Left -->
+                        <div class="w-full md:w-1/2 md:pr-12 text-left md:text-right mb-6 md:mb-0 order-2 md:order-1">
+                            <div class="inline-block px-4 py-1 rounded-full bg-eco-green/10 text-eco-green dark:bg-eco-green/20 dark:text-green-400 text-sm font-bold tracking-widest mb-3 uppercase">[Date 4]</div>
+                            <h3 class="font-display text-3xl font-bold text-gray-900 dark:text-white mb-3 drop-shadow-sm">[Event Title 4]</h3>
+                            <p class="text-gray-600 dark:text-gray-300 text-lg leading-relaxed">[Enter your description here...]</p>
+                        </div>
+                        
+                        <!-- Center Marker -->
+                        <div class="hidden md:flex absolute left-1/2 transform -translate-x-1/2 w-14 h-14 rounded-full bg-white dark:bg-darker-charcoal border-4 border-eco-green items-center justify-center z-10 shadow-lg shadow-eco-green/30">
+                            <i class="fa-solid fa-earth-americas text-xl text-eco-green"></i>
+                        </div>
+
+                        <!-- Image Right -->
+                        <div class="w-full md:w-1/2 md:pl-12 order-1 md:order-2">
+                            <div class="image-container h-64 shadow-[0_0_20px_rgba(43,122,11,0.15)] dark:shadow-[0_0_20px_rgba(43,122,11,0.3)] border border-gray-200 dark:border-white/10">
+                                <img src="YOUR_IMAGE_4.jpg" alt="Event 4" class="w-full h-full object-cover" onerror="this.src='https://images.unsplash.com/photo-1531482615713-2afd69097998?auto=format&fit=crop&q=80&w=600'">
+                                <div class="image-overlay">
+                                    <h4 class="font-bold text-lg text-white drop-shadow-md">[Image 4 Caption]</h4>
+                                </div>
                             </div>
                         </div>
                     </div>
 
-                    <!-- Image 4 -->
-                    <div class="image-container h-64 fade-in rounded-xl border border-gray-200 dark:border-white/10 shadow-lg" style="transition-delay: 300ms;">
-                        <img src="gallery-4.jpg" alt="Events" class="w-full h-full object-cover" onerror="this.src='https://images.unsplash.com/photo-1531482615713-2afd69097998?auto=format&fit=crop&q=80&w=400'">
-                        <div class="image-overlay">
-                            <div>
-                                <h4 class="font-bold text-lg text-eco-green drop-shadow-md">Tech Expos</h4>
-                                <p class="text-sm text-gray-200">Showcasing solutions to the world.</p>
-                            </div>
+                    <!-- Node 5: Future Placeholder -->
+                    <div class="flex flex-col items-center justify-center w-full mt-32 relative z-10 pull-forward">
+                        <div class="w-20 h-20 rounded-full bg-gray-100 dark:bg-darker-charcoal border-4 border-dashed border-gray-300 dark:border-gray-500 flex items-center justify-center mb-6 shadow-inner animate-[spin_12s_linear_infinite]">
+                            <i class="fa-solid fa-hourglass-empty text-2xl text-gray-400 dark:text-gray-500 animate-pulse"></i>
                         </div>
+                        <h3 class="font-display text-2xl font-bold text-gray-800 dark:text-gray-200 uppercase tracking-widest drop-shadow-sm">To Be Continued...</h3>
+                        <p class="text-gray-500 dark:text-gray-400 mt-3 max-w-md text-center">Space reserved for our next big breakthrough. The code never stops.</p>
                     </div>
 
                 </div>
@@ -293,7 +398,7 @@
     </div>
 
     <!-- 8. Footer -->
-    <footer class="bg-gray-100 dark:bg-darker-charcoal pt-16 pb-8 border-t border-gray-200 dark:border-white/10 relative z-10 transition-colors duration-300 mt-20">
+    <footer class="bg-gray-100 dark:bg-darker-charcoal pt-16 pb-8 border-t border-gray-200 dark:border-white/10 relative z-10 transition-colors duration-300 mt-12">
         <div class="max-w-7xl mx-auto px-6 lg:px-12">
             <div class="grid grid-cols-1 md:grid-cols-4 gap-12 mb-12">
                 <div class="md:col-span-2">
@@ -552,22 +657,24 @@
             }
         });
 
+        // Use IntersectionObserver to fade in timeline items on scroll
         const observerOptions = {
             root: null,
             rootMargin: '0px',
-            threshold: 0.1
+            threshold: 0.15 // Triggers when 15% of the element is visible
         };
 
         const observer = new IntersectionObserver((entries, observer) => {
             entries.forEach(entry => {
                 if (entry.isIntersecting) {
                     entry.target.classList.add('visible');
-                    observer.unobserve(entry.target);
+                    observer.unobserve(entry.target); // Only animate once
                 }
             });
         }, observerOptions);
 
-        document.querySelectorAll('.fade-in').forEach((el) => {
+        // Track both fade-in text elements AND our new pull-forward images
+        document.querySelectorAll('.fade-in, .pull-forward').forEach((el) => {
             observer.observe(el);
         });
     </script>
