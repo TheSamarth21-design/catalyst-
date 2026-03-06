@@ -288,9 +288,9 @@
                         <!-- Image Left -->
                         <div class="w-full md:w-1/2 md:pr-12 mb-6 md:mb-0 order-1">
                             <div class="image-container h-64 shadow-[0_0_20px_rgba(0,120,215,0.15)] dark:shadow-[0_0_20px_rgba(0,120,215,0.3)] border border-gray-200 dark:border-white/10">
-                                <img src="YOUR_IMAGE_1.jpg" alt="Event 1" class="w-full h-full object-cover" onerror="this.src='https://images.unsplash.com/photo-1504384308090-c894fdcc538d?auto=format&fit=crop&q=80&w=600'">
+                                <img src="gallery-1.jpg" alt="Event 1" class="w-full h-full object-cover" onerror="this.src='https://images.unsplash.com/photo-1504384308090-c894fdcc538d?auto=format&fit=crop&q=80&w=600'">
                                 <div class="image-overlay">
-                                    <h4 class="font-bold text-lg text-white drop-shadow-md">[Image 1 Caption]</h4>
+                                    <h4 class="font-bold text-lg text-white drop-shadow-md">[Team’s Inaugural Meeting]</h4>
                                 </div>
                             </div>
                         </div>
@@ -303,8 +303,8 @@
                         <!-- Text Right -->
                         <div class="w-full md:w-1/2 md:pl-12 text-left order-2">
                             <div class="inline-block px-4 py-1 rounded-full bg-electric-blue/10 text-electric-blue dark:bg-electric-blue/20 dark:text-cyan-300 text-sm font-bold tracking-widest mb-3 uppercase">August 16, 2025</div>
-                            <h3 class="font-display text-3xl font-bold text-gray-900 dark:text-white mb-3 drop-shadow-sm">[Event Title 1]</h3>
-                            <p class="text-gray-600 dark:text-gray-300 text-lg leading-relaxed">[Enter your description here...]</p>
+                            <h3 class="font-display text-3xl font-bold text-gray-900 dark:text-white mb-3 drop-shadow-sm">[Team’s Inaugural Meeting]</h3>
+                            <p class="text-gray-600 dark:text-gray-300 text-lg leading-relaxed">[The meeting began with introductions from each team member, followed by a discussion of their skills and areas of specialization.]</p>
                         </div>
                     </div>
 
@@ -312,9 +312,9 @@
                     <div class="flex flex-col md:flex-row items-center w-full relative pull-forward">
                         <!-- Text Left (Desktop: left, Mobile: stacked below image) -->
                         <div class="w-full md:w-1/2 md:pr-12 text-left md:text-right mb-6 md:mb-0 order-2 md:order-1">
-                            <div class="inline-block px-4 py-1 rounded-full bg-vivid-cyan/10 text-vivid-cyan dark:bg-vivid-cyan/20 dark:text-vivid-cyan text-sm font-bold tracking-widest mb-3 uppercase">[Date 2]</div>
-                            <h3 class="font-display text-3xl font-bold text-gray-900 dark:text-white mb-3 drop-shadow-sm">[Event Title 2]</h3>
-                            <p class="text-gray-600 dark:text-gray-300 text-lg leading-relaxed">[Enter your description here...]</p>
+                            <div class="inline-block px-4 py-1 rounded-full bg-vivid-cyan/10 text-vivid-cyan dark:bg-vivid-cyan/20 dark:text-vivid-cyan text-sm font-bold tracking-widest mb-3 uppercase">[August 20, 2025]</div>
+                            <h3 class="font-display text-3xl font-bold text-gray-900 dark:text-white mb-3 drop-shadow-sm">[Participated in the InnovateX Startup Event Competition.]</h3>
+                            <p class="text-gray-600 dark:text-gray-300 text-lg leading-relaxed">[At the InnovateX Startup Event, our team presented forward-thinking startup concepts that combined technological innovation with practical solutions to real-world challenges.]</p>
                         </div>
                         
                         <!-- Center Marker (Desktop Only) -->
@@ -668,7 +668,10 @@
             entries.forEach(entry => {
                 if (entry.isIntersecting) {
                     entry.target.classList.add('visible');
-                    observer.unobserve(entry.target); // Only animate once
+                } else {
+                    // Removed observer.unobserve() and added this else block
+                    // This allows the animation to reverse when scrolling up and out of view
+                    entry.target.classList.remove('visible'); 
                 }
             });
         }, observerOptions);
