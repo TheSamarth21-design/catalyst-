@@ -467,56 +467,62 @@
 
                 <!-- Expanded Form -->
                 <div class="glass-card p-8 rounded-2xl fade-in shadow-xl dark:shadow-none" style="transition-delay: 200ms;">
-                    <form onsubmit="handleFormSubmit(event)">
+                   <form onsubmit="handleFormSubmit(event)">
+                        <!-- YOUR WEB3FORMS API KEY -->
+                        <input type="hidden" name="access_key" value="b5c62644-7f86-4e5f-908e-05fb59eca046">
+                        
                         <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
                             <div>
                                 <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2" for="name">Name</label>
-                                <input type="text" id="name" required class="w-full bg-gray-50/80 dark:bg-darker-charcoal/80 border border-gray-300 dark:border-white/10 rounded-lg px-4 py-3 text-gray-900 dark:text-white focus:outline-none focus:border-electric-blue dark:focus:border-vivid-cyan focus:ring-1 focus:ring-electric-blue dark:focus:ring-vivid-cyan transition-colors" placeholder="John Doe">
+                                <input type="text" name="Name" id="name" required class="w-full bg-gray-50/80 dark:bg-darker-charcoal/80 border border-gray-300 dark:border-white/10 rounded-lg px-4 py-3 text-gray-900 dark:text-white focus:outline-none focus:border-electric-blue dark:focus:border-vivid-cyan focus:ring-1 focus:ring-electric-blue dark:focus:ring-vivid-cyan transition-colors" placeholder="John Doe">
                             </div>
                             <div>
                                 <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2" for="phone">Phone (Optional)</label>
-                                <input type="tel" id="phone" class="w-full bg-gray-50/80 dark:bg-darker-charcoal/80 border border-gray-300 dark:border-white/10 rounded-lg px-4 py-3 text-gray-900 dark:text-white focus:outline-none focus:border-electric-blue dark:focus:border-vivid-cyan focus:ring-1 focus:ring-electric-blue dark:focus:ring-vivid-cyan transition-colors" placeholder="+1 (555) 000-0000">
+                                <input type="tel" name="Phone" id="phone" class="w-full bg-gray-50/80 dark:bg-darker-charcoal/80 border border-gray-300 dark:border-white/10 rounded-lg px-4 py-3 text-gray-900 dark:text-white focus:outline-none focus:border-electric-blue dark:focus:border-vivid-cyan focus:ring-1 focus:ring-electric-blue dark:focus:ring-vivid-cyan transition-colors" placeholder="+1 (555) 000-0000">
                             </div>
                         </div>
                         <div class="mb-6">
                             <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2" for="email">Email</label>
-                            <input type="email" id="email" required class="w-full bg-gray-50/80 dark:bg-darker-charcoal/80 border border-gray-300 dark:border-white/10 rounded-lg px-4 py-3 text-gray-900 dark:text-white focus:outline-none focus:border-electric-blue dark:focus:border-vivid-cyan focus:ring-1 focus:ring-electric-blue dark:focus:ring-vivid-cyan transition-colors" placeholder="john@example.com">
+                            <input type="email" name="Email" id="email" required class="w-full bg-gray-50/80 dark:bg-darker-charcoal/80 border border-gray-300 dark:border-white/10 rounded-lg px-4 py-3 text-gray-900 dark:text-white focus:outline-none focus:border-electric-blue dark:focus:border-vivid-cyan focus:ring-1 focus:ring-electric-blue dark:focus:ring-vivid-cyan transition-colors" placeholder="john@example.com">
                         </div>
                         <div class="mb-6">
                             <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2" for="subject">Subject</label>
-                            <select id="subject" class="w-full bg-gray-50/80 dark:bg-darker-charcoal/80 border border-gray-300 dark:border-white/10 rounded-lg px-4 py-3 text-gray-900 dark:text-white focus:outline-none focus:border-electric-blue dark:focus:border-vivid-cyan focus:ring-1 focus:ring-electric-blue dark:focus:ring-vivid-cyan transition-colors cursor-pointer appearance-none">
-                                <option value="general">General Inquiry</option>
-                                <option value="project">Project Proposal / Collaboration</option>
-                                <option value="join">Join the Team</option>
-                                <option value="sponsor">Sponsorship</option>
+                            <select name="Subject" id="subject" class="w-full bg-gray-50/80 dark:bg-darker-charcoal/80 border border-gray-300 dark:border-white/10 rounded-lg px-4 py-3 text-gray-900 dark:text-white focus:outline-none focus:border-electric-blue dark:focus:border-vivid-cyan focus:ring-1 focus:ring-electric-blue dark:focus:ring-vivid-cyan transition-colors cursor-pointer appearance-none">
+                                <option value="General Inquiry">General Inquiry</option>
+                                <option value="Project Proposal / Collaboration">Project Proposal / Collaboration</option>
+                                <option value="Join the Team">Join the Team</option>
+                                <option value="Sponsorship">Sponsorship</option>
                             </select>
                         </div>
                         
-                        <!-- New Detailed Options Row -->
                         <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
                             <div>
-                                <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2" for="budget">Budget Range (If applicable)</label>
-                                <select id="budget" class="w-full bg-gray-50/80 dark:bg-darker-charcoal/80 border border-gray-300 dark:border-white/10 rounded-lg px-4 py-3 text-gray-900 dark:text-white focus:outline-none focus:border-electric-blue dark:focus:border-vivid-cyan focus:ring-1 focus:ring-electric-blue transition-colors cursor-pointer appearance-none">
-                                    <option value="none">Not Applicable</option>
-                                    <option value="small">< $5,000</option>
-                                    <option value="medium">$5,000 - $20,000</option>
-                                    <option value="large">$20,000+</option>
+                                <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2" for="budget">Budget Range</label>
+                                <select name="Budget" id="budget" class="w-full bg-gray-50/80 dark:bg-darker-charcoal/80 border border-gray-300 dark:border-white/10 rounded-lg px-4 py-3 text-gray-900 dark:text-white focus:outline-none focus:border-electric-blue dark:focus:border-vivid-cyan focus:ring-1 focus:ring-electric-blue transition-colors cursor-pointer appearance-none">
+                                    <option value="Not Applicable">Not Applicable</option>
+                                    <option value="< $5,000">< $5,000</option>
+                                    <option value="$5,000 - $20,000">$5,000 - $20,000</option>
+                                    <option value="$20,000+">$20,000+</option>
                                 </select>
                             </div>
                             <div>
                                 <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2" for="urgency">Urgency</label>
-                                <select id="urgency" class="w-full bg-gray-50/80 dark:bg-darker-charcoal/80 border border-gray-300 dark:border-white/10 rounded-lg px-4 py-3 text-gray-900 dark:text-white focus:outline-none focus:border-electric-blue dark:focus:border-vivid-cyan focus:ring-1 focus:ring-electric-blue transition-colors cursor-pointer appearance-none">
-                                    <option value="low">Low (Just Exploring)</option>
-                                    <option value="medium">Medium (Planning Stage)</option>
-                                    <option value="high">High (Ready to Start)</option>
+                                <select name="Urgency" id="urgency" class="w-full bg-gray-50/80 dark:bg-darker-charcoal/80 border border-gray-300 dark:border-white/10 rounded-lg px-4 py-3 text-gray-900 dark:text-white focus:outline-none focus:border-electric-blue dark:focus:border-vivid-cyan focus:ring-1 focus:ring-electric-blue transition-colors cursor-pointer appearance-none">
+                                    <option value="Low">Low (Just Exploring)</option>
+                                    <option value="Medium">Medium (Planning Stage)</option>
+                                    <option value="High">High (Ready to Start)</option>
                                 </select>
                             </div>
                         </div>
 
                         <div class="mb-6">
                             <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2" for="message">Message</label>
-                            <textarea id="message" required rows="4" class="w-full bg-gray-50/80 dark:bg-darker-charcoal/80 border border-gray-300 dark:border-white/10 rounded-lg px-4 py-3 text-gray-900 dark:text-white focus:outline-none focus:border-electric-blue dark:focus:border-vivid-cyan focus:ring-1 focus:ring-electric-blue dark:focus:ring-vivid-cyan transition-colors resize-none" placeholder="Tell us more..."></textarea>
+                            <textarea name="Message" id="message" required rows="4" class="w-full bg-gray-50/80 dark:bg-darker-charcoal/80 border border-gray-300 dark:border-white/10 rounded-lg px-4 py-3 text-gray-900 dark:text-white focus:outline-none focus:border-electric-blue dark:focus:border-vivid-cyan focus:ring-1 focus:ring-electric-blue dark:focus:ring-vivid-cyan transition-colors resize-none" placeholder="Tell us more..."></textarea>
                         </div>
+                        
+                        <!-- Advanced Web3Forms Settings -->
+                        <input type="checkbox" name="botcheck" class="hidden" style="display: none;">
+
                         <button type="submit" class="w-full btn-primary py-4 rounded-lg font-bold text-white text-lg shadow-md hover:scale-[1.02] transition-transform">
                             Send Message <i class="fa-solid fa-paper-plane ml-2"></i>
                         </button>
@@ -819,18 +825,53 @@
             }
         });
 
-        // Custom Modal Logic
+        // Custom Modal Logic & Web3Forms API Integration
         const modal = document.getElementById('contact-modal');
         const modalContent = document.getElementById('contact-modal-content');
 
         window.handleFormSubmit = (e) => {
-            e.preventDefault();
-            modal.classList.add('show');
-            setTimeout(() => {
-                modalContent.classList.remove('scale-95');
-                modalContent.classList.add('scale-100');
-            }, 10);
-            e.target.reset(); // clear form
+            e.preventDefault(); // Stop page from reloading
+            
+            const form = e.target;
+            const formData = new FormData(form);
+            const object = Object.fromEntries(formData);
+            const json = JSON.stringify(object);
+
+            // Change button text to show it's working
+            const submitBtn = form.querySelector('button[type="submit"]');
+            const originalBtnText = submitBtn.innerHTML;
+            submitBtn.innerHTML = 'Sending... <i class="fa-solid fa-spinner fa-spin ml-2"></i>';
+
+            // Send data to Web3Forms
+            fetch('https://api.web3forms.com/submit', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Accept': 'application/json'
+                },
+                body: json
+            })
+            .then(async (response) => {
+                if (response.status == 200) {
+                    // Success! Show your popup modal
+                    modal.classList.add('show');
+                    setTimeout(() => {
+                        modalContent.classList.remove('scale-95');
+                        modalContent.classList.add('scale-100');
+                    }, 10);
+                    form.reset(); // Clear the form
+                } else {
+                    alert("Something went wrong. Please try again.");
+                }
+            })
+            .catch(error => {
+                console.log(error);
+                alert("Something went wrong. Please check your internet connection.");
+            })
+            .finally(() => {
+                // Restore button text
+                submitBtn.innerHTML = originalBtnText;
+            });
         };
 
         window.closeModal = () => {
@@ -894,5 +935,6 @@
     </script>
 </body>
 </html>
+
 
 
