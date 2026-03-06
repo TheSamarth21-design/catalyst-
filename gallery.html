@@ -64,8 +64,7 @@
             width: 100vw;
             height: 100vh;
             z-index: -2;
-            pointer-events: none; /* Prevents 3D canvas from blocking clicks */
-            /* Add a subtle radial gradient to focus the center */
+            pointer-events: none;
             background: radial-gradient(circle at center, rgba(0,120,215,0.05) 0%, transparent 70%);
         }
 
@@ -117,68 +116,6 @@
             z-index: 1;
             overflow: hidden;
             color: white !important;
-        }
-
-        .btn-primary::before {
-            content: '';
-            position: absolute;
-            top: 0; left: 0; right: 0; bottom: 0;
-            background: linear-gradient(135deg, var(--vivid-cyan), var(--electric-blue));
-            z-index: -1;
-            transition: opacity 0.3s ease;
-            opacity: 0;
-        }
-
-        .btn-primary:hover::before {
-            opacity: 1;
-        }
-
-        .btn-primary:hover {
-            box-shadow: 0 0 20px rgba(0, 207, 255, 0.4);
-        }
-
-        .btn-secondary {
-            background: transparent;
-            border: 2px solid var(--vivid-cyan);
-            color: var(--electric-blue);
-            transition: all 0.3s ease;
-        }
-
-        html.dark .btn-secondary {
-            color: var(--vivid-cyan);
-        }
-
-        .btn-secondary:hover {
-            background: rgba(0, 207, 255, 0.1);
-            box-shadow: 0 0 15px rgba(0, 207, 255, 0.2);
-        }
-
-        .btn-green {
-            background: linear-gradient(135deg, var(--harvest-green), var(--eco-green));
-            transition: all 0.3s ease;
-            color: white !important;
-        }
-        .btn-green:hover {
-            box-shadow: 0 0 20px rgba(136, 176, 75, 0.4);
-            transform: scale(1.05);
-        }
-
-        /* Abstract Background Elements */
-        .blob {
-            position: absolute;
-            filter: blur(100px);
-            z-index: -1;
-            opacity: 0.15;
-            border-radius: 50%;
-            animation: float 12s infinite alternate ease-in-out;
-        }
-        html.dark .blob {
-            opacity: 0.25;
-        }
-
-        @keyframes float {
-            0% { transform: translate(0, 0) scale(1); }
-            100% { transform: translate(30px, -50px) scale(1.1); }
         }
 
         /* Image Overlay */
@@ -235,26 +172,6 @@
             background: rgba(26, 26, 26, 0.85);
             border-bottom: 1px solid rgba(255,255,255,0.05);
         }
-
-        /* Custom Modal */
-        #contact-modal {
-            opacity: 0;
-            visibility: hidden;
-            transition: all 0.3s ease;
-        }
-        #contact-modal.show {
-            opacity: 1;
-            visibility: visible;
-        }
-        
-        select option {
-            background: var(--dark-charcoal);
-            color: #fff;
-        }
-        html:not(.dark) select option {
-            background: #fff;
-            color: #333;
-        }
     </style>
 </head>
 <body class="antialiased selection:bg-vivid-cyan selection:text-white bg-gray-50 dark:bg-dark-charcoal text-gray-900 dark:text-white transition-colors duration-300">
@@ -274,7 +191,8 @@
             <div class="hidden md:flex items-center gap-6 lg:gap-8 font-medium">
                 <a href="index.html#about" class="text-gray-700 dark:text-gray-200 hover:text-vivid-cyan dark:hover:text-vivid-cyan transition-colors drop-shadow-md">About</a>
                 <a href="projects.html" class="text-gray-700 dark:text-gray-200 hover:text-vivid-cyan dark:hover:text-vivid-cyan transition-colors drop-shadow-md">Projects</a>
-                <a href="gallery.html" class="text-gray-700 dark:text-gray-200 hover:text-vivid-cyan dark:hover:text-vivid-cyan transition-colors drop-shadow-md">Gallery</a>
+                <!-- Highlighted Gallery Link -->
+                <a href="gallery.html" class="text-vivid-cyan transition-colors drop-shadow-md">Gallery</a>
                 <a href="vision.html" class="text-gray-700 dark:text-gray-200 hover:text-vivid-cyan dark:hover:text-vivid-cyan transition-colors drop-shadow-md">Vision</a>
                 
                 <!-- Theme Toggle Button -->
@@ -300,15 +218,16 @@
         
         <!-- Mobile Menu -->
         <div id="mobile-menu" class="hidden absolute top-full left-0 w-full bg-white/95 dark:bg-darker-charcoal/95 backdrop-blur-md border-b border-gray-200 dark:border-white/10 flex flex-col items-center py-6 gap-6 shadow-2xl">
-            <a href="index.html#about" class="text-gray-800 dark:text-gray-200 hover:text-vivid-cyan dark:hover:text-vivid-cyan transition-colors mobile-link font-medium">About</a>
-            <a href="projects.html" class="text-gray-800 dark:text-gray-200 hover:text-vivid-cyan dark:hover:text-vivid-cyan transition-colors mobile-link font-medium">Projects</a>
-            <a href="gallery.html" class="text-gray-800 dark:text-gray-200 hover:text-vivid-cyan dark:hover:text-vivid-cyan transition-colors mobile-link font-medium">Gallery</a>
-            <a href="vision.html" class="text-gray-800 dark:text-gray-200 hover:text-vivid-cyan dark:hover:text-vivid-cyan transition-colors mobile-link font-medium">Vision</a>
-            <a href="index.html#contact" class="text-gray-800 dark:text-gray-200 hover:text-vivid-cyan dark:hover:text-vivid-cyan transition-colors mobile-link font-medium">Contact Us</a>
+            <a href="index.html#about" class="text-gray-800 dark:text-gray-200 hover:text-vivid-cyan transition-colors mobile-link font-medium">About</a>
+            <a href="projects.html" class="text-gray-800 dark:text-gray-200 hover:text-vivid-cyan transition-colors mobile-link font-medium">Projects</a>
+            <a href="gallery.html" class="text-vivid-cyan transition-colors mobile-link font-medium">Gallery</a>
+            <a href="vision.html" class="text-gray-800 dark:text-gray-200 hover:text-vivid-cyan transition-colors mobile-link font-medium">Vision</a>
+            <a href="index.html#contact" class="text-gray-800 dark:text-gray-200 hover:text-vivid-cyan transition-colors mobile-link font-medium">Contact Us</a>
         </div>
     </nav>
 
-  <div id="page-gallery">
+    <!-- WRAPPER FOR GALLERY PAGE -->
+    <div id="page-gallery">
         <section class="pt-32 pb-16 relative overflow-hidden">
             <div class="max-w-7xl mx-auto px-6 lg:px-12 relative z-10 text-center fade-in">
                 <span class="text-electric-blue dark:text-vivid-cyan font-semibold tracking-wider uppercase text-sm mb-2 block drop-shadow-sm dark:drop-shadow-md">Gallery</span>
@@ -320,11 +239,13 @@
         <!-- Gallery Section Grid -->
         <section id="gallery" class="pb-24 relative bg-transparent">
             <div class="max-w-7xl mx-auto px-6 lg:px-12 relative z-10">
-                <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+                <!-- Change grid-cols based on how many images you want per row -->
+                <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
                     
                     <!-- Image 1 -->
                     <div class="image-container h-64 fade-in rounded-xl border border-gray-200 dark:border-white/10 shadow-lg">
-                        <img src="assets/images/gallery-1.jpg" alt="Hackathon" class="w-full h-full object-cover" onerror="this.src='[https://via.placeholder.com/400x400/2B7A0B/ffffff?text=Image+1](https://via.placeholder.com/400x400/2B7A0B/ffffff?text=Image+1)'">
+                        <!-- It looks for gallery-1.jpg in your main GitHub folder -->
+                        <img src="gallery-1.jpg" alt="Hackathon" class="w-full h-full object-cover" onerror="this.src='https://images.unsplash.com/photo-1504384308090-c894fdcc538d?auto=format&fit=crop&q=80&w=400'">
                         <div class="image-overlay">
                             <div>
                                 <h4 class="font-bold text-lg text-vivid-cyan drop-shadow-md">Hackathon Action</h4>
@@ -335,7 +256,7 @@
                     
                     <!-- Image 2 -->
                     <div class="image-container h-64 fade-in rounded-xl border border-gray-200 dark:border-white/10 shadow-lg" style="transition-delay: 100ms;">
-                        <img src="assets/images/gallery-2.jpg" alt="Team" class="w-full h-full object-cover" onerror="this.src='[https://via.placeholder.com/400x400/0078D7/ffffff?text=Image+2](https://via.placeholder.com/400x400/0078D7/ffffff?text=Image+2)'">
+                        <img src="gallery-2.jpg" alt="Team" class="w-full h-full object-cover" onerror="this.src='https://images.unsplash.com/photo-1522071820081-009f0129c71c?auto=format&fit=crop&q=80&w=400'">
                         <div class="image-overlay">
                             <div>
                                 <h4 class="font-bold text-lg text-electric-blue drop-shadow-md">Team Collaboration</h4>
@@ -346,7 +267,7 @@
 
                     <!-- Image 3 -->
                     <div class="image-container h-64 fade-in rounded-xl border border-gray-200 dark:border-white/10 shadow-lg" style="transition-delay: 200ms;">
-                        <img src="assets/images/gallery-3.jpg" alt="Prototype" class="w-full h-full object-cover" onerror="this.src='[https://via.placeholder.com/400x400/88B04B/ffffff?text=Image+3](https://via.placeholder.com/400x400/88B04B/ffffff?text=Image+3)'">
+                        <img src="gallery-3.jpg" alt="Prototype" class="w-full h-full object-cover" onerror="this.src='https://images.unsplash.com/photo-1518770660439-4636190af475?auto=format&fit=crop&q=80&w=400'">
                         <div class="image-overlay">
                             <div>
                                 <h4 class="font-bold text-lg text-harvest-green drop-shadow-md">Hardware Prototyping</h4>
@@ -357,7 +278,7 @@
 
                     <!-- Image 4 -->
                     <div class="image-container h-64 fade-in rounded-xl border border-gray-200 dark:border-white/10 shadow-lg" style="transition-delay: 300ms;">
-                        <img src="assets/images/gallery-4.jpg" alt="Events" class="w-full h-full object-cover" onerror="this.src='[https://via.placeholder.com/400x400/00CFFF/ffffff?text=Image+4](https://via.placeholder.com/400x400/00CFFF/ffffff?text=Image+4)'">
+                        <img src="gallery-4.jpg" alt="Events" class="w-full h-full object-cover" onerror="this.src='https://images.unsplash.com/photo-1531482615713-2afd69097998?auto=format&fit=crop&q=80&w=400'">
                         <div class="image-overlay">
                             <div>
                                 <h4 class="font-bold text-lg text-eco-green drop-shadow-md">Tech Expos</h4>
@@ -365,27 +286,14 @@
                             </div>
                         </div>
                     </div>
+
                 </div>
             </div>
         </section>
     </div>
 
-    <!-- Success Modal -->
-    <div id="contact-modal" class="fixed inset-0 z-[100] flex items-center justify-center bg-black/50 backdrop-blur-sm">
-        <div class="bg-white dark:bg-dark-charcoal p-8 rounded-2xl max-w-sm w-full mx-4 shadow-2xl border border-gray-200 dark:border-white/10 transform scale-95 transition-transform duration-300 text-center relative" id="contact-modal-content">
-            <div class="w-16 h-16 rounded-full bg-eco-green/20 text-eco-green flex items-center justify-center text-3xl mx-auto mb-4">
-                <i class="fa-solid fa-check"></i>
-            </div>
-            <h3 class="text-2xl font-display font-bold text-gray-900 dark:text-white mb-2">Message Sent!</h3>
-            <p class="text-gray-600 dark:text-gray-300 mb-6">Thank you for reaching out. The Catalyst Corps team will get back to you shortly.</p>
-            <button onclick="closeModal()" class="w-full btn-green py-3 rounded-lg font-bold text-white transition-transform hover:scale-105">
-                Awesome
-            </button>
-        </div>
-    </div>
-
     <!-- 8. Footer -->
-    <footer class="bg-gray-100 dark:bg-darker-charcoal pt-16 pb-8 border-t border-gray-200 dark:border-white/10 relative z-10 transition-colors duration-300">
+    <footer class="bg-gray-100 dark:bg-darker-charcoal pt-16 pb-8 border-t border-gray-200 dark:border-white/10 relative z-10 transition-colors duration-300 mt-20">
         <div class="max-w-7xl mx-auto px-6 lg:px-12">
             <div class="grid grid-cols-1 md:grid-cols-4 gap-12 mb-12">
                 <div class="md:col-span-2">
@@ -396,6 +304,19 @@
                     <p class="text-gray-600 dark:text-gray-400 text-sm max-w-sm">
                         Engineering innovation and solving tomorrow's problems today. We build, we deploy, we conquer.
                     </p>
+                    
+                    <div class="flex gap-4 mt-8 pt-8 border-t border-gray-200 dark:border-white/10 max-w-sm">
+                        <a href="https://github.com/TheSamarth21-design" target="_blank" class="w-12 h-12 rounded-full bg-gray-100 dark:bg-white/5 flex items-center justify-center text-gray-600 dark:text-gray-300 hover:bg-electric-blue dark:hover:bg-electric-blue hover:text-white transition-all border border-gray-200 dark:border-white/10 hover:border-transparent hover:shadow-[0_0_15px_rgba(0,120,215,0.4)] dark:hover:shadow-[0_0_15px_rgba(0,120,215,0.6)] backdrop-blur-sm">
+                            <i class="fa-brands fa-github text-xl"></i>
+                        </a>
+                        <a href="https://linkedin.com/in/YOUR_LINKEDIN_ID" target="_blank" class="w-12 h-12 rounded-full bg-gray-100 dark:bg-white/5 flex items-center justify-center text-gray-600 dark:text-gray-300 hover:bg-electric-blue dark:hover:bg-electric-blue hover:text-white transition-all border border-gray-200 dark:border-white/10 hover:border-transparent hover:shadow-[0_0_15px_rgba(0,120,215,0.4)] dark:hover:shadow-[0_0_15px_rgba(0,120,215,0.6)] backdrop-blur-sm">
+                            <i class="fa-brands fa-linkedin-in text-xl"></i>
+                        </a>
+                        <a href="https://instagram.com/YOUR_INSTAGRAM_ID" target="_blank" class="w-12 h-12 rounded-full bg-gray-100 dark:bg-white/5 flex items-center justify-center text-gray-600 dark:text-gray-300 hover:bg-electric-blue dark:hover:bg-vivid-cyan hover:text-white dark:hover:text-darker-charcoal transition-all border border-gray-200 dark:border-white/10 hover:border-transparent hover:shadow-[0_0_15px_rgba(0,120,215,0.4)] dark:hover:shadow-[0_0_15px_rgba(0,207,255,0.6)] backdrop-blur-sm">
+                            <i class="fa-brands fa-instagram text-xl"></i>
+                        </a>
+                    </div>
+
                 </div>
                 <div>
                     <h4 class="font-bold mb-4 text-gray-900 dark:text-white">Quick Links</h4>
@@ -429,7 +350,6 @@
         // Theme Toggle Logic
         // --------------------------------------------------------
         const initTheme = () => {
-            // Check local storage or default to dark
             const savedTheme = localStorage.getItem('theme');
             if (savedTheme === 'light') {
                 document.documentElement.classList.remove('dark');
@@ -441,8 +361,6 @@
         const toggleTheme = () => {
             const isDark = document.documentElement.classList.toggle('dark');
             localStorage.setItem('theme', isDark ? 'dark' : 'light');
-            
-            // Notify 3D Background if function exists
             if(typeof window.update3DTheme === 'function') {
                 window.update3DTheme(isDark);
             }
@@ -454,68 +372,57 @@
         document.getElementById('theme-toggle-mobile').addEventListener('click', toggleTheme);
 
         // --------------------------------------------------------
-        // Premium 3D Background (Image Watermark + Particles)
+        // Premium 3D Background (Torus Knot Core + Particles)
         // --------------------------------------------------------
         let sceneFog;
 
         const init3DBackground = () => {
             const container = document.getElementById('canvas-container');
-            
-            // Setup scene
             const scene = new THREE.Scene();
             
-            // Fog for depth
             const isDark = document.documentElement.classList.contains('dark');
             sceneFog = new THREE.FogExp2(isDark ? 0x1a1a1a : 0xf8fafc, 0.015);
             scene.fog = sceneFog;
 
-            // Camera setup
             const camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
             camera.position.z = 30;
 
-            // Renderer setup
             const renderer = new THREE.WebGLRenderer({ alpha: true, antialias: true });
             renderer.setSize(window.innerWidth, window.innerHeight);
-            renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2)); // Perf optimization
+            renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
             container.appendChild(renderer.domElement);
 
-            // Group for central interactive elements
             const coreGroup = new THREE.Group();
             scene.add(coreGroup);
 
-            // --- 1. Background Image Watermark ---
-            const textureLoader = new THREE.TextureLoader();
-            // Using your actual filename. It will load when running locally!
-            const bgTexture = textureLoader.load('1772605589123.jpg');
-            bgTexture.minFilter = THREE.LinearFilter;
-            
-            // Huge plane to act as the deep background
-            const bgGeo = new THREE.PlaneGeometry(160, 90); 
-            const bgMat = new THREE.MeshBasicMaterial({
-                map: bgTexture,
-                transparent: true,
-                opacity: 0.1, // Subtle opacity
-                depthWrite: false
-            });
-            const bgMesh = new THREE.Mesh(bgGeo, bgMat);
-            bgMesh.position.z = -25; // Pushed way to the back
-            scene.add(bgMesh);
+            // --- 1. The Tech Core (Torus Knot) ---
+            const knotGeo = new THREE.TorusKnotGeometry(8, 2.5, 200, 32);
+            const colorPrimary = new THREE.Color(0x00CFFF);
+            const colorSecondary = new THREE.Color(0x0078D7);
 
-
-            // --- 2. Tech Wireframe (Replacing the old frame) ---
-            const knotGeo = new THREE.TorusKnotGeometry(12, 1.5, 200, 32);
             const knotMat = new THREE.MeshBasicMaterial({
-                color: 0x0078D7,
+                color: colorPrimary,
                 wireframe: true,
                 transparent: true,
                 opacity: 0.15,
                 blending: THREE.AdditiveBlending
             });
             const knotMesh = new THREE.Mesh(knotGeo, knotMat);
-            knotMesh.position.z = -5;
             coreGroup.add(knotMesh);
 
-            // --- 3. Particle System (Data Flow) ---
+            // Inner Core
+            const innerGeo = new THREE.IcosahedronGeometry(6, 1);
+            const innerMat = new THREE.MeshBasicMaterial({
+                color: colorSecondary,
+                wireframe: true,
+                transparent: true,
+                opacity: 0.2,
+                blending: THREE.AdditiveBlending
+            });
+            const innerMesh = new THREE.Mesh(innerGeo, innerMat);
+            coreGroup.add(innerMesh);
+
+            // --- 2. Particle System ---
             const particlesGeo = new THREE.BufferGeometry();
             const particleCount = 900;
             const posArray = new Float32Array(particleCount * 3);
@@ -526,7 +433,6 @@
             
             particlesGeo.setAttribute('position', new THREE.BufferAttribute(posArray, 3));
             
-            // Circular particle texture
             const canvas = document.createElement('canvas');
             canvas.width = 16; canvas.height = 16;
             const ctx = canvas.getContext('2d');
@@ -541,7 +447,7 @@
                 map: texture,
                 transparent: true,
                 opacity: 0.5,
-                color: 0x88B04B, // Harvest Green
+                color: 0x88B04B,
                 blending: THREE.AdditiveBlending,
                 depthWrite: false
             });
@@ -549,31 +455,23 @@
             const particleMesh = new THREE.Points(particlesGeo, particlesMat);
             scene.add(particleMesh);
 
-            // Global function to update fog and blending from Theme Toggle
             window.update3DTheme = (isDark) => {
                 if(sceneFog) {
                     sceneFog.color.setHex(isDark ? 0x1a1a1a : 0xf8fafc);
-                    
-                    // Adjust blending/opacity based on light/dark mode for better visibility
                     knotMat.blending = isDark ? THREE.AdditiveBlending : THREE.NormalBlending;
                     knotMat.opacity = isDark ? 0.15 : 0.3;
-                    
-                    // The background image visibility
-                    bgMat.opacity = isDark ? 0.08 : 0.15; 
-                    
+                    innerMat.blending = isDark ? THREE.AdditiveBlending : THREE.NormalBlending;
+                    innerMat.opacity = isDark ? 0.2 : 0.4;
                     particlesMat.blending = isDark ? THREE.AdditiveBlending : THREE.NormalBlending;
-                    particlesMat.color.setHex(isDark ? 0x88B04B : 0x2B7A0B); // Switch to Eco Green in light mode
+                    particlesMat.color.setHex(isDark ? 0x88B04B : 0x2B7A0B);
                 }
             };
 
-            // Initial theme configuration application
             window.update3DTheme(isDark);
 
-            // Tracking Interactions
             let mouseX = 0;
             let mouseY = 0;
             let scrollY = window.scrollY;
-
             const windowHalfX = window.innerWidth / 2;
             const windowHalfY = window.innerHeight / 2;
 
@@ -586,46 +484,35 @@
                 scrollY = window.scrollY;
             });
 
-            // Smooth animation loop
             const clock = new THREE.Clock();
 
             const animate = () => {
                 requestAnimationFrame(animate);
                 const elapsedTime = clock.getElapsedTime();
 
-                // 1. Rotate Tech Wireframe
                 coreGroup.rotation.y += 0.002;
                 coreGroup.rotation.x += 0.001;
 
-                // 2. Parallax the Background Image slightly based on mouse and scroll
-                bgMesh.position.x = -(mouseX * 0.005);
-                bgMesh.position.y = (mouseY * 0.005) + (scrollY * 0.01);
+                const scale = 1 + Math.sin(elapsedTime * 2) * 0.05;
+                innerMesh.scale.set(scale, scale, scale);
 
-                // 3. Rotate Particles
                 particleMesh.rotation.y = elapsedTime * 0.05;
-                // Add slight vertical wave to particles
                 const positions = particleMesh.geometry.attributes.position.array;
                 for(let i = 1; i < particleCount * 3; i+=3) {
                    positions[i] += Math.sin(elapsedTime + positions[i-1]) * 0.01;
                 }
                 particleMesh.geometry.attributes.position.needsUpdate = true;
 
-                // 4. Parallax Camera & Scroll Effect
-                // Parallax based on mouse
                 camera.position.x += (mouseX * 0.01 - camera.position.x) * 0.05;
-                
-                // Add scroll interactivity: Objects move up as you scroll down
                 const scrollEffect = scrollY * 0.015;
                 camera.position.y += (-mouseY * 0.01 - camera.position.y - scrollEffect) * 0.05;
                 
                 camera.lookAt(scene.position);
-
                 renderer.render(scene, camera);
             };
 
             animate();
 
-            // Handle browser resize
             window.addEventListener('resize', () => {
                 camera.aspect = window.innerWidth / window.innerHeight;
                 camera.updateProjectionMatrix();
@@ -633,14 +520,11 @@
             });
         };
 
-        // Initialize 3D Background when DOM is fully loaded
         window.addEventListener('DOMContentLoaded', init3DBackground);
 
         // --------------------------------------------------------
-        // UI & Scroll Interactions
+        // UI Navigation Logic
         // --------------------------------------------------------
-
-        // Mobile Menu Toggle
         const mobileMenuBtn = document.getElementById('mobile-menu-btn');
         const mobileMenu = document.getElementById('mobile-menu');
         const mobileLinks = document.querySelectorAll('.mobile-link');
@@ -655,7 +539,6 @@
             });
         });
 
-        // Navbar Scroll Effect
         const navbar = document.getElementById('navbar');
         window.addEventListener('scroll', () => {
             if (window.scrollY > 50) {
@@ -669,36 +552,6 @@
             }
         });
 
-        // Custom Modal Logic
-        const modal = document.getElementById('contact-modal');
-        const modalContent = document.getElementById('contact-modal-content');
-
-        window.handleFormSubmit = (e) => {
-            e.preventDefault();
-            modal.classList.add('show');
-            setTimeout(() => {
-                modalContent.classList.remove('scale-95');
-                modalContent.classList.add('scale-100');
-            }, 10);
-            e.target.reset(); // clear form
-        };
-
-        window.closeModal = () => {
-            modalContent.classList.remove('scale-100');
-            modalContent.classList.add('scale-95');
-            setTimeout(() => {
-                modal.classList.remove('show');
-            }, 300);
-        };
-
-        // Close modal on outside click
-        modal.addEventListener('click', (e) => {
-            if (e.target === modal) {
-                closeModal();
-            }
-        });
-
-        // Intersection Observer for Fade-In Animations
         const observerOptions = {
             root: null,
             rootMargin: '0px',
@@ -709,30 +562,6 @@
             entries.forEach(entry => {
                 if (entry.isIntersecting) {
                     entry.target.classList.add('visible');
-                    
-                    // Trigger counters if they are inside this section
-                    const counters = entry.target.querySelectorAll('.counter');
-                    if (counters.length > 0) {
-                        counters.forEach(counter => {
-                            const target = +counter.getAttribute('data-target');
-                            const duration = 2000; // ms
-                            const increment = target / (duration / 16); // 60fps
-                            
-                            let current = 0;
-                            const updateCounter = () => {
-                                current += increment;
-                                if (current < target) {
-                                    counter.innerText = Math.ceil(current);
-                                    requestAnimationFrame(updateCounter);
-                                } else {
-                                    counter.innerText = target;
-                                }
-                            };
-                            updateCounter();
-                            // remove class so it only animates once
-                            counter.classList.remove('counter'); 
-                        });
-                    }
                     observer.unobserve(entry.target);
                 }
             });
@@ -743,5 +572,4 @@
         });
     </script>
 </body>
-
 </html>
