@@ -42,6 +42,11 @@
         }
     </script>
 
+    <!-- Firebase Compat Libraries (Solves the blank page issue) -->
+    <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-auth-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore-compat.js"></script>
+
     <!-- Navigation & Core Styling -->
     <style>
         :root {
@@ -513,12 +518,8 @@
         </div>
     </footer>
 
-    <!-- Scripts: Note type="module" allows for Cloud Firebase Backend -->
-    <script type="module">
-        import { initializeApp } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-app.js";
-        import { getAuth, onAuthStateChanged, signInAnonymously, signInWithCustomToken, signInWithEmailAndPassword, createUserWithEmailAndPassword, signOut } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-auth.js";
-        import { getFirestore, doc, setDoc, getDoc, collection, addDoc } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js";
-
+    <!-- Scripts: Pure JS without module imports to prevent CORS blocking -->
+    <script>
         // =========================================================
         // ADD YOUR FIREBASE KEYS EXACTLY IN THE BOX BELOW
         // =========================================================
@@ -533,10 +534,11 @@
 
         let app, auth, db;
         try {
-            app = initializeApp(firebaseConfig);
-            auth = getAuth(app);
-            db = getFirestore(app);
-        } catch(e) { console.log("Firebase starting in local mode."); }
+            // Using Compat libraries
+            app = firebase.initializeApp(firebaseConfig);
+            auth = firebase.auth();
+            db = firebase.firestore();
+        } catch(e) { console.log("Firebase starting in local mode without cloud saves."); }
 
         let currentUserId = null;
         let userLoggedIn = false;
@@ -572,16 +574,12 @@
         const initAuth = async () => {
             if(!auth) return;
             try {
-                if (typeof __initial_auth_token !== 'undefined' && __initial_auth_token) {
-                    await signInWithCustomToken(auth, __initial_auth_token);
-                } else {
-                    await signInAnonymously(auth);
-                }
-            } catch(e) { console.warn("Cloud auth bypassed in local preview."); }
+                await auth.signInAnonymously();
+            } catch(e) { console.warn("Cloud auth bypassed."); }
         };
 
         if(auth) {
-            onAuthStateChanged(auth, async (user) => {
+            auth.onAuthStateChanged(async (user) => {
                 if (user) {
                     currentUserId = user.uid;
                     userLoggedIn = !user.isAnonymous; 
@@ -590,11 +588,11 @@
                     // Fetch existing cloud data
                     if(db && userLoggedIn) {
                         try {
-                            const cSnap = await getDoc(doc(db, 'artifacts', appId, 'users', currentUserId, 'userData', 'cart'));
-                            if (cSnap.exists()) { cart = cSnap.data().items || []; updateCartUI(); }
-                            const wSnap = await getDoc(doc(db, 'artifacts', appId, 'users', currentUserId, 'userData', 'wishlist'));
-                            if (wSnap.exists()) { wishlist = wSnap.data().items || []; updateWishlistUI(); applyFilters(); }
-                        } catch(e) { console.error("Could not sync cloud data."); }
+                            const cSnap = await db.collection('artifacts').doc(appId).collection('users').doc(currentUserId).collection('userData').doc('cart').get();
+                            if (cSnap.exists) { cart = cSnap.data().items || []; updateCartUI(); }
+                            const wSnap = await db.collection('artifacts').doc(appId).collection('users').doc(currentUserId).collection('userData').doc('wishlist').get();
+                            if (wSnap.exists) { wishlist = wSnap.data().items || []; updateWishlistUI(); window.applyFilters(); }
+                        } catch(e) { console.error("Could not sync cloud data.", e); }
                     }
                 } else {
                     currentUserId = null; userLoggedIn = false; checkAuthUI();
@@ -612,13 +610,13 @@
 
             btn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i>';
             try {
-                await signInWithEmailAndPassword(auth, email, pass);
+                await auth.signInWithEmailAndPassword(email, pass);
                 alert("Successfully logged into cloud account!");
                 window.closeAuthModal();
             } catch(e) {
                 if(e.code === 'auth/user-not-found' || e.code === 'auth/invalid-credential') {
                     try {
-                        await createUserWithEmailAndPassword(auth, email, pass);
+                        await auth.createUserWithEmailAndPassword(email, pass);
                         alert("New cloud account created!");
                         window.closeAuthModal();
                     } catch(err) { alert(err.message); }
@@ -644,7 +642,7 @@
         window.openAuthModal = async () => {
             if(userLoggedIn && auth) {
                 if(confirm("Do you want to logout?")) {
-                    await signOut(auth);
+                    await auth.signOut();
                     cart = []; wishlist = []; 
                     updateCartUI(); updateWishlistUI(); window.applyFilters();
                     initAuth(); // Re-auth anonymously
@@ -664,14 +662,14 @@
         // --- 3. DATABASE SAVING LOGIC ---
         async function syncCloudCart() {
             if(db && userLoggedIn && currentUserId) {
-                try { await setDoc(doc(db, 'artifacts', appId, 'users', currentUserId, 'userData', 'cart'), { items: cart }); } 
+                try { await db.collection('artifacts').doc(appId).collection('users').doc(currentUserId).collection('userData').doc('cart').set({ items: cart }); } 
                 catch(e) {}
             }
         }
         
         async function syncCloudWishlist() {
             if(db && userLoggedIn && currentUserId) {
-                try { await setDoc(doc(db, 'artifacts', appId, 'users', currentUserId, 'userData', 'wishlist'), { items: wishlist }); } 
+                try { await db.collection('artifacts').doc(appId).collection('users').doc(currentUserId).collection('userData').doc('wishlist').set({ items: wishlist }); } 
                 catch(e) {}
             }
         }
@@ -950,7 +948,7 @@
             
             try {
                 if(db && currentUserId) {
-                    await addDoc(collection(db, 'artifacts', appId, 'users', currentUserId, 'orders'), {
+                    await db.collection('artifacts').doc(appId).collection('users').doc(currentUserId).collection('orders').add({
                         items: cart,
                         total: cart.reduce((t, i) => t + i.price * i.qty, 0),
                         status: 'Processing',
@@ -971,7 +969,16 @@
         };
 
         // UI toggles
-        window.toggleTheme = toggleTheme;
+        window.toggleTheme = () => {
+            const isDark = document.documentElement.classList.toggle('dark');
+            localStorage.setItem('theme', isDark ? 'dark' : 'light');
+            if(typeof window.update3DTheme === 'function') window.update3DTheme(isDark);
+        };
+        const initTheme = () => {
+            if (localStorage.getItem('theme') === 'light') document.documentElement.classList.remove('dark');
+            else document.documentElement.classList.add('dark');
+        };
+        
         window.toggleMobileFilters = () => {
             if (window.innerWidth >= 1024) return;
             document.getElementById('filter-container').classList.toggle('hidden');
@@ -1029,14 +1036,22 @@
             }; animate();
         };
 
-        window.addEventListener('DOMContentLoaded', () => {
+        // Ensures everything loads correctly without DOM race conditions
+        const bootStore = () => {
+            initTheme();
             init3DBackground();
             initAuth();
             window.renderProducts(productsDB);
             checkAuthUI();
             updateCartUI();
             updateWishlistUI();
-        });
+        };
+
+        if (document.readyState === 'loading') {
+            document.addEventListener('DOMContentLoaded', bootStore);
+        } else {
+            bootStore();
+        }
     </script>
 </body>
 </html>
