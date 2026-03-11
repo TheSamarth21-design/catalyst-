@@ -519,18 +519,24 @@
         import { getAuth, onAuthStateChanged, signInAnonymously, signInWithCustomToken, signInWithEmailAndPassword, createUserWithEmailAndPassword, signOut } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-auth.js";
         import { getFirestore, doc, setDoc, getDoc, collection, addDoc } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js";
 
-        // --- 0. CLOUD BACKEND (FIREBASE) CONFIGURATION ---
-        // NOTE: To use this on your own GitHub Pages, replace fallbackConfig with your keys from the Firebase Console!
-        const fallbackConfig = { apiKey: "AIzaSyAd1ivx7WReAj1WKgeWzeaK5H6mpmcqplw", authDomain: "catalyst-corps-store.firebaseapp.com", projectId: "catalyst-corps-store" };
-        const firebaseConfig = typeof __firebase_config !== 'undefined' ? JSON.parse(__firebase_config) : fallbackConfig;
-        const appId = typeof __app_id !== 'undefined' ? __app_id : 'catalyst-store';
+        // =========================================================
+        // ADD YOUR FIREBASE KEYS EXACTLY IN THE BOX BELOW
+        // =========================================================
+        const firebaseConfig = {
+            apiKey: "AIzaSyAd1ivx7WReAj1WKgeWzeaK5H6mpmcqplw",
+            authDomain: "catalyst-corps-store.firebaseapp.com",
+            projectId: "catalyst-corps-store"
+        };
+        // =========================================================
+
+        const appId = 'catalyst-store';
 
         let app, auth, db;
         try {
             app = initializeApp(firebaseConfig);
             auth = getAuth(app);
             db = getFirestore(app);
-        } catch(e) { console.log("Firebase not configured for standalone execution yet."); }
+        } catch(e) { console.log("Firebase starting in local mode."); }
 
         let currentUserId = null;
         let userLoggedIn = false;
@@ -943,7 +949,6 @@
             btn.innerHTML = 'Connecting to Secure Cloud Gateway... <i class="fa-solid fa-spinner fa-spin ml-2"></i>';
             
             try {
-                // If Cloud Database is connected, save the order permanently!
                 if(db && currentUserId) {
                     await addDoc(collection(db, 'artifacts', appId, 'users', currentUserId, 'orders'), {
                         items: cart,
