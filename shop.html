@@ -134,6 +134,10 @@
 
         /* Custom Checkbox */
         .custom-checkbox { accent-color: var(--vivid-cyan); width: 1.2rem; height: 1.2rem; cursor: pointer; }
+        
+        /* Hide number input arrows */
+        input[type="number"]::-webkit-inner-spin-button, input[type="number"]::-webkit-outer-spin-button { -webkit-appearance: none; margin: 0; }
+        input[type="number"] { -moz-appearance: textfield; }
     </style>
 </head>
 <body class="antialiased selection:bg-vivid-cyan selection:text-white bg-gray-50 dark:bg-dark-charcoal text-gray-900 dark:text-white transition-colors duration-300">
@@ -180,6 +184,15 @@
                 </button>
             </div>
         </div>
+        
+        <!-- Mobile Menu -->
+        <div id="mobile-menu" class="hidden absolute top-full left-0 w-full bg-white/95 dark:bg-darker-charcoal/95 backdrop-blur-md border-b border-gray-200 dark:border-white/10 flex flex-col items-center py-6 gap-6 shadow-2xl">
+            <a href="index.html#about" class="text-gray-800 dark:text-gray-200 hover:text-vivid-cyan transition-colors mobile-link font-medium">About</a>
+            <a href="projects.html" class="text-gray-800 dark:text-gray-200 hover:text-vivid-cyan transition-colors mobile-link font-medium">Projects</a>
+            <a href="gallery.html" class="text-gray-800 dark:text-gray-200 hover:text-vivid-cyan transition-colors mobile-link font-medium">Gallery</a>
+            <a href="vision.html" class="text-gray-800 dark:text-gray-200 hover:text-vivid-cyan transition-colors mobile-link font-medium">Vision</a>
+            <a href="index.html#contact" class="text-gray-800 dark:text-gray-200 hover:text-vivid-cyan transition-colors mobile-link font-medium">Contact Us</a>
+        </div>
     </nav>
 
     <!-- WRAPPER FOR STORE PAGE -->
@@ -193,10 +206,10 @@
                 <p class="text-lg text-gray-600 dark:text-gray-300 max-w-2xl mx-auto mb-8 drop-shadow-sm">Professional-grade hardware kits and components for your next engineering build.</p>
                 
                 <!-- Search Bar -->
-                <div class="max-w-xl mx-auto relative glass-card rounded-full flex items-center overflow-hidden border border-gray-300 dark:border-white/20 focus-within:border-vivid-cyan transition-colors">
+                <div class="max-w-xl mx-auto relative glass-card rounded-full flex items-center overflow-hidden border border-gray-300 dark:border-white/20 focus-within:border-vivid-cyan transition-colors shadow-lg">
                     <i class="fa-solid fa-search absolute left-5 text-gray-500 dark:text-gray-400"></i>
-                    <input type="text" placeholder="Search for ESP32, Sensors, Kits..." class="w-full bg-transparent py-4 pl-12 pr-4 text-gray-900 dark:text-white focus:outline-none placeholder-gray-500 dark:placeholder-gray-400">
-                    <button class="btn-primary h-full px-6 font-semibold absolute right-0 rounded-r-full">Search</button>
+                    <input type="text" id="searchInput" oninput="filterProducts()" placeholder="Search for ESP32, Sensors, Kits..." class="w-full bg-transparent py-4 pl-12 pr-4 text-gray-900 dark:text-white focus:outline-none placeholder-gray-500 dark:placeholder-gray-400">
+                    <button onclick="filterProducts()" class="btn-primary h-full px-6 font-semibold absolute right-0 rounded-r-full">Search</button>
                 </div>
             </div>
         </section>
@@ -208,36 +221,51 @@
                 <!-- Left Sidebar: Filters (25%) -->
                 <aside class="w-full lg:w-1/4 fade-in">
                     <div class="glass-card rounded-2xl p-6 sticky top-24">
-                        <h3 class="font-display text-xl font-bold mb-4 border-b border-gray-200 dark:border-white/10 pb-2">Filters</h3>
+                        <!-- Mobile Toggle Header -->
+                        <div class="flex justify-between items-center mb-4 border-b border-gray-200 dark:border-white/10 pb-2 cursor-pointer lg:cursor-default select-none" onclick="toggleMobileFilters()">
+                            <h3 class="font-display text-xl font-bold">Filters</h3>
+                            <i id="mobile-filter-icon" class="fa-solid fa-chevron-down lg:hidden transition-transform duration-300"></i>
+                        </div>
                         
-                        <!-- Category Filter -->
-                        <div class="mb-6">
-                            <h4 class="font-semibold mb-3 text-electric-blue dark:text-vivid-cyan">Categories</h4>
-                            <div class="space-y-2 text-sm text-gray-700 dark:text-gray-300">
-                                <label class="flex items-center gap-3"><input type="checkbox" class="custom-checkbox" checked> Full Project Kits</label>
-                                <label class="flex items-center gap-3"><input type="checkbox" class="custom-checkbox"> Microcontrollers</label>
-                                <label class="flex items-center gap-3"><input type="checkbox" class="custom-checkbox"> Sensors & Modules</label>
-                                <label class="flex items-center gap-3"><input type="checkbox" class="custom-checkbox"> Robotics</label>
+                        <!-- Wrapper for all filters (hidden on mobile by default) -->
+                        <div id="filter-container" class="hidden lg:block">
+                            <!-- Category Filter -->
+                            <div class="mb-6 border-b border-gray-200 dark:border-white/10 pb-4">
+                                <h4 class="font-semibold text-electric-blue dark:text-vivid-cyan cursor-pointer flex justify-between items-center select-none" onclick="toggleFilter('filter-categories', 'icon-categories')">
+                                    Categories <i id="icon-categories" class="fa-solid fa-chevron-up transition-transform duration-300"></i>
+                                </h4>
+                                <div id="filter-categories" class="space-y-2 text-sm text-gray-700 dark:text-gray-300 transition-all duration-300 overflow-hidden max-h-96 opacity-100 mt-3">
+                                    <label class="flex items-center gap-3"><input type="checkbox" class="custom-checkbox" checked> Full Project Kits</label>
+                                    <label class="flex items-center gap-3"><input type="checkbox" class="custom-checkbox"> Microcontrollers</label>
+                                    <label class="flex items-center gap-3"><input type="checkbox" class="custom-checkbox"> Sensors & Modules</label>
+                                    <label class="flex items-center gap-3"><input type="checkbox" class="custom-checkbox"> Robotics</label>
+                                </div>
                             </div>
-                        </div>
 
-                        <!-- Difficulty Filter -->
-                        <div class="mb-6">
-                            <h4 class="font-semibold mb-3 text-electric-blue dark:text-vivid-cyan">Difficulty</h4>
-                            <div class="space-y-2 text-sm text-gray-700 dark:text-gray-300">
-                                <label class="flex items-center gap-3"><input type="checkbox" class="custom-checkbox"> Beginner Friendly</label>
-                                <label class="flex items-center gap-3"><input type="checkbox" class="custom-checkbox"> Intermediate</label>
-                                <label class="flex items-center gap-3"><input type="checkbox" class="custom-checkbox"> Advanced Pro</label>
+                            <!-- Difficulty Filter -->
+                            <div class="mb-6 border-b border-gray-200 dark:border-white/10 pb-4">
+                                <h4 class="font-semibold text-electric-blue dark:text-vivid-cyan cursor-pointer flex justify-between items-center select-none" onclick="toggleFilter('filter-difficulty', 'icon-difficulty')">
+                                    Difficulty <i id="icon-difficulty" class="fa-solid fa-chevron-up transition-transform duration-300"></i>
+                                </h4>
+                                <div id="filter-difficulty" class="space-y-2 text-sm text-gray-700 dark:text-gray-300 transition-all duration-300 overflow-hidden max-h-96 opacity-100 mt-3">
+                                    <label class="flex items-center gap-3"><input type="checkbox" class="custom-checkbox"> Beginner Friendly</label>
+                                    <label class="flex items-center gap-3"><input type="checkbox" class="custom-checkbox"> Intermediate</label>
+                                    <label class="flex items-center gap-3"><input type="checkbox" class="custom-checkbox"> Advanced Pro</label>
+                                </div>
                             </div>
-                        </div>
 
-                        <!-- Price Range -->
-                        <div>
-                            <h4 class="font-semibold mb-3 text-electric-blue dark:text-vivid-cyan">Price Range</h4>
-                            <input type="range" min="0" max="20000" class="w-full accent-vivid-cyan">
-                            <div class="flex justify-between text-xs mt-2 text-gray-500">
-                                <span>₹0</span>
-                                <span>₹20000+</span>
+                            <!-- Price Range -->
+                            <div>
+                                <h4 class="font-semibold text-electric-blue dark:text-vivid-cyan cursor-pointer flex justify-between items-center select-none" onclick="toggleFilter('filter-price', 'icon-price')">
+                                    Price Range <i id="icon-price" class="fa-solid fa-chevron-up transition-transform duration-300"></i>
+                                </h4>
+                                <div id="filter-price" class="transition-all duration-300 overflow-hidden max-h-96 opacity-100 mt-4">
+                                    <input type="range" min="0" max="20000" class="w-full accent-vivid-cyan">
+                                    <div class="flex justify-between text-xs mt-2 text-gray-500">
+                                        <span>₹0</span>
+                                        <span>₹20000+</span>
+                                    </div>
+                                </div>
                             </div>
                         </div>
                     </div>
@@ -248,7 +276,7 @@
                     
                     <!-- Sort Header -->
                     <div class="flex justify-between items-center mb-6 fade-in">
-                        <p class="text-sm text-gray-600 dark:text-gray-400">Showing <span class="font-bold text-gray-900 dark:text-white">3</span> products</p>
+                        <p class="text-sm text-gray-600 dark:text-gray-400">Showing <span id="product-count" class="font-bold text-gray-900 dark:text-white">20</span> products</p>
                         <select class="bg-gray-100/80 dark:bg-darker-charcoal/80 border border-gray-300 dark:border-white/10 rounded-lg px-4 py-2 text-sm text-gray-900 dark:text-white focus:outline-none focus:border-vivid-cyan backdrop-blur-sm">
                             <option>Sort by: Featured</option>
                             <option>Price: Low to High</option>
@@ -257,71 +285,445 @@
                         </select>
                     </div>
 
-                    <!-- Products Grid -->
-                    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+                    <!-- Product Grid -->
+                    <div id="product-grid" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
                         
-                        <!-- Blank Product Template 1 -->
-                        <div class="glass-card rounded-2xl overflow-hidden group flex flex-col fade-in">
+                        <!-- Product 1 -->
+                        <div class="glass-card product-card rounded-2xl overflow-hidden group flex flex-col fade-in">
                             <div class="h-48 bg-gray-100/50 dark:bg-black/40 relative overflow-hidden flex items-center justify-center p-4">
-                                <span class="absolute top-3 left-3 bg-vivid-cyan text-white text-xs font-bold px-2 py-1 rounded-md z-10 shadow-md">Tag</span>
-                                <!-- Replace icon below with an image if needed: <img src="product1.jpg" class="w-full h-full object-cover"> -->
-                                <i class="fa-solid fa-box text-6xl text-electric-blue group-hover:scale-110 transition-transform duration-500 drop-shadow-lg"></i>
+                                <span class="absolute top-3 left-3 bg-vivid-cyan text-white text-xs font-bold px-2 py-1 rounded-md z-10 shadow-md">IoT</span>
+                                <i class="fa-solid fa-house-signal text-6xl text-electric-blue group-hover:scale-110 transition-transform duration-500 drop-shadow-lg"></i>
                             </div>
                             <div class="p-5 flex flex-col flex-1">
                                 <div class="flex justify-between items-start mb-1">
-                                    <span class="text-xs font-semibold text-harvest-green bg-harvest-green/10 px-2 py-0.5 rounded">Level</span>
-                                    <div class="text-yellow-400 text-xs"><i class="fa-solid fa-star"></i> 0.0</div>
+                                    <span class="text-xs font-semibold text-harvest-green bg-harvest-green/10 px-2 py-0.5 rounded">Beginner</span>
+                                    <div class="text-yellow-400 text-xs"><i class="fa-solid fa-star"></i> 4.8</div>
                                 </div>
-                                <h3 class="font-display font-bold text-lg text-gray-900 dark:text-white leading-tight mb-1 line-clamp-1">[Product Title 1]</h3>
-                                <p class="text-sm text-gray-500 dark:text-gray-400 line-clamp-2 mb-4 flex-1">[Short product description goes here. Describe what the kit does.]</p>
-                                <div class="text-xl font-bold text-electric-blue dark:text-vivid-cyan mb-4">₹0.00</div>
+                                <h3 class="font-display font-bold text-lg text-gray-900 dark:text-white leading-tight mb-1 line-clamp-1">IoT Smart Home Hub</h3>
+                                <p class="text-sm text-gray-500 dark:text-gray-400 line-clamp-2 mb-4 flex-1">Control 4 household appliances remotely using WiFi and a smartphone app. Perfect first IoT project.</p>
+                                <div class="text-xl font-bold text-electric-blue dark:text-vivid-cyan mb-4">₹1,499.00</div>
                                 
                                 <div class="grid grid-cols-2 gap-2 mt-auto">
-                                    <button onclick="openQuickView('[Product Title 1]', '₹0.00', '[Detailed description of the product and its features.]', ['Component 1', 'Component 2', 'Component 3'], 'Level')" class="btn-secondary py-2 rounded-lg text-sm font-semibold flex justify-center items-center">Details</button>
-                                    <button onclick="addToCart('prod_1', '[Product Title 1]', 0.00, 'fa-box')" class="btn-primary py-2 rounded-lg text-sm font-semibold flex justify-center items-center gap-2"><i class="fa-solid fa-cart-plus"></i> Add</button>
+                                    <button onclick="openQuickView('prod_1', 'IoT Smart Home Hub', 1499.00, '₹1,499.00', 'Control 4 household appliances remotely using WiFi and a smartphone app. Perfect first IoT project.', ['1x NodeMCU ESP8266', '1x 4-Channel Relay Module', 'Jumper Wires', 'Breadboard'], 'Beginner', 'fa-house-signal')" class="btn-secondary py-2 rounded-lg text-sm font-semibold flex justify-center items-center">Details</button>
+                                    <button onclick="addToCart('prod_1', 'IoT Smart Home Hub', 1499.00, 'fa-house-signal')" class="btn-primary py-2 rounded-lg text-sm font-semibold flex justify-center items-center gap-2"><i class="fa-solid fa-cart-plus"></i> Add</button>
                                 </div>
                             </div>
                         </div>
 
-                        <!-- Blank Product Template 2 -->
-                        <div class="glass-card rounded-2xl overflow-hidden group flex flex-col fade-in" style="transition-delay: 100ms;">
+                        <!-- Product 2 -->
+                        <div class="glass-card product-card rounded-2xl overflow-hidden group flex flex-col fade-in" style="transition-delay: 100ms;">
                             <div class="h-48 bg-gray-100/50 dark:bg-black/40 relative overflow-hidden flex items-center justify-center p-4">
-                                <i class="fa-solid fa-microchip text-6xl text-vivid-cyan group-hover:scale-110 transition-transform duration-500 drop-shadow-lg"></i>
-                            </div>
-                            <div class="p-5 flex flex-col flex-1">
-                                <div class="flex justify-between items-start mb-1">
-                                    <span class="text-xs font-semibold text-vivid-cyan bg-vivid-cyan/10 px-2 py-0.5 rounded">Level</span>
-                                    <div class="text-yellow-400 text-xs"><i class="fa-solid fa-star"></i> 0.0</div>
-                                </div>
-                                <h3 class="font-display font-bold text-lg text-gray-900 dark:text-white leading-tight mb-1 line-clamp-1">[Product Title 2]</h3>
-                                <p class="text-sm text-gray-500 dark:text-gray-400 line-clamp-2 mb-4 flex-1">[Short product description goes here. Describe what the kit does.]</p>
-                                <div class="text-xl font-bold text-electric-blue dark:text-vivid-cyan mb-4">₹0.00</div>
-                                
-                                <div class="grid grid-cols-2 gap-2 mt-auto">
-                                    <button onclick="openQuickView('[Product Title 2]', '₹0.00', '[Detailed description of the product and its features.]', ['Component A', 'Component B', 'Component C'], 'Level')" class="btn-secondary py-2 rounded-lg text-sm font-semibold flex justify-center items-center">Details</button>
-                                    <button onclick="addToCart('prod_2', '[Product Title 2]', 0.00, 'fa-microchip')" class="btn-primary py-2 rounded-lg text-sm font-semibold flex justify-center items-center gap-2"><i class="fa-solid fa-cart-plus"></i> Add</button>
-                                </div>
-                            </div>
-                        </div>
-
-                        <!-- Blank Product Template 3 -->
-                        <div class="glass-card rounded-2xl overflow-hidden group flex flex-col fade-in" style="transition-delay: 200ms;">
-                            <div class="h-48 bg-gray-100/50 dark:bg-black/40 relative overflow-hidden flex items-center justify-center p-4">
-                                <span class="absolute top-3 left-3 bg-electric-blue text-white text-xs font-bold px-2 py-1 rounded-md z-10 shadow-md">New</span>
+                                <span class="absolute top-3 left-3 bg-harvest-green text-white text-xs font-bold px-2 py-1 rounded-md z-10 shadow-md">Robotics</span>
                                 <i class="fa-solid fa-robot text-6xl text-harvest-green group-hover:scale-110 transition-transform duration-500 drop-shadow-lg"></i>
                             </div>
                             <div class="p-5 flex flex-col flex-1">
                                 <div class="flex justify-between items-start mb-1">
-                                    <span class="text-xs font-semibold text-electric-blue bg-electric-blue/10 px-2 py-0.5 rounded">Level</span>
-                                    <div class="text-yellow-400 text-xs"><i class="fa-solid fa-star"></i> 0.0</div>
+                                    <span class="text-xs font-semibold text-vivid-cyan bg-vivid-cyan/10 px-2 py-0.5 rounded">Intermediate</span>
+                                    <div class="text-yellow-400 text-xs"><i class="fa-solid fa-star"></i> 4.9</div>
                                 </div>
-                                <h3 class="font-display font-bold text-lg text-gray-900 dark:text-white leading-tight mb-1 line-clamp-1">[Product Title 3]</h3>
-                                <p class="text-sm text-gray-500 dark:text-gray-400 line-clamp-2 mb-4 flex-1">[Short product description goes here. Describe what the kit does.]</p>
-                                <div class="text-xl font-bold text-electric-blue dark:text-vivid-cyan mb-4">₹0.00</div>
+                                <h3 class="font-display font-bold text-lg text-gray-900 dark:text-white leading-tight mb-1 line-clamp-1">Obstacle Avoiding Bot</h3>
+                                <p class="text-sm text-gray-500 dark:text-gray-400 line-clamp-2 mb-4 flex-1">Autonomous rover that uses ultrasonic sensors to detect and avoid collisions in real-time.</p>
+                                <div class="text-xl font-bold text-electric-blue dark:text-vivid-cyan mb-4">₹1,899.00</div>
                                 
                                 <div class="grid grid-cols-2 gap-2 mt-auto">
-                                    <button onclick="openQuickView('[Product Title 3]', '₹0.00', '[Detailed description of the product and its features.]', ['Part X', 'Part Y', 'Part Z'], 'Level')" class="btn-secondary py-2 rounded-lg text-sm font-semibold flex justify-center items-center">Details</button>
-                                    <button onclick="addToCart('prod_3', '[Product Title 3]', 0.00, 'fa-robot')" class="btn-primary py-2 rounded-lg text-sm font-semibold flex justify-center items-center gap-2"><i class="fa-solid fa-cart-plus"></i> Add</button>
+                                    <button onclick="openQuickView('prod_2', 'Obstacle Avoiding Bot', 1899.00, '₹1,899.00', 'Autonomous rover that uses ultrasonic sensors to detect and avoid collisions in real-time.', ['1x Arduino UNO R3', '1x L298N Motor Driver', '1x HC-SR04 Ultrasonic', '2x DC Motors & Wheels', '1x Acrylic Chassis'], 'Intermediate', 'fa-robot')" class="btn-secondary py-2 rounded-lg text-sm font-semibold flex justify-center items-center">Details</button>
+                                    <button onclick="addToCart('prod_2', 'Obstacle Avoiding Bot', 1899.00, 'fa-robot')" class="btn-primary py-2 rounded-lg text-sm font-semibold flex justify-center items-center gap-2"><i class="fa-solid fa-cart-plus"></i> Add</button>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Product 3 -->
+                        <div class="glass-card product-card rounded-2xl overflow-hidden group flex flex-col fade-in" style="transition-delay: 200ms;">
+                            <div class="h-48 bg-gray-100/50 dark:bg-black/40 relative overflow-hidden flex items-center justify-center p-4">
+                                <span class="absolute top-3 left-3 bg-electric-blue text-white text-xs font-bold px-2 py-1 rounded-md z-10 shadow-md">Automation</span>
+                                <i class="fa-solid fa-id-card text-6xl text-vivid-cyan group-hover:scale-110 transition-transform duration-500 drop-shadow-lg"></i>
+                            </div>
+                            <div class="p-5 flex flex-col flex-1">
+                                <div class="flex justify-between items-start mb-1">
+                                    <span class="text-xs font-semibold text-vivid-cyan bg-vivid-cyan/10 px-2 py-0.5 rounded">Intermediate</span>
+                                    <div class="text-yellow-400 text-xs"><i class="fa-solid fa-star"></i> 4.7</div>
+                                </div>
+                                <h3 class="font-display font-bold text-lg text-gray-900 dark:text-white leading-tight mb-1 line-clamp-1">RFID Access System</h3>
+                                <p class="text-sm text-gray-500 dark:text-gray-400 line-clamp-2 mb-4 flex-1">Smart door lock and attendance system using RFID tags and an LCD display interface.</p>
+                                <div class="text-xl font-bold text-electric-blue dark:text-vivid-cyan mb-4">₹1,199.00</div>
+                                
+                                <div class="grid grid-cols-2 gap-2 mt-auto">
+                                    <button onclick="openQuickView('prod_3', 'RFID Access System', 1199.00, '₹1,199.00', 'Smart door lock and attendance system using RFID tags and an LCD display interface.', ['1x Arduino UNO R3', '1x RC522 RFID Module', '3x RFID Tags', '1x I2C LCD Display', '1x Servo Motor'], 'Intermediate', 'fa-id-card')" class="btn-secondary py-2 rounded-lg text-sm font-semibold flex justify-center items-center">Details</button>
+                                    <button onclick="addToCart('prod_3', 'RFID Access System', 1199.00, 'fa-id-card')" class="btn-primary py-2 rounded-lg text-sm font-semibold flex justify-center items-center gap-2"><i class="fa-solid fa-cart-plus"></i> Add</button>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Product 4 -->
+                        <div class="glass-card product-card rounded-2xl overflow-hidden group flex flex-col fade-in">
+                            <div class="h-48 bg-gray-100/50 dark:bg-black/40 relative overflow-hidden flex items-center justify-center p-4">
+                                <span class="absolute top-3 left-3 bg-vivid-cyan text-white text-xs font-bold px-2 py-1 rounded-md z-10 shadow-md">IoT</span>
+                                <i class="fa-solid fa-cloud-sun text-6xl text-harvest-green group-hover:scale-110 transition-transform duration-500 drop-shadow-lg"></i>
+                            </div>
+                            <div class="p-5 flex flex-col flex-1">
+                                <div class="flex justify-between items-start mb-1">
+                                    <span class="text-xs font-semibold text-vivid-cyan bg-vivid-cyan/10 px-2 py-0.5 rounded">Intermediate</span>
+                                    <div class="text-yellow-400 text-xs"><i class="fa-solid fa-star"></i> 4.6</div>
+                                </div>
+                                <h3 class="font-display font-bold text-lg text-gray-900 dark:text-white leading-tight mb-1 line-clamp-1">Live AQI & Weather Station</h3>
+                                <p class="text-sm text-gray-500 dark:text-gray-400 line-clamp-2 mb-4 flex-1">Monitor temp, humidity, and Air Quality (AQI) and push data to a ThingSpeak dashboard.</p>
+                                <div class="text-xl font-bold text-electric-blue dark:text-vivid-cyan mb-4">₹1,299.00</div>
+                                
+                                <div class="grid grid-cols-2 gap-2 mt-auto">
+                                    <button onclick="openQuickView('prod_4', 'Live AQI & Weather Station', 1299.00, '₹1,299.00', 'Monitor temp, humidity, and Air Quality (AQI) and push data to a ThingSpeak dashboard.', ['1x NodeMCU ESP8266', '1x DHT11 Sensor', '1x MQ135 Gas Sensor', '1x OLED Display'], 'Intermediate', 'fa-cloud-sun')" class="btn-secondary py-2 rounded-lg text-sm font-semibold flex justify-center items-center">Details</button>
+                                    <button onclick="addToCart('prod_4', 'Live AQI & Weather Station', 1299.00, 'fa-cloud-sun')" class="btn-primary py-2 rounded-lg text-sm font-semibold flex justify-center items-center gap-2"><i class="fa-solid fa-cart-plus"></i> Add</button>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Product 5 -->
+                        <div class="glass-card product-card rounded-2xl overflow-hidden group flex flex-col fade-in" style="transition-delay: 100ms;">
+                            <div class="h-48 bg-gray-100/50 dark:bg-black/40 relative overflow-hidden flex items-center justify-center p-4">
+                                <span class="absolute top-3 left-3 bg-electric-blue text-white text-xs font-bold px-2 py-1 rounded-md z-10 shadow-md">Biometrics</span>
+                                <i class="fa-solid fa-fingerprint text-6xl text-electric-blue group-hover:scale-110 transition-transform duration-500 drop-shadow-lg"></i>
+                            </div>
+                            <div class="p-5 flex flex-col flex-1">
+                                <div class="flex justify-between items-start mb-1">
+                                    <span class="text-xs font-semibold text-electric-blue bg-electric-blue/10 px-2 py-0.5 rounded">Advanced</span>
+                                    <div class="text-yellow-400 text-xs"><i class="fa-solid fa-star"></i> 5.0</div>
+                                </div>
+                                <h3 class="font-display font-bold text-lg text-gray-900 dark:text-white leading-tight mb-1 line-clamp-1">Biometric Security Vault</h3>
+                                <p class="text-sm text-gray-500 dark:text-gray-400 line-clamp-2 mb-4 flex-1">Advanced optical fingerprint scanner integrated with a solenoid lock for high-security applications.</p>
+                                <div class="text-xl font-bold text-electric-blue dark:text-vivid-cyan mb-4">₹2,499.00</div>
+                                
+                                <div class="grid grid-cols-2 gap-2 mt-auto">
+                                    <button onclick="openQuickView('prod_5', 'Biometric Security Vault', 2499.00, '₹2,499.00', 'Advanced optical fingerprint scanner integrated with a solenoid lock for high-security applications.', ['1x Arduino UNO', '1x R307 Fingerprint Sensor', '1x Solenoid Lock', '1x Relay Module'], 'Advanced', 'fa-fingerprint')" class="btn-secondary py-2 rounded-lg text-sm font-semibold flex justify-center items-center">Details</button>
+                                    <button onclick="addToCart('prod_5', 'Biometric Security Vault', 2499.00, 'fa-fingerprint')" class="btn-primary py-2 rounded-lg text-sm font-semibold flex justify-center items-center gap-2"><i class="fa-solid fa-cart-plus"></i> Add</button>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Product 6 -->
+                        <div class="glass-card product-card rounded-2xl overflow-hidden group flex flex-col fade-in" style="transition-delay: 200ms;">
+                            <div class="h-48 bg-gray-100/50 dark:bg-black/40 relative overflow-hidden flex items-center justify-center p-4">
+                                <span class="absolute top-3 left-3 bg-harvest-green text-white text-xs font-bold px-2 py-1 rounded-md z-10 shadow-md">AgriTech</span>
+                                <i class="fa-solid fa-seedling text-6xl text-harvest-green group-hover:scale-110 transition-transform duration-500 drop-shadow-lg"></i>
+                            </div>
+                            <div class="p-5 flex flex-col flex-1">
+                                <div class="flex justify-between items-start mb-1">
+                                    <span class="text-xs font-semibold text-vivid-cyan bg-vivid-cyan/10 px-2 py-0.5 rounded">Intermediate</span>
+                                    <div class="text-yellow-400 text-xs"><i class="fa-solid fa-star"></i> 4.8</div>
+                                </div>
+                                <h3 class="font-display font-bold text-lg text-gray-900 dark:text-white leading-tight mb-1 line-clamp-1">Smart Agriculture IoT</h3>
+                                <p class="text-sm text-gray-500 dark:text-gray-400 line-clamp-2 mb-4 flex-1">Monitors soil moisture and automatically triggers a water pump, with web-based logging.</p>
+                                <div class="text-xl font-bold text-electric-blue dark:text-vivid-cyan mb-4">₹1,599.00</div>
+                                
+                                <div class="grid grid-cols-2 gap-2 mt-auto">
+                                    <button onclick="openQuickView('prod_6', 'Smart Agriculture IoT', 1599.00, '₹1,599.00', 'Monitors soil moisture and automatically triggers a water pump, with web-based logging.', ['1x ESP32 Board', '1x Soil Moisture Sensor', '1x 5V Water Pump', 'Relay & Tubing'], 'Intermediate', 'fa-seedling')" class="btn-secondary py-2 rounded-lg text-sm font-semibold flex justify-center items-center">Details</button>
+                                    <button onclick="addToCart('prod_6', 'Smart Agriculture IoT', 1599.00, 'fa-seedling')" class="btn-primary py-2 rounded-lg text-sm font-semibold flex justify-center items-center gap-2"><i class="fa-solid fa-cart-plus"></i> Add</button>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Product 7 -->
+                        <div class="glass-card product-card rounded-2xl overflow-hidden group flex flex-col fade-in">
+                            <div class="h-48 bg-gray-100/50 dark:bg-black/40 relative overflow-hidden flex items-center justify-center p-4">
+                                <span class="absolute top-3 left-3 bg-electric-blue text-white text-xs font-bold px-2 py-1 rounded-md z-10 shadow-md">Robotics</span>
+                                <i class="fa-solid fa-car text-6xl text-electric-blue group-hover:scale-110 transition-transform duration-500 drop-shadow-lg"></i>
+                            </div>
+                            <div class="p-5 flex flex-col flex-1">
+                                <div class="flex justify-between items-start mb-1">
+                                    <span class="text-xs font-semibold text-harvest-green bg-harvest-green/10 px-2 py-0.5 rounded">Beginner</span>
+                                    <div class="text-yellow-400 text-xs"><i class="fa-solid fa-star"></i> 4.5</div>
+                                </div>
+                                <h3 class="font-display font-bold text-lg text-gray-900 dark:text-white leading-tight mb-1 line-clamp-1">Bluetooth RC Rover</h3>
+                                <p class="text-sm text-gray-500 dark:text-gray-400 line-clamp-2 mb-4 flex-1">Build your own remote-controlled car that you can drive using a Bluetooth Android app.</p>
+                                <div class="text-xl font-bold text-electric-blue dark:text-vivid-cyan mb-4">₹1,699.00</div>
+                                
+                                <div class="grid grid-cols-2 gap-2 mt-auto">
+                                    <button onclick="openQuickView('prod_7', 'Bluetooth RC Rover', 1699.00, '₹1,699.00', 'Build your own remote-controlled car that you can drive using a Bluetooth Android app.', ['1x Arduino UNO', '1x HC-05 Bluetooth', '1x 4WD Chassis', '1x Motor Driver'], 'Beginner', 'fa-car')" class="btn-secondary py-2 rounded-lg text-sm font-semibold flex justify-center items-center">Details</button>
+                                    <button onclick="addToCart('prod_7', 'Bluetooth RC Rover', 1699.00, 'fa-car')" class="btn-primary py-2 rounded-lg text-sm font-semibold flex justify-center items-center gap-2"><i class="fa-solid fa-cart-plus"></i> Add</button>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Product 8 -->
+                        <div class="glass-card product-card rounded-2xl overflow-hidden group flex flex-col fade-in" style="transition-delay: 100ms;">
+                            <div class="h-48 bg-gray-100/50 dark:bg-black/40 relative overflow-hidden flex items-center justify-center p-4">
+                                <span class="absolute top-3 left-3 bg-vivid-cyan text-white text-xs font-bold px-2 py-1 rounded-md z-10 shadow-md">Health</span>
+                                <i class="fa-solid fa-heart-pulse text-6xl text-vivid-cyan group-hover:scale-110 transition-transform duration-500 drop-shadow-lg"></i>
+                            </div>
+                            <div class="p-5 flex flex-col flex-1">
+                                <div class="flex justify-between items-start mb-1">
+                                    <span class="text-xs font-semibold text-electric-blue bg-electric-blue/10 px-2 py-0.5 rounded">Advanced</span>
+                                    <div class="text-yellow-400 text-xs"><i class="fa-solid fa-star"></i> 4.9</div>
+                                </div>
+                                <h3 class="font-display font-bold text-lg text-gray-900 dark:text-white leading-tight mb-1 line-clamp-1">IoT SpO2 & BPM Monitor</h3>
+                                <p class="text-sm text-gray-500 dark:text-gray-400 line-clamp-2 mb-4 flex-1">Clinical-style project to measure blood oxygen and heart rate, logging data to the cloud.</p>
+                                <div class="text-xl font-bold text-electric-blue dark:text-vivid-cyan mb-4">₹1,850.00</div>
+                                
+                                <div class="grid grid-cols-2 gap-2 mt-auto">
+                                    <button onclick="openQuickView('prod_8', 'IoT SpO2 & BPM Monitor', 1850.00, '₹1,850.00', 'Clinical-style project to measure blood oxygen and heart rate, logging data to the cloud.', ['1x NodeMCU ESP8266', '1x MAX30100 Pulse Oximeter', '1x I2C OLED Screen'], 'Advanced', 'fa-heart-pulse')" class="btn-secondary py-2 rounded-lg text-sm font-semibold flex justify-center items-center">Details</button>
+                                    <button onclick="addToCart('prod_8', 'IoT SpO2 & BPM Monitor', 1850.00, 'fa-heart-pulse')" class="btn-primary py-2 rounded-lg text-sm font-semibold flex justify-center items-center gap-2"><i class="fa-solid fa-cart-plus"></i> Add</button>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Product 9 -->
+                        <div class="glass-card product-card rounded-2xl overflow-hidden group flex flex-col fade-in" style="transition-delay: 200ms;">
+                            <div class="h-48 bg-gray-100/50 dark:bg-black/40 relative overflow-hidden flex items-center justify-center p-4">
+                                <span class="absolute top-3 left-3 bg-eco-green text-white text-xs font-bold px-2 py-1 rounded-md z-10 shadow-md">Automation</span>
+                                <i class="fa-solid fa-trash-can text-6xl text-eco-green group-hover:scale-110 transition-transform duration-500 drop-shadow-lg"></i>
+                            </div>
+                            <div class="p-5 flex flex-col flex-1">
+                                <div class="flex justify-between items-start mb-1">
+                                    <span class="text-xs font-semibold text-harvest-green bg-harvest-green/10 px-2 py-0.5 rounded">Beginner</span>
+                                    <div class="text-yellow-400 text-xs"><i class="fa-solid fa-star"></i> 4.4</div>
+                                </div>
+                                <h3 class="font-display font-bold text-lg text-gray-900 dark:text-white leading-tight mb-1 line-clamp-1">Touchless Smart Dustbin</h3>
+                                <p class="text-sm text-gray-500 dark:text-gray-400 line-clamp-2 mb-4 flex-1">Automatically opens the lid when motion is detected. A great first mechanical project.</p>
+                                <div class="text-xl font-bold text-electric-blue dark:text-vivid-cyan mb-4">₹1,350.00</div>
+                                
+                                <div class="grid grid-cols-2 gap-2 mt-auto">
+                                    <button onclick="openQuickView('prod_9', 'Touchless Smart Dustbin', 1350.00, '₹1,350.00', 'Automatically opens the lid when motion is detected. A great first mechanical project.', ['1x Arduino Nano', '1x SG90 Servo Motor', '1x Ultrasonic Sensor', 'Battery Pack'], 'Beginner', 'fa-trash-can')" class="btn-secondary py-2 rounded-lg text-sm font-semibold flex justify-center items-center">Details</button>
+                                    <button onclick="addToCart('prod_9', 'Touchless Smart Dustbin', 1350.00, 'fa-trash-can')" class="btn-primary py-2 rounded-lg text-sm font-semibold flex justify-center items-center gap-2"><i class="fa-solid fa-cart-plus"></i> Add</button>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Product 10 -->
+                        <div class="glass-card product-card rounded-2xl overflow-hidden group flex flex-col fade-in">
+                            <div class="h-48 bg-gray-100/50 dark:bg-black/40 relative overflow-hidden flex items-center justify-center p-4">
+                                <span class="absolute top-3 left-3 bg-electric-blue text-white text-xs font-bold px-2 py-1 rounded-md z-10 shadow-md">Tracking</span>
+                                <i class="fa-solid fa-location-dot text-6xl text-electric-blue group-hover:scale-110 transition-transform duration-500 drop-shadow-lg"></i>
+                            </div>
+                            <div class="p-5 flex flex-col flex-1">
+                                <div class="flex justify-between items-start mb-1">
+                                    <span class="text-xs font-semibold text-electric-blue bg-electric-blue/10 px-2 py-0.5 rounded">Advanced</span>
+                                    <div class="text-yellow-400 text-xs"><i class="fa-solid fa-star"></i> 4.9</div>
+                                </div>
+                                <h3 class="font-display font-bold text-lg text-gray-900 dark:text-white leading-tight mb-1 line-clamp-1">GPS Vehicle Tracker</h3>
+                                <p class="text-sm text-gray-500 dark:text-gray-400 line-clamp-2 mb-4 flex-1">Real-time GPS mapping device. Sends location data coordinates via SMS using a GSM module.</p>
+                                <div class="text-xl font-bold text-electric-blue dark:text-vivid-cyan mb-4">₹3,299.00</div>
+                                
+                                <div class="grid grid-cols-2 gap-2 mt-auto">
+                                    <button onclick="openQuickView('prod_10', 'GPS Vehicle Tracker', 3299.00, '₹3,299.00', 'Real-time GPS mapping device. Sends location data coordinates via SMS using a GSM module.', ['1x Arduino UNO', '1x NEO-6M GPS Module', '1x SIM900A GSM Module', 'Antennas'], 'Advanced', 'fa-location-dot')" class="btn-secondary py-2 rounded-lg text-sm font-semibold flex justify-center items-center">Details</button>
+                                    <button onclick="addToCart('prod_10', 'GPS Vehicle Tracker', 3299.00, 'fa-location-dot')" class="btn-primary py-2 rounded-lg text-sm font-semibold flex justify-center items-center gap-2"><i class="fa-solid fa-cart-plus"></i> Add</button>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Product 11 -->
+                        <div class="glass-card product-card rounded-2xl overflow-hidden group flex flex-col fade-in" style="transition-delay: 100ms;">
+                            <div class="h-48 bg-gray-100/50 dark:bg-black/40 relative overflow-hidden flex items-center justify-center p-4">
+                                <span class="absolute top-3 left-3 bg-harvest-green text-white text-xs font-bold px-2 py-1 rounded-md z-10 shadow-md">Robotics</span>
+                                <i class="fa-solid fa-route text-6xl text-vivid-cyan group-hover:scale-110 transition-transform duration-500 drop-shadow-lg"></i>
+                            </div>
+                            <div class="p-5 flex flex-col flex-1">
+                                <div class="flex justify-between items-start mb-1">
+                                    <span class="text-xs font-semibold text-harvest-green bg-harvest-green/10 px-2 py-0.5 rounded">Beginner</span>
+                                    <div class="text-yellow-400 text-xs"><i class="fa-solid fa-star"></i> 4.6</div>
+                                </div>
+                                <h3 class="font-display font-bold text-lg text-gray-900 dark:text-white leading-tight mb-1 line-clamp-1">Line Follower Robot</h3>
+                                <p class="text-sm text-gray-500 dark:text-gray-400 line-clamp-2 mb-4 flex-1">The classic college competition project. Uses IR sensors to navigate complex black line tracks.</p>
+                                <div class="text-xl font-bold text-electric-blue dark:text-vivid-cyan mb-4">₹1,450.00</div>
+                                
+                                <div class="grid grid-cols-2 gap-2 mt-auto">
+                                    <button onclick="openQuickView('prod_11', 'Line Follower Robot', 1450.00, '₹1,450.00', 'The classic college competition project. Uses IR sensors to navigate complex black line tracks.', ['1x Arduino Nano', '2x IR Sensors', '1x 2WD Chassis', '1x L298N Driver'], 'Beginner', 'fa-route')" class="btn-secondary py-2 rounded-lg text-sm font-semibold flex justify-center items-center">Details</button>
+                                    <button onclick="addToCart('prod_11', 'Line Follower Robot', 1450.00, 'fa-route')" class="btn-primary py-2 rounded-lg text-sm font-semibold flex justify-center items-center gap-2"><i class="fa-solid fa-cart-plus"></i> Add</button>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Product 12 -->
+                        <div class="glass-card product-card rounded-2xl overflow-hidden group flex flex-col fade-in" style="transition-delay: 200ms;">
+                            <div class="h-48 bg-gray-100/50 dark:bg-black/40 relative overflow-hidden flex items-center justify-center p-4">
+                                <span class="absolute top-3 left-3 bg-vivid-cyan text-white text-xs font-bold px-2 py-1 rounded-md z-10 shadow-md">IoT</span>
+                                <i class="fa-solid fa-microphone text-6xl text-harvest-green group-hover:scale-110 transition-transform duration-500 drop-shadow-lg"></i>
+                            </div>
+                            <div class="p-5 flex flex-col flex-1">
+                                <div class="flex justify-between items-start mb-1">
+                                    <span class="text-xs font-semibold text-vivid-cyan bg-vivid-cyan/10 px-2 py-0.5 rounded">Intermediate</span>
+                                    <div class="text-yellow-400 text-xs"><i class="fa-solid fa-star"></i> 4.5</div>
+                                </div>
+                                <h3 class="font-display font-bold text-lg text-gray-900 dark:text-white leading-tight mb-1 line-clamp-1">Voice Controlled Hub</h3>
+                                <p class="text-sm text-gray-500 dark:text-gray-400 line-clamp-2 mb-4 flex-1">Integrate with Google Assistant or Alexa to turn your room lights on/off with your voice.</p>
+                                <div class="text-xl font-bold text-electric-blue dark:text-vivid-cyan mb-4">₹1,100.00</div>
+                                
+                                <div class="grid grid-cols-2 gap-2 mt-auto">
+                                    <button onclick="openQuickView('prod_12', 'Voice Controlled Hub', 1100.00, '₹1,100.00', 'Integrate with Google Assistant or Alexa to turn your room lights on/off with your voice.', ['1x NodeMCU ESP8266', '1x 2-Channel Relay', 'Jumper Wires'], 'Intermediate', 'fa-microphone')" class="btn-secondary py-2 rounded-lg text-sm font-semibold flex justify-center items-center">Details</button>
+                                    <button onclick="addToCart('prod_12', 'Voice Controlled Hub', 1100.00, 'fa-microphone')" class="btn-primary py-2 rounded-lg text-sm font-semibold flex justify-center items-center gap-2"><i class="fa-solid fa-cart-plus"></i> Add</button>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Product 13 -->
+                        <div class="glass-card product-card rounded-2xl overflow-hidden group flex flex-col fade-in">
+                            <div class="h-48 bg-gray-100/50 dark:bg-black/40 relative overflow-hidden flex items-center justify-center p-4">
+                                <span class="absolute top-3 left-3 bg-electric-blue text-white text-xs font-bold px-2 py-1 rounded-md z-10 shadow-md">Electronics</span>
+                                <i class="fa-solid fa-satellite-dish text-6xl text-electric-blue group-hover:scale-110 transition-transform duration-500 drop-shadow-lg"></i>
+                            </div>
+                            <div class="p-5 flex flex-col flex-1">
+                                <div class="flex justify-between items-start mb-1">
+                                    <span class="text-xs font-semibold text-vivid-cyan bg-vivid-cyan/10 px-2 py-0.5 rounded">Intermediate</span>
+                                    <div class="text-yellow-400 text-xs"><i class="fa-solid fa-star"></i> 4.7</div>
+                                </div>
+                                <h3 class="font-display font-bold text-lg text-gray-900 dark:text-white leading-tight mb-1 line-clamp-1">Sonar Radar Simulator</h3>
+                                <p class="text-sm text-gray-500 dark:text-gray-400 line-clamp-2 mb-4 flex-1">Sweeping ultrasonic sensor that plots detected objects visually on a Processing IDE computer screen.</p>
+                                <div class="text-xl font-bold text-electric-blue dark:text-vivid-cyan mb-4">₹1,400.00</div>
+                                
+                                <div class="grid grid-cols-2 gap-2 mt-auto">
+                                    <button onclick="openQuickView('prod_13', 'Sonar Radar Simulator', 1400.00, '₹1,400.00', 'Sweeping ultrasonic sensor that plots detected objects visually on a Processing IDE computer screen.', ['1x Arduino UNO', '1x SG90 Servo', '1x Ultrasonic Sensor', 'Mounting Bracket'], 'Intermediate', 'fa-satellite-dish')" class="btn-secondary py-2 rounded-lg text-sm font-semibold flex justify-center items-center">Details</button>
+                                    <button onclick="addToCart('prod_13', 'Sonar Radar Simulator', 1400.00, 'fa-satellite-dish')" class="btn-primary py-2 rounded-lg text-sm font-semibold flex justify-center items-center gap-2"><i class="fa-solid fa-cart-plus"></i> Add</button>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Product 14 -->
+                        <div class="glass-card product-card rounded-2xl overflow-hidden group flex flex-col fade-in" style="transition-delay: 100ms;">
+                            <div class="h-48 bg-gray-100/50 dark:bg-black/40 relative overflow-hidden flex items-center justify-center p-4">
+                                <span class="absolute top-3 left-3 bg-harvest-green text-white text-xs font-bold px-2 py-1 rounded-md z-10 shadow-md">Robotics</span>
+                                <i class="fa-solid fa-fire-extinguisher text-6xl text-vivid-cyan group-hover:scale-110 transition-transform duration-500 drop-shadow-lg"></i>
+                            </div>
+                            <div class="p-5 flex flex-col flex-1">
+                                <div class="flex justify-between items-start mb-1">
+                                    <span class="text-xs font-semibold text-electric-blue bg-electric-blue/10 px-2 py-0.5 rounded">Advanced</span>
+                                    <div class="text-yellow-400 text-xs"><i class="fa-solid fa-star"></i> 4.8</div>
+                                </div>
+                                <h3 class="font-display font-bold text-lg text-gray-900 dark:text-white leading-tight mb-1 line-clamp-1">Fire Fighting Robot</h3>
+                                <p class="text-sm text-gray-500 dark:text-gray-400 line-clamp-2 mb-4 flex-1">Detects flames autonomously and uses a built-in water pump to extinguish them. Heavy-duty chassis.</p>
+                                <div class="text-xl font-bold text-electric-blue dark:text-vivid-cyan mb-4">₹2,699.00</div>
+                                
+                                <div class="grid grid-cols-2 gap-2 mt-auto">
+                                    <button onclick="openQuickView('prod_14', 'Fire Fighting Robot', 2699.00, '₹2,699.00', 'Detects flames autonomously and uses a built-in water pump to extinguish them. Heavy-duty chassis.', ['1x Arduino UNO', '3x Flame Sensors', '1x Water Pump & Relay', '4WD Chassis'], 'Advanced', 'fa-fire-extinguisher')" class="btn-secondary py-2 rounded-lg text-sm font-semibold flex justify-center items-center">Details</button>
+                                    <button onclick="addToCart('prod_14', 'Fire Fighting Robot', 2699.00, 'fa-fire-extinguisher')" class="btn-primary py-2 rounded-lg text-sm font-semibold flex justify-center items-center gap-2"><i class="fa-solid fa-cart-plus"></i> Add</button>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Product 15 -->
+                        <div class="glass-card product-card rounded-2xl overflow-hidden group flex flex-col fade-in" style="transition-delay: 200ms;">
+                            <div class="h-48 bg-gray-100/50 dark:bg-black/40 relative overflow-hidden flex items-center justify-center p-4">
+                                <span class="absolute top-3 left-3 bg-eco-green text-white text-xs font-bold px-2 py-1 rounded-md z-10 shadow-md">Green Tech</span>
+                                <i class="fa-solid fa-solar-panel text-6xl text-eco-green group-hover:scale-110 transition-transform duration-500 drop-shadow-lg"></i>
+                            </div>
+                            <div class="p-5 flex flex-col flex-1">
+                                <div class="flex justify-between items-start mb-1">
+                                    <span class="text-xs font-semibold text-vivid-cyan bg-vivid-cyan/10 px-2 py-0.5 rounded">Intermediate</span>
+                                    <div class="text-yellow-400 text-xs"><i class="fa-solid fa-star"></i> 4.9</div>
+                                </div>
+                                <h3 class="font-display font-bold text-lg text-gray-900 dark:text-white leading-tight mb-1 line-clamp-1">Dual-Axis Solar Tracker</h3>
+                                <p class="text-sm text-gray-500 dark:text-gray-400 line-clamp-2 mb-4 flex-1">Automatically rotates a small solar panel using LDRs to follow the maximum light source for peak efficiency.</p>
+                                <div class="text-xl font-bold text-electric-blue dark:text-vivid-cyan mb-4">₹1,950.00</div>
+                                
+                                <div class="grid grid-cols-2 gap-2 mt-auto">
+                                    <button onclick="openQuickView('prod_15', 'Dual-Axis Solar Tracker', 1950.00, '₹1,950.00', 'Automatically rotates a small solar panel using LDRs to follow the maximum light source for peak efficiency.', ['1x Arduino Nano', '4x LDR Sensors', '2x Servo Motors', '1x Solar Panel'], 'Intermediate', 'fa-solar-panel')" class="btn-secondary py-2 rounded-lg text-sm font-semibold flex justify-center items-center">Details</button>
+                                    <button onclick="addToCart('prod_15', 'Dual-Axis Solar Tracker', 1950.00, 'fa-solar-panel')" class="btn-primary py-2 rounded-lg text-sm font-semibold flex justify-center items-center gap-2"><i class="fa-solid fa-cart-plus"></i> Add</button>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Product 16 -->
+                        <div class="glass-card product-card rounded-2xl overflow-hidden group flex flex-col fade-in">
+                            <div class="h-48 bg-gray-100/50 dark:bg-black/40 relative overflow-hidden flex items-center justify-center p-4">
+                                <span class="absolute top-3 left-3 bg-vivid-cyan text-white text-xs font-bold px-2 py-1 rounded-md z-10 shadow-md">Health</span>
+                                <i class="fa-solid fa-person-falling text-6xl text-electric-blue group-hover:scale-110 transition-transform duration-500 drop-shadow-lg"></i>
+                            </div>
+                            <div class="p-5 flex flex-col flex-1">
+                                <div class="flex justify-between items-start mb-1">
+                                    <span class="text-xs font-semibold text-electric-blue bg-electric-blue/10 px-2 py-0.5 rounded">Advanced</span>
+                                    <div class="text-yellow-400 text-xs"><i class="fa-solid fa-star"></i> 4.8</div>
+                                </div>
+                                <h3 class="font-display font-bold text-lg text-gray-900 dark:text-white leading-tight mb-1 line-clamp-1">IoT Fall Detection Kit</h3>
+                                <p class="text-sm text-gray-500 dark:text-gray-400 line-clamp-2 mb-4 flex-1">Wearable device prototype calculating XYZ axis acceleration. Triggers SOS alerts on sudden impacts.</p>
+                                <div class="text-xl font-bold text-electric-blue dark:text-vivid-cyan mb-4">₹1,750.00</div>
+                                
+                                <div class="grid grid-cols-2 gap-2 mt-auto">
+                                    <button onclick="openQuickView('prod_16', 'IoT Fall Detection Kit', 1750.00, '₹1,750.00', 'Wearable device prototype calculating XYZ axis acceleration. Triggers SOS alerts on sudden impacts.', ['1x ESP32 Dev Board', '1x MPU6050 Accelerometer', '1x Buzzer', 'Battery Socket'], 'Advanced', 'fa-person-falling')" class="btn-secondary py-2 rounded-lg text-sm font-semibold flex justify-center items-center">Details</button>
+                                    <button onclick="addToCart('prod_16', 'IoT Fall Detection Kit', 1750.00, 'fa-person-falling')" class="btn-primary py-2 rounded-lg text-sm font-semibold flex justify-center items-center gap-2"><i class="fa-solid fa-cart-plus"></i> Add</button>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Product 17 -->
+                        <div class="glass-card product-card rounded-2xl overflow-hidden group flex flex-col fade-in" style="transition-delay: 100ms;">
+                            <div class="h-48 bg-gray-100/50 dark:bg-black/40 relative overflow-hidden flex items-center justify-center p-4">
+                                <span class="absolute top-3 left-3 bg-harvest-green text-white text-xs font-bold px-2 py-1 rounded-md z-10 shadow-md">AgriTech</span>
+                                <i class="fa-solid fa-droplet text-6xl text-vivid-cyan group-hover:scale-110 transition-transform duration-500 drop-shadow-lg"></i>
+                            </div>
+                            <div class="p-5 flex flex-col flex-1">
+                                <div class="flex justify-between items-start mb-1">
+                                    <span class="text-xs font-semibold text-harvest-green bg-harvest-green/10 px-2 py-0.5 rounded">Beginner</span>
+                                    <div class="text-yellow-400 text-xs"><i class="fa-solid fa-star"></i> 4.5</div>
+                                </div>
+                                <h3 class="font-display font-bold text-lg text-gray-900 dark:text-white leading-tight mb-1 line-clamp-1">Auto Plant Waterer</h3>
+                                <p class="text-sm text-gray-500 dark:text-gray-400 line-clamp-2 mb-4 flex-1">Simplest hardware introduction. Reads soil dry states and runs a mini water pump automatically.</p>
+                                <div class="text-xl font-bold text-electric-blue dark:text-vivid-cyan mb-4">₹899.00</div>
+                                
+                                <div class="grid grid-cols-2 gap-2 mt-auto">
+                                    <button onclick="openQuickView('prod_17', 'Auto Plant Waterer', 899.00, '₹899.00', 'Simplest hardware introduction. Reads soil dry states and runs a mini water pump automatically.', ['1x Arduino UNO', '1x Soil Sensor', '1x Mini Water Pump', '1x Relay'], 'Beginner', 'fa-droplet')" class="btn-secondary py-2 rounded-lg text-sm font-semibold flex justify-center items-center">Details</button>
+                                    <button onclick="addToCart('prod_17', 'Auto Plant Waterer', 899.00, 'fa-droplet')" class="btn-primary py-2 rounded-lg text-sm font-semibold flex justify-center items-center gap-2"><i class="fa-solid fa-cart-plus"></i> Add</button>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Product 18 -->
+                        <div class="glass-card product-card rounded-2xl overflow-hidden group flex flex-col fade-in" style="transition-delay: 200ms;">
+                            <div class="h-48 bg-gray-100/50 dark:bg-black/40 relative overflow-hidden flex items-center justify-center p-4">
+                                <span class="absolute top-3 left-3 bg-electric-blue text-white text-xs font-bold px-2 py-1 rounded-md z-10 shadow-md">Smart City</span>
+                                <i class="fa-solid fa-square-parking text-6xl text-harvest-green group-hover:scale-110 transition-transform duration-500 drop-shadow-lg"></i>
+                            </div>
+                            <div class="p-5 flex flex-col flex-1">
+                                <div class="flex justify-between items-start mb-1">
+                                    <span class="text-xs font-semibold text-vivid-cyan bg-vivid-cyan/10 px-2 py-0.5 rounded">Intermediate</span>
+                                    <div class="text-yellow-400 text-xs"><i class="fa-solid fa-star"></i> 4.7</div>
+                                </div>
+                                <h3 class="font-display font-bold text-lg text-gray-900 dark:text-white leading-tight mb-1 line-clamp-1">Smart Parking System</h3>
+                                <p class="text-sm text-gray-500 dark:text-gray-400 line-clamp-2 mb-4 flex-1">Manages entry/exit boom barriers and displays available slot counts on a cloud dashboard.</p>
+                                <div class="text-xl font-bold text-electric-blue dark:text-vivid-cyan mb-4">₹1,650.00</div>
+                                
+                                <div class="grid grid-cols-2 gap-2 mt-auto">
+                                    <button onclick="openQuickView('prod_18', 'Smart Parking System', 1650.00, '₹1,650.00', 'Manages entry/exit boom barriers and displays available slot counts on a cloud dashboard.', ['1x NodeMCU ESP8266', '2x IR Sensors', '1x SG90 Servo', '1x OLED Display'], 'Intermediate', 'fa-square-parking')" class="btn-secondary py-2 rounded-lg text-sm font-semibold flex justify-center items-center">Details</button>
+                                    <button onclick="addToCart('prod_18', 'Smart Parking System', 1650.00, 'fa-square-parking')" class="btn-primary py-2 rounded-lg text-sm font-semibold flex justify-center items-center gap-2"><i class="fa-solid fa-cart-plus"></i> Add</button>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Product 19 -->
+                        <div class="glass-card product-card rounded-2xl overflow-hidden group flex flex-col fade-in">
+                            <div class="h-48 bg-gray-100/50 dark:bg-black/40 relative overflow-hidden flex items-center justify-center p-4">
+                                <span class="absolute top-3 left-3 bg-harvest-green text-white text-xs font-bold px-2 py-1 rounded-md z-10 shadow-md">Robotics</span>
+                                <i class="fa-solid fa-wheelchair text-6xl text-electric-blue group-hover:scale-110 transition-transform duration-500 drop-shadow-lg"></i>
+                            </div>
+                            <div class="p-5 flex flex-col flex-1">
+                                <div class="flex justify-between items-start mb-1">
+                                    <span class="text-xs font-semibold text-electric-blue bg-electric-blue/10 px-2 py-0.5 rounded">Advanced</span>
+                                    <div class="text-yellow-400 text-xs"><i class="fa-solid fa-star"></i> 4.9</div>
+                                </div>
+                                <h3 class="font-display font-bold text-lg text-gray-900 dark:text-white leading-tight mb-1 line-clamp-1">Gesture Control Wheelchair</h3>
+                                <p class="text-sm text-gray-500 dark:text-gray-400 line-clamp-2 mb-4 flex-1">Dual-board project. Control a motorized chassis using hand tilts via RF communication.</p>
+                                <div class="text-xl font-bold text-electric-blue dark:text-vivid-cyan mb-4">₹2,100.00</div>
+                                
+                                <div class="grid grid-cols-2 gap-2 mt-auto">
+                                    <button onclick="openQuickView('prod_19', 'Gesture Control Wheelchair', 2100.00, '₹2,100.00', 'Dual-board project. Control a motorized chassis using hand tilts via RF communication.', ['2x Arduino Nano', '1x MPU6050', '2x nRF24L01 Transceivers', 'Motor Driver'], 'Advanced', 'fa-wheelchair')" class="btn-secondary py-2 rounded-lg text-sm font-semibold flex justify-center items-center">Details</button>
+                                    <button onclick="addToCart('prod_19', 'Gesture Control Wheelchair', 2100.00, 'fa-wheelchair')" class="btn-primary py-2 rounded-lg text-sm font-semibold flex justify-center items-center gap-2"><i class="fa-solid fa-cart-plus"></i> Add</button>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Product 20 -->
+                        <div class="glass-card product-card rounded-2xl overflow-hidden group flex flex-col fade-in" style="transition-delay: 100ms;">
+                            <div class="h-48 bg-gray-100/50 dark:bg-black/40 relative overflow-hidden flex items-center justify-center p-4">
+                                <span class="absolute top-3 left-3 bg-vivid-cyan text-white text-xs font-bold px-2 py-1 rounded-md z-10 shadow-md">IoT</span>
+                                <i class="fa-solid fa-clock text-6xl text-vivid-cyan group-hover:scale-110 transition-transform duration-500 drop-shadow-lg"></i>
+                            </div>
+                            <div class="p-5 flex flex-col flex-1">
+                                <div class="flex justify-between items-start mb-1">
+                                    <span class="text-xs font-semibold text-harvest-green bg-harvest-green/10 px-2 py-0.5 rounded">Beginner</span>
+                                    <div class="text-yellow-400 text-xs"><i class="fa-solid fa-star"></i> 4.8</div>
+                                </div>
+                                <h3 class="font-display font-bold text-lg text-gray-900 dark:text-white leading-tight mb-1 line-clamp-1">IoT Web Weather Clock</h3>
+                                <p class="text-sm text-gray-500 dark:text-gray-400 line-clamp-2 mb-4 flex-1">Pulls live internet time and weather API data to display beautifully on a desktop OLED screen.</p>
+                                <div class="text-xl font-bold text-electric-blue dark:text-vivid-cyan mb-4">₹1,250.00</div>
+                                
+                                <div class="grid grid-cols-2 gap-2 mt-auto">
+                                    <button onclick="openQuickView('prod_20', 'IoT Web Weather Clock', 1250.00, '₹1,250.00', 'Pulls live internet time and weather API data to display beautifully on a desktop OLED screen.', ['1x NodeMCU ESP8266', '1x 0.96 inch OLED Display', 'Jumper Wires'], 'Beginner', 'fa-clock')" class="btn-secondary py-2 rounded-lg text-sm font-semibold flex justify-center items-center">Details</button>
+                                    <button onclick="addToCart('prod_20', 'IoT Web Weather Clock', 1250.00, 'fa-clock')" class="btn-primary py-2 rounded-lg text-sm font-semibold flex justify-center items-center gap-2"><i class="fa-solid fa-cart-plus"></i> Add</button>
                                 </div>
                             </div>
                         </div>
@@ -406,14 +808,16 @@
                 </div>
 
                 <div class="flex gap-4">
-                    <!-- Dummy Qty -->
+                    <!-- Interactive Quantity Input -->
                     <div class="border border-gray-300 dark:border-white/20 rounded-lg flex items-center px-4 w-32">
-                        <button class="text-gray-500 hover:text-vivid-cyan">-</button>
-                        <input type="number" value="1" class="w-full text-center bg-transparent focus:outline-none dark:text-white font-bold" readonly>
-                        <button class="text-gray-500 hover:text-vivid-cyan">+</button>
+                        <button onclick="changeQvQty(-1)" class="text-gray-500 hover:text-vivid-cyan p-2 text-lg font-bold">-</button>
+                        <input type="number" id="qv-qty" value="1" class="w-full text-center bg-transparent focus:outline-none dark:text-white font-bold" readonly>
+                        <button onclick="changeQvQty(1)" class="text-gray-500 hover:text-vivid-cyan p-2 text-lg font-bold">+</button>
                     </div>
-                    <button class="flex-1 btn-primary py-3 rounded-lg font-bold text-white text-lg shadow-md" onclick="alert('Item Added!'); closeQuickView();">
-                        Add to Cart
+                    
+                    <!-- Fully functional Add to Cart Button -->
+                    <button class="flex-1 btn-primary py-3 rounded-lg font-bold text-white text-lg shadow-md" onclick="addCurrentToCart()">
+                        Add to Cart <i class="fa-solid fa-cart-plus ml-2"></i>
                     </button>
                 </div>
             </div>
@@ -444,7 +848,6 @@
             </button>
         </div>
     </div>
-
 
     <!-- 8. Footer -->
     <footer class="bg-gray-100 dark:bg-darker-charcoal pt-16 pb-8 border-t border-gray-200 dark:border-white/10 relative z-10 transition-colors duration-300 mt-12">
@@ -497,16 +900,61 @@
         initTheme();
         document.getElementById('theme-toggle').addEventListener('click', toggleTheme);
 
-        // --- 2. Shopping Cart Logic ---
-        let cart = [];
+        // --- Live Search Logic ---
+        function filterProducts() {
+            const query = document.getElementById('searchInput').value.toLowerCase();
+            const cards = document.querySelectorAll('.product-card');
+            let visibleCount = 0;
+
+            cards.forEach(card => {
+                const cardText = card.innerText.toLowerCase();
+                if (cardText.includes(query)) {
+                    card.style.display = 'flex';
+                    visibleCount++;
+                } else {
+                    card.style.display = 'none';
+                }
+            });
+
+            document.getElementById('product-count').innerText = visibleCount;
+            let noResultsMsg = document.getElementById('no-results-msg');
+            const grid = document.getElementById('product-grid');
+            
+            if (visibleCount === 0) {
+                if (!noResultsMsg) {
+                    noResultsMsg = document.createElement('div');
+                    noResultsMsg.id = 'no-results-msg';
+                    noResultsMsg.className = 'col-span-full text-center py-12 text-gray-500 dark:text-gray-400 fade-in visible';
+                    noResultsMsg.innerHTML = '<i class="fa-solid fa-ghost text-5xl mb-4 opacity-50"></i><h3 class="text-xl font-bold font-display">No items found</h3><p>Try searching for something else.</p>';
+                    grid.appendChild(noResultsMsg);
+                } else {
+                    noResultsMsg.style.display = 'block';
+                }
+            } else if (noResultsMsg) {
+                noResultsMsg.style.display = 'none';
+            }
+        }
+
+
+        // --- 2. ACTIVATED SHOPPING CART LOGIC ---
         
-        function addToCart(id, name, price, icon) {
+        // Load cart from memory (LocalStorage) so items persist!
+        let cart = JSON.parse(localStorage.getItem('catalyst_cart')) || [];
+        
+        function saveCart() {
+            localStorage.setItem('catalyst_cart', JSON.stringify(cart));
+        }
+
+        // Updated Add to Cart function that allows adding more than 1 item at once
+        function addToCart(id, name, price, icon, qtyToAdd = 1) {
             const existingItem = cart.find(item => item.id === id);
             if (existingItem) {
-                existingItem.qty++;
+                existingItem.qty += qtyToAdd;
             } else {
-                cart.push({ id, name, price, icon, qty: 1 });
+                cart.push({ id, name, price, icon, qty: qtyToAdd });
             }
+            
+            saveCart();
             updateCartUI();
             
             // Visual feedback on badge
@@ -520,7 +968,22 @@
 
         function removeFromCart(id) {
             cart = cart.filter(item => item.id !== id);
+            saveCart();
             updateCartUI();
+        }
+
+        // Function to let users change quantity directly inside the side cart drawer
+        function changeCartQty(id, change) {
+            const item = cart.find(i => i.id === id);
+            if (item) {
+                item.qty += change;
+                if (item.qty <= 0) {
+                    removeFromCart(id);
+                } else {
+                    saveCart();
+                    updateCartUI();
+                }
+            }
         }
 
         function updateCartUI() {
@@ -549,7 +1012,14 @@
                         </div>
                         <div class="flex-1">
                             <h4 class="text-sm font-bold text-gray-900 dark:text-white line-clamp-1">${item.name}</h4>
-                            <div class="text-xs text-gray-500 dark:text-gray-400">Qty: ${item.qty} × ₹${item.price.toFixed(2)}</div>
+                            <div class="text-xs text-gray-500 dark:text-gray-400 mt-1 flex items-center gap-3">
+                                <div class="flex items-center bg-gray-200 dark:bg-white/10 rounded-md overflow-hidden">
+                                    <button onclick="changeCartQty('${item.id}', -1)" class="w-6 h-6 flex items-center justify-center hover:bg-gray-300 dark:hover:bg-white/20 transition-colors">-</button>
+                                    <span class="w-6 text-center font-bold text-gray-900 dark:text-white">${item.qty}</span>
+                                    <button onclick="changeCartQty('${item.id}', 1)" class="w-6 h-6 flex items-center justify-center hover:bg-gray-300 dark:hover:bg-white/20 transition-colors">+</button>
+                                </div>
+                                <span>× ₹${item.price.toFixed(2)}</span>
+                            </div>
                         </div>
                         <div class="font-bold text-electric-blue dark:text-vivid-cyan">₹${(item.price * item.qty).toFixed(2)}</div>
                         <button onclick="removeFromCart('${item.id}')" class="text-red-500 hover:text-red-400 p-2"><i class="fa-solid fa-trash"></i></button>
@@ -577,15 +1047,26 @@
             }
         }
 
-        // --- 3. Quick View Modal ---
+        // --- 3. QUICK VIEW MODAL & MODAL CART ADDITION ---
         const qvModal = document.getElementById('quick-view-modal');
         const qvContent = document.getElementById('quick-view-content');
+        
+        // This stores the product data of whatever item you clicked "Details" on
+        let currentQV = null;
 
-        function openQuickView(title, price, desc, components, difficulty) {
+        function openQuickView(id, title, priceNum, priceStr, desc, components, difficulty, icon) {
+            currentQV = { id, title, price: priceNum, icon };
+            
             document.getElementById('qv-title').innerText = title;
-            document.getElementById('qv-price').innerText = price;
+            document.getElementById('qv-price').innerText = priceStr;
             document.getElementById('qv-desc').innerText = desc;
             document.getElementById('qv-difficulty').innerText = difficulty;
+            
+            // Render the correct icon inside the modal
+            document.getElementById('qv-icon').className = `fa-solid ${icon} text-9xl text-electric-blue drop-shadow-[0_0_15px_rgba(0,120,215,0.4)]`;
+            
+            // Reset quantity to 1 when opening a new item
+            document.getElementById('qv-qty').value = 1;
             
             const ul = document.getElementById('qv-components');
             ul.innerHTML = components.map(c => `<li>${c}</li>`).join('');
@@ -595,6 +1076,24 @@
                 qvModal.classList.add('opacity-100');
                 qvContent.classList.remove('scale-95');
             }, 10);
+        }
+
+        // Function for the +/- buttons inside Quick View
+        function changeQvQty(change) {
+            const input = document.getElementById('qv-qty');
+            let val = parseInt(input.value) + change;
+            if (val < 1) val = 1; // Don't let quantity go below 1
+            input.value = val;
+        }
+
+        // The actual function called when you click "Add to Cart" inside Quick View
+        function addCurrentToCart() {
+            if(!currentQV) return;
+            const qty = parseInt(document.getElementById('qv-qty').value) || 1;
+            
+            // Pass the quantity to our main cart logic
+            addToCart(currentQV.id, currentQV.title, currentQV.price, currentQV.icon, qty);
+            closeQuickView();
         }
 
         function closeQuickView() {
@@ -664,7 +1163,37 @@
             };
             animate();
         };
-        window.addEventListener('DOMContentLoaded', init3DBackground);
+
+        // Call init logic and load cart on startup
+        window.addEventListener('DOMContentLoaded', () => {
+            init3DBackground();
+            updateCartUI(); // Restore cart from local storage immediately on load
+        });
+
+        // --- 6. Collapsible Filters Logic ---
+        function toggleMobileFilters() {
+            if (window.innerWidth >= 1024) return; // Prevent toggle action on desktop
+            const container = document.getElementById('filter-container');
+            const icon = document.getElementById('mobile-filter-icon');
+            container.classList.toggle('hidden');
+            icon.classList.toggle('rotate-180');
+        }
+
+        function toggleFilter(sectionId, iconId) {
+            const section = document.getElementById(sectionId);
+            const icon = document.getElementById(iconId);
+            
+            if (section.classList.contains('max-h-0')) {
+                section.classList.remove('max-h-0', 'opacity-0', 'mt-0');
+                section.classList.add('max-h-96', 'opacity-100', 'mt-3');
+                icon.classList.remove('rotate-180');
+                if(sectionId === 'filter-price') section.classList.add('mt-4');
+            } else {
+                section.classList.remove('max-h-96', 'opacity-100', 'mt-3', 'mt-4');
+                section.classList.add('max-h-0', 'opacity-0', 'mt-0');
+                icon.classList.add('rotate-180');
+            }
+        }
 
         // Observer for scroll fades
         const observer = new IntersectionObserver((entries) => {
