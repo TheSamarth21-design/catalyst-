@@ -265,9 +265,9 @@
     <!-- Navigation -->
     <nav id="navbar" class="fixed w-full z-50 transition-all duration-300 py-4 px-6 lg:px-12">
         <div class="max-w-7xl mx-auto flex justify-between items-center">
-            <a href="index.html" class="text-2xl font-display font-bold flex items-center gap-2 group cursor-pointer">
-                <i class="fa-solid fa-cube text-vivid-cyan group-hover:rotate-180 transition-transform duration-500"></i>
-                <span class="tracking-wide">Catalyst<span class="text-electric-blue">Corps</span></span>
+            <!-- REPLACED TEXT LOGO WITH IMAGE -->
+            <a href="index.html" class="flex items-center group cursor-pointer">
+                <img src="1772605589123.jpg" alt="Catalyst Corps Logo" class="h-10 md:h-12 w-auto bg-white rounded-lg p-1 transition-transform duration-300 group-hover:scale-105 shadow-sm">
             </a>
             
             <!-- Desktop Menu -->
@@ -275,7 +275,7 @@
                 <a href="index.html#about" class="text-gray-700 dark:text-gray-200 hover:text-vivid-cyan dark:hover:text-vivid-cyan transition-colors drop-shadow-md">About</a>
                 <a href="projects.html" class="text-gray-700 dark:text-gray-200 hover:text-vivid-cyan dark:hover:text-vivid-cyan transition-colors drop-shadow-md">Projects</a>
                 <a href="gallery.html" class="text-gray-700 dark:text-gray-200 hover:text-vivid-cyan dark:hover:text-vivid-cyan transition-colors drop-shadow-md">Gallery</a>
-                <a href="vision.html" class="text-gray-700 dark:text-gray-200 hover:text-vivid-cyan dark:hover:text-vivid-cyan transition-colors drop-shadow-md">Vision</a>
+                <a href="vision.html" class="text-vivid-cyan transition-colors drop-shadow-md">Vision</a>
                 <a href="shop.html" class="text-gray-700 dark:text-gray-200 hover:text-vivid-cyan dark:hover:text-vivid-cyan transition-colors drop-shadow-md">Store</a>
                 
                 <!-- Theme Toggle Button -->
@@ -304,7 +304,7 @@
             <a href="index.html#about" class="text-gray-800 dark:text-gray-200 hover:text-vivid-cyan dark:hover:text-vivid-cyan transition-colors mobile-link font-medium">About</a>
             <a href="projects.html" class="text-gray-800 dark:text-gray-200 hover:text-vivid-cyan dark:hover:text-vivid-cyan transition-colors mobile-link font-medium">Projects</a>
             <a href="gallery.html" class="text-gray-800 dark:text-gray-200 hover:text-vivid-cyan dark:hover:text-vivid-cyan transition-colors mobile-link font-medium">Gallery</a>
-            <a href="vision.html" class="text-gray-800 dark:text-gray-200 hover:text-vivid-cyan dark:hover:text-vivid-cyan transition-colors mobile-link font-medium">Vision</a>
+            <a href="vision.html" class="text-vivid-cyan transition-colors mobile-link font-medium">Vision</a>
             <a href="index.html#contact" class="text-gray-800 dark:text-gray-200 hover:text-vivid-cyan dark:hover:text-vivid-cyan transition-colors mobile-link font-medium">Contact Us</a>
             <a href="shop.html" class="text-gray-700 dark:text-gray-200 hover:text-vivid-cyan dark:hover:text-vivid-cyan transition-colors drop-shadow-md">Store</a>
         </div>
@@ -399,9 +399,9 @@
         <div class="max-w-7xl mx-auto px-6 lg:px-12">
             <div class="grid grid-cols-1 md:grid-cols-4 gap-12 mb-12">
                 <div class="md:col-span-2">
-                    <a href="index.html" class="text-2xl font-display font-bold flex items-center gap-2 mb-4 text-gray-900 dark:text-white">
-                        <i class="fa-solid fa-cube text-electric-blue dark:text-vivid-cyan"></i>
-                        <span>Catalyst<span class="text-electric-blue">Corps</span></span>
+                    <!-- REPLACED TEXT LOGO WITH IMAGE -->
+                    <a href="index.html" class="inline-block mb-4">
+                        <img src="1772605589123.jpg" alt="Catalyst Corps Logo" class="h-12 md:h-16 w-auto bg-white rounded-lg p-1 hover:opacity-90 transition-opacity shadow-sm">
                     </a>
                     <p class="text-gray-600 dark:text-gray-400 text-sm max-w-sm">
                         Engineering innovation and solving tomorrow's problems today. We build, we deploy, we conquer.
@@ -464,7 +464,7 @@
         document.getElementById('theme-toggle-mobile').addEventListener('click', toggleTheme);
 
         // --------------------------------------------------------
-        // Premium 3D Background (Image Watermark + Particles)
+        // Premium 3D Background (Torus Knot Core + Particles)
         // --------------------------------------------------------
         let sceneFog;
 
@@ -493,39 +493,34 @@
             const coreGroup = new THREE.Group();
             scene.add(coreGroup);
 
-            // --- 1. Background Image Watermark ---
-            const textureLoader = new THREE.TextureLoader();
-            // Using your actual filename. It will load when running locally!
-            const bgTexture = textureLoader.load('1772605589123.jpg');
-            bgTexture.minFilter = THREE.LinearFilter;
-            
-            // Huge plane to act as the deep background
-            const bgGeo = new THREE.PlaneGeometry(160, 90); 
-            const bgMat = new THREE.MeshBasicMaterial({
-                map: bgTexture,
-                transparent: true,
-                opacity: 0.1, // Subtle opacity
-                depthWrite: false
-            });
-            const bgMesh = new THREE.Mesh(bgGeo, bgMat);
-            bgMesh.position.z = -25; // Pushed way to the back
-            scene.add(bgMesh);
+            // --- 1. The Tech Core (Torus Knot) ---
+            const knotGeo = new THREE.TorusKnotGeometry(8, 2.5, 200, 32);
+            const colorPrimary = new THREE.Color(0x00CFFF); // Vivid Cyan
+            const colorSecondary = new THREE.Color(0x0078D7); // Electric Blue
 
-
-            // --- 2. Tech Wireframe (Replacing the old frame) ---
-            const knotGeo = new THREE.TorusKnotGeometry(12, 1.5, 200, 32);
             const knotMat = new THREE.MeshBasicMaterial({
-                color: 0x0078D7,
+                color: colorPrimary,
                 wireframe: true,
                 transparent: true,
                 opacity: 0.15,
                 blending: THREE.AdditiveBlending
             });
             const knotMesh = new THREE.Mesh(knotGeo, knotMat);
-            knotMesh.position.z = -5;
             coreGroup.add(knotMesh);
 
-            // --- 3. Particle System (Data Flow) ---
+            // Inner Core (Icosahedron)
+            const innerGeo = new THREE.IcosahedronGeometry(6, 1);
+            const innerMat = new THREE.MeshBasicMaterial({
+                color: colorSecondary,
+                wireframe: true,
+                transparent: true,
+                opacity: 0.2,
+                blending: THREE.AdditiveBlending
+            });
+            const innerMesh = new THREE.Mesh(innerGeo, innerMat);
+            coreGroup.add(innerMesh);
+
+            // --- 2. Particle System (Data Flow) ---
             const particlesGeo = new THREE.BufferGeometry();
             const particleCount = 900;
             const posArray = new Float32Array(particleCount * 3);
@@ -567,9 +562,8 @@
                     // Adjust blending/opacity based on light/dark mode for better visibility
                     knotMat.blending = isDark ? THREE.AdditiveBlending : THREE.NormalBlending;
                     knotMat.opacity = isDark ? 0.15 : 0.3;
-                    
-                    // The background image visibility
-                    bgMat.opacity = isDark ? 0.08 : 0.15; 
+                    innerMat.blending = isDark ? THREE.AdditiveBlending : THREE.NormalBlending;
+                    innerMat.opacity = isDark ? 0.2 : 0.4;
                     
                     particlesMat.blending = isDark ? THREE.AdditiveBlending : THREE.NormalBlending;
                     particlesMat.color.setHex(isDark ? 0x88B04B : 0x2B7A0B); // Switch to Eco Green in light mode
@@ -603,15 +597,15 @@
                 requestAnimationFrame(animate);
                 const elapsedTime = clock.getElapsedTime();
 
-                // 1. Rotate Tech Wireframe
+                // 1. Rotate Tech Core
                 coreGroup.rotation.y += 0.002;
                 coreGroup.rotation.x += 0.001;
 
-                // 2. Parallax the Background Image slightly based on mouse and scroll
-                bgMesh.position.x = -(mouseX * 0.005);
-                bgMesh.position.y = (mouseY * 0.005) + (scrollY * 0.01);
+                // Pulsate inner core
+                const scale = 1 + Math.sin(elapsedTime * 2) * 0.05;
+                innerMesh.scale.set(scale, scale, scale);
 
-                // 3. Rotate Particles
+                // 2. Rotate Particles
                 particleMesh.rotation.y = elapsedTime * 0.05;
                 // Add slight vertical wave to particles
                 const positions = particleMesh.geometry.attributes.position.array;
@@ -620,7 +614,7 @@
                 }
                 particleMesh.geometry.attributes.position.needsUpdate = true;
 
-                // 4. Parallax Camera & Scroll Effect
+                // 3. Parallax Camera & Scroll Effect
                 // Parallax based on mouse
                 camera.position.x += (mouseX * 0.01 - camera.position.x) * 0.05;
                 
@@ -679,12 +673,12 @@
             }
         });
 
-        // Custom Modal Logic
+        // Custom Modal Logic & Web3Forms API Integration
         const modal = document.getElementById('contact-modal');
         const modalContent = document.getElementById('contact-modal-content');
 
         window.handleFormSubmit = (e) => {
-            e.preventDefault();
+            e.preventDefault(); // Stop page from reloading
             modal.classList.add('show');
             setTimeout(() => {
                 modalContent.classList.remove('scale-95');
@@ -753,6 +747,4 @@
         });
     </script>
 </body>
-
 </html>
-
