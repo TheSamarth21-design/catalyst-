@@ -8,7 +8,7 @@
     <!-- Google Fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800&family=Space+Grotesk:wght@400;600;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800&family=Space+Grotesk:wght@400;700;900&display=swap" rel="stylesheet">
     
     <!-- FontAwesome Icons -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
@@ -30,8 +30,8 @@
                         'harvest-green': '#88B04B',
                         'electric-blue': '#0078D7',
                         'vivid-cyan': '#00CFFF',
-                        'dark-charcoal': '#2E2E2E',
-                        'darker-charcoal': '#1a1a1a',
+                        'dark-charcoal': '#181818',
+                        'darker-charcoal': '#111111',
                     },
                     fontFamily: {
                         sans: ['Outfit', 'sans-serif'],
@@ -42,30 +42,30 @@
         }
     </script>
 
-    <!-- Navigation styling -->
+    <!-- Behance-style Styling -->
     <style>
         :root {
             --eco-green: #2B7A0B;
             --harvest-green: #88B04B;
             --electric-blue: #0078D7;
             --vivid-cyan: #00CFFF;
-            --dark-charcoal: #2E2E2E;
         }
 
         body {
             overflow-x: hidden;
+            background-color: #f9fafb;
+        }
+        
+        html.dark body {
+            background-color: #111111;
         }
 
-        /* 3D Background Container */
+        /* 3D Background Container - Pushed back slightly */
         #canvas-container {
             position: fixed;
-            top: 0;
-            left: 0;
-            width: 100vw;
-            height: 100vh;
-            z-index: -2;
-            pointer-events: none;
-            background: radial-gradient(circle at center, rgba(0,120,215,0.05) 0%, transparent 70%);
+            top: 0; left: 0; width: 100vw; height: 100vh;
+            z-index: -2; pointer-events: none; 
+            opacity: 0.6;
         }
 
         /* Gradient Text */
@@ -81,94 +81,90 @@
             -webkit-text-fill-color: transparent;
         }
 
-        /* Glassmorphism Cards */
-        .glass-card {
-            background: rgba(255, 255, 255, 0.65);
-            backdrop-filter: blur(12px);
-            -webkit-backdrop-filter: blur(12px);
-            border: 1px solid rgba(0, 0, 0, 0.05);
-            transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+        /* BEHANCE STYLE CARDS */
+        .b-card {
+            background: #ffffff;
+            border-radius: 16px;
+            overflow: hidden;
+            transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
+            box-shadow: 0 4px 20px -2px rgba(0, 0, 0, 0.05);
+            border: 1px solid rgba(0,0,0,0.05);
         }
 
-        html.dark .glass-card {
-            background: rgba(46, 46, 46, 0.4);
-            border: 1px solid rgba(0, 207, 255, 0.15);
+        html.dark .b-card {
+            background: #181818;
+            border: 1px solid #2a2a2a;
+            box-shadow: 0 10px 30px -5px rgba(0, 0, 0, 0.4);
         }
 
-        .glass-card:hover {
-            transform: translateY(-10px);
-            border-color: var(--electric-blue);
-            box-shadow: 0 10px 30px -10px rgba(0, 120, 215, 0.2);
-            background: rgba(255, 255, 255, 0.85);
+        .b-card:hover {
+            transform: translateY(-8px);
+            box-shadow: 0 25px 35px -5px rgba(0, 120, 215, 0.15);
+            border-color: rgba(0, 207, 255, 0.3);
         }
 
-        html.dark .glass-card:hover {
-            border-color: var(--vivid-cyan);
-            box-shadow: 0 10px 30px -10px rgba(0, 207, 255, 0.3);
-            background: rgba(46, 46, 46, 0.6);
+        html.dark .b-card:hover {
+            box-shadow: 0 25px 35px -5px rgba(0, 207, 255, 0.15);
+            border-color: rgba(0, 207, 255, 0.4);
         }
 
         /* Custom Buttons */
         .btn-primary {
-            background: linear-gradient(135deg, var(--electric-blue), var(--vivid-cyan));
+            background: var(--electric-blue);
             transition: all 0.3s ease;
-            position: relative;
-            z-index: 1;
-            overflow: hidden;
             color: white !important;
+            border-radius: 50px;
+            font-weight: 700;
         }
-
-        .btn-primary::before {
-            content: '';
-            position: absolute;
-            top: 0; left: 0; right: 0; bottom: 0;
-            background: linear-gradient(135deg, var(--vivid-cyan), var(--electric-blue));
-            z-index: -1;
-            transition: opacity 0.3s ease;
-            opacity: 0;
-        }
-
-        .btn-primary:hover::before {
-            opacity: 1;
-        }
-
         .btn-primary:hover {
-            box-shadow: 0 0 20px rgba(0, 207, 255, 0.4);
+            background: var(--vivid-cyan);
+            box-shadow: 0 8px 25px rgba(0, 207, 255, 0.35);
+            transform: translateY(-3px);
         }
 
         .btn-secondary {
             background: transparent;
-            border: 2px solid var(--vivid-cyan);
+            border: 2px solid var(--electric-blue);
             color: var(--electric-blue);
             transition: all 0.3s ease;
+            border-radius: 50px;
+            font-weight: 700;
         }
-
-        html.dark .btn-secondary {
-            color: var(--vivid-cyan);
+        html.dark .btn-secondary { 
+            border-color: var(--vivid-cyan);
+            color: var(--vivid-cyan); 
         }
-
         .btn-secondary:hover {
-            background: rgba(0, 207, 255, 0.1);
-            box-shadow: 0 0 15px rgba(0, 207, 255, 0.2);
+            background: var(--electric-blue);
+            color: white !important;
+            box-shadow: 0 8px 25px rgba(0, 120, 215, 0.35);
+            transform: translateY(-3px);
+        }
+        html.dark .btn-secondary:hover {
+            background: var(--vivid-cyan);
+            box-shadow: 0 8px 25px rgba(0, 207, 255, 0.35);
+            color: #111111 !important;
         }
 
         .btn-green {
-            background: linear-gradient(135deg, var(--harvest-green), var(--eco-green));
+            background: var(--harvest-green);
             transition: all 0.3s ease;
             color: white !important;
+            border-radius: 50px;
+            font-weight: 700;
         }
         .btn-green:hover {
-            box-shadow: 0 0 20px rgba(136, 176, 75, 0.4);
-            transform: scale(1.05);
+            background: var(--eco-green);
+            box-shadow: 0 8px 20px rgba(136, 176, 75, 0.4);
+            transform: translateY(-2px);
         }
 
         /* Animations on Scroll */
         .fade-in {
             opacity: 0;
-            transform: translateY(30px);
+            transform: translateY(40px);
             transition: opacity 0.8s ease-out, transform 0.8s ease-out;
         }
-
         .fade-in.visible {
             opacity: 1;
             transform: translateY(0);
@@ -176,141 +172,157 @@
         
         /* Navigation styling */
         .nav-scrolled {
-            background: rgba(255, 255, 255, 0.9);
-            backdrop-filter: blur(15px);
-            -webkit-backdrop-filter: blur(15px);
+            background: rgba(255, 255, 255, 0.98);
+            backdrop-filter: blur(10px);
             border-bottom: 1px solid rgba(0,0,0,0.05);
+            box-shadow: 0 4px 20px rgba(0,0,0,0.03);
         }
 
         html.dark .nav-scrolled {
-            background: rgba(26, 26, 26, 0.85);
+            background: rgba(17, 17, 17, 0.98);
             border-bottom: 1px solid rgba(255,255,255,0.05);
+            box-shadow: 0 4px 20px rgba(0,0,0,0.3);
         }
     </style>
 </head>
-<body class="antialiased selection:bg-vivid-cyan selection:text-white bg-gray-50 dark:bg-dark-charcoal text-gray-900 dark:text-white transition-colors duration-300">
+<body class="antialiased selection:bg-vivid-cyan selection:text-white text-gray-900 dark:text-white transition-colors duration-300">
 
     <!-- 3D Background Canvas -->
     <div id="canvas-container"></div>
 
     <!-- Navigation -->
-    <nav id="navbar" class="fixed w-full z-50 transition-all duration-300 py-4 px-6 lg:px-12">
-        <div class="max-w-7xl mx-auto flex justify-between items-center">
-            <!-- REPLACED TEXT LOGO WITH IMAGE -->
+    <nav id="navbar" class="fixed w-full z-50 transition-all duration-300 py-6 px-6 lg:px-12">
+        <div class="max-w-[1400px] mx-auto flex justify-between items-center">
             <a href="index.html" class="flex items-center group cursor-pointer">
-                <img src="1772605589123.jpg" alt="Catalyst Corps Logo" class="h-10 md:h-12 w-auto bg-white rounded-lg p-1 transition-transform duration-300 group-hover:scale-105 shadow-sm">
+                <img src="1772605589123.jpg" alt="Catalyst Corps Logo" class="h-12 md:h-14 w-auto bg-white rounded-xl p-1 transition-transform duration-300 group-hover:scale-105 shadow-md">
             </a>
             
             <!-- Desktop Menu -->
-            <div class="hidden md:flex items-center gap-6 lg:gap-8 font-medium">
-                <a href="index.html#about" class="text-gray-700 dark:text-gray-200 hover:text-vivid-cyan dark:hover:text-vivid-cyan transition-colors drop-shadow-md">About</a>
-                <a href="projects.html" class="text-vivid-cyan transition-colors drop-shadow-md">Projects</a>
-                <a href="gallery.html" class="text-gray-700 dark:text-gray-200 hover:text-vivid-cyan dark:hover:text-vivid-cyan transition-colors drop-shadow-md">Gallery</a>
-                <a href="vision.html" class="text-gray-700 dark:text-gray-200 hover:text-vivid-cyan dark:hover:text-vivid-cyan transition-colors drop-shadow-md">Vision</a>
-                <a href="shop.html" class="text-gray-700 dark:text-gray-200 hover:text-vivid-cyan dark:hover:text-vivid-cyan transition-colors drop-shadow-md">Store</a>
+            <div class="hidden md:flex items-center gap-8 font-medium">
+                <a href="index.html#about" class="text-gray-700 dark:text-gray-300 hover:text-electric-blue dark:hover:text-vivid-cyan transition-colors text-base">About</a>
+                <a href="projects.html" class="text-gray-900 dark:text-white font-bold border-b-2 border-vivid-cyan pb-1 text-base">Projects</a>
+                <a href="gallery.html" class="text-gray-700 dark:text-gray-300 hover:text-electric-blue dark:hover:text-vivid-cyan transition-colors text-base">Gallery</a>
+                <a href="vision.html" class="text-gray-700 dark:text-gray-300 hover:text-electric-blue dark:hover:text-vivid-cyan transition-colors text-base">Vision</a>
+                <a href="shop.html" class="text-gray-700 dark:text-gray-300 hover:text-electric-blue dark:hover:text-vivid-cyan transition-colors text-base">Store</a>
+                
+                <div class="h-6 w-px bg-gray-300 dark:bg-gray-700 mx-2"></div>
                 
                 <!-- Theme Toggle Button -->
-                <button id="theme-toggle" class="text-gray-500 dark:text-gray-300 hover:text-electric-blue dark:hover:text-vivid-cyan transition-colors focus:outline-none text-xl w-8 h-8 flex items-center justify-center rounded-full bg-gray-200/50 dark:bg-white/10 ml-2">
+                <button id="theme-toggle" class="text-gray-500 dark:text-gray-400 hover:text-electric-blue dark:hover:text-vivid-cyan transition-colors focus:outline-none text-xl w-10 h-10 flex items-center justify-center rounded-full bg-gray-100 dark:bg-gray-800">
                     <i id="theme-icon-dark" class="fa-solid fa-moon hidden dark:block"></i>
                     <i id="theme-icon-light" class="fa-solid fa-sun block dark:hidden"></i>
                 </button>
 
-                <a href="index.html#contact" class="btn-primary px-5 py-2 rounded-full text-sm font-semibold shadow-md">Contact Us</a>
+                <a href="index.html#contact" class="btn-primary px-8 py-3 text-sm tracking-wide">Contact Us</a>
             </div>
 
             <!-- Mobile Toggles -->
             <div class="md:hidden flex items-center gap-4">
-                <button id="theme-toggle-mobile" class="text-gray-600 dark:text-gray-300 hover:text-electric-blue dark:hover:text-vivid-cyan transition-colors focus:outline-none text-xl">
+                <button id="theme-toggle-mobile" class="text-gray-600 dark:text-gray-300 hover:text-vivid-cyan transition-colors focus:outline-none text-xl">
                     <i class="fa-solid fa-moon hidden dark:block mobile-dark-icon"></i>
                     <i class="fa-solid fa-sun block dark:hidden mobile-light-icon"></i>
                 </button>
-                <button id="mobile-menu-btn" class="text-2xl text-gray-800 dark:text-white focus:outline-none drop-shadow-md">
-                    <i class="fa-solid fa-bars"></i>
+                <button id="mobile-menu-btn" class="text-2xl text-gray-800 dark:text-white focus:outline-none">
+                    <i class="fa-solid fa-bars-staggered"></i>
                 </button>
             </div>
         </div>
         
         <!-- Mobile Menu -->
-        <div id="mobile-menu" class="hidden absolute top-full left-0 w-full bg-white/95 dark:bg-darker-charcoal/95 backdrop-blur-md border-b border-gray-200 dark:border-white/10 flex flex-col items-center py-6 gap-6 shadow-2xl">
-            <a href="index.html#about" class="text-gray-800 dark:text-gray-200 hover:text-vivid-cyan transition-colors mobile-link font-medium">About</a>
-            <a href="projects.html" class="text-vivid-cyan transition-colors mobile-link font-medium">Projects</a>
-            <a href="gallery.html" class="text-gray-800 dark:text-gray-200 hover:text-vivid-cyan transition-colors mobile-link font-medium">Gallery</a>
-            <a href="vision.html" class="text-gray-800 dark:text-gray-200 hover:text-vivid-cyan transition-colors mobile-link font-medium">Vision</a>
-            <a href="index.html#contact" class="text-gray-800 dark:text-gray-200 hover:text-vivid-cyan transition-colors mobile-link font-medium">Contact Us</a>
-            <a href="shop.html" class="text-gray-700 dark:text-gray-200 hover:text-vivid-cyan dark:hover:text-vivid-cyan transition-colors drop-shadow-md">Store</a>
+        <div id="mobile-menu" class="hidden absolute top-full left-0 w-full bg-white dark:bg-darker-charcoal border-b border-gray-200 dark:border-gray-800 flex flex-col items-center py-8 gap-6 shadow-2xl">
+            <a href="index.html#about" class="text-gray-800 dark:text-gray-200 hover:text-vivid-cyan transition-colors font-bold text-lg mobile-link">About</a>
+            <a href="projects.html" class="text-vivid-cyan transition-colors font-bold text-lg mobile-link">Projects</a>
+            <a href="gallery.html" class="text-gray-800 dark:text-gray-200 hover:text-vivid-cyan transition-colors font-bold text-lg mobile-link">Gallery</a>
+            <a href="vision.html" class="text-gray-800 dark:text-gray-200 hover:text-vivid-cyan transition-colors font-bold text-lg mobile-link">Vision</a>
+            <a href="index.html#contact" class="text-gray-800 dark:text-gray-200 hover:text-vivid-cyan transition-colors font-bold text-lg mobile-link">Contact Us</a>
+            <a href="shop.html" class="text-gray-700 dark:text-gray-200 hover:text-vivid-cyan transition-colors font-bold text-lg mobile-link">Store</a>
         </div>
     </nav>
 
     <!-- WRAPPER FOR PROJECTS PAGE -->
     <div id="page-projects">
         
-        <!-- Page Header -->
-        <section class="pt-32 pb-16 relative overflow-hidden">
-            <div class="max-w-7xl mx-auto px-6 lg:px-12 relative z-10 text-center fade-in">
-                <span class="text-electric-blue dark:text-vivid-cyan font-semibold tracking-wider uppercase text-sm mb-2 block drop-shadow-sm dark:drop-shadow-md">Portfolio</span>
-                <h1 class="font-display text-5xl md:text-6xl font-bold mb-6 drop-shadow-sm dark:drop-shadow-lg text-gray-900 dark:text-white">Our Projects & <span class="text-gradient-blue">Solutions</span></h1>
-                <p class="text-lg text-gray-600 dark:text-gray-300 max-w-2xl mx-auto drop-shadow-sm">Deep dive into the products and prototypes engineered by Catalyst Corps.</p>
+        <!-- Page Header (Behance Style) -->
+        <section class="pt-40 pb-16 relative overflow-hidden z-10">
+            <div class="max-w-[1400px] mx-auto px-6 lg:px-12 flex flex-col items-center text-center fade-in">
+                <div class="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-gray-200 dark:bg-gray-800 text-gray-800 dark:text-gray-200 text-xs font-bold tracking-widest uppercase mb-8 shadow-sm">
+                    <span class="w-2 h-2 rounded-full bg-electric-blue animate-pulse"></span> Portfolio
+                </div>
+                
+                <h1 class="font-display text-6xl md:text-8xl lg:text-[100px] font-black mb-6 tracking-tighter text-gray-900 dark:text-white leading-none drop-shadow-sm">
+                    Our Projects &<br />
+                    <span class="text-gradient-blue">Solutions.</span>
+                </h1>
+                <p class="text-xl md:text-2xl text-gray-600 dark:text-gray-400 max-w-3xl mx-auto font-light leading-relaxed mt-6">
+                    Deep dive into the products and prototypes engineered by Catalyst Corps.
+                </p>
             </div>
         </section>
 
         <!-- Solutions / Projects Section Grid -->
-        <section id="projects" class="pb-24 relative bg-transparent">
-            <div class="max-w-7xl mx-auto px-6 lg:px-12 relative z-10">
-                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+        <section id="projects" class="pb-32 relative z-10">
+            <div class="max-w-[1400px] mx-auto px-6 lg:px-12">
+                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-10">
                     
                     <!-- 🟢 PROJECT 1: HERITAGE VERSE -->
-                    <div class="glass-card rounded-2xl overflow-hidden group flex flex-col fade-in shadow-md dark:shadow-none">
-                        <div class="h-48 bg-gray-100/80 dark:bg-darker-charcoal/80 border-b border-gray-200 dark:border-white/5 relative overflow-hidden flex items-center justify-center transition-colors">
-                            <i class="fa-solid fa-landmark text-6xl text-electric-blue opacity-50 dark:opacity-70 group-hover:scale-125 transition-transform duration-700 drop-shadow-[0_0_10px_rgba(0,120,215,0.4)] dark:drop-shadow-[0_0_10px_rgba(0,120,215,0.8)]"></i>
-                            <div class="absolute top-4 right-4 bg-white/90 dark:bg-dark-charcoal/90 px-3 py-1 rounded-full text-xs font-bold text-gray-800 dark:text-white border border-gray-200 dark:border-white/10 backdrop-blur-md">Live</div>
+                    <div class="b-card group flex flex-col fade-in">
+                        <div class="h-64 bg-gray-100 dark:bg-gray-800 relative overflow-hidden flex items-center justify-center border-b border-gray-200 dark:border-gray-700 transition-colors">
+                            <i class="fa-solid fa-landmark text-7xl text-electric-blue opacity-50 dark:opacity-80 group-hover:scale-125 transition-transform duration-700"></i>
+                            <div class="absolute top-6 right-6 bg-white dark:bg-dark-charcoal px-4 py-1.5 rounded-full text-xs font-bold text-gray-900 dark:text-white border border-gray-200 dark:border-gray-700 shadow-sm uppercase tracking-widest">Live</div>
                         </div>
-                        <div class="p-6 flex-1 flex flex-col">
-                            <h3 class="font-display text-xl font-bold mb-2 text-gray-900 dark:text-white">Heritage Verse</h3>
-                            <p class="text-gray-600 dark:text-gray-300 text-sm mb-4 flex-1">An interactive platform that places QR codes at heritage sites, allowing visitors to scan and visualize historical events from that exact location in real-time.</p>
-                            <div class="flex flex-wrap gap-2 mb-6">
-                                <span class="text-xs px-2 py-1 rounded bg-electric-blue/10 dark:bg-electric-blue/20 text-electric-blue dark:text-blue-200 border border-electric-blue/20 dark:border-electric-blue/40">Python</span>
-                                <span class="text-xs px-2 py-1 rounded bg-electric-blue/10 dark:bg-electric-blue/20 text-electric-blue dark:text-blue-200 border border-electric-blue/20 dark:border-electric-blue/40">React</span>
-                                <span class="text-xs px-2 py-1 rounded bg-electric-blue/10 dark:bg-electric-blue/20 text-electric-blue dark:text-blue-200 border border-electric-blue/20 dark:border-electric-blue/40">QR Tech</span>
+                        <div class="p-8 flex-1 flex flex-col bg-white dark:bg-dark-charcoal">
+                            <h3 class="font-display text-2xl font-bold mb-3 text-gray-900 dark:text-white group-hover:text-electric-blue transition-colors">Heritage Verse</h3>
+                            <p class="text-gray-600 dark:text-gray-400 text-base mb-8 flex-1 leading-relaxed">An interactive platform that places QR codes at heritage sites, allowing visitors to scan and visualize historical events from that exact location in real-time.</p>
+                            
+                            <div class="flex flex-wrap gap-2 mb-8">
+                                <span class="text-xs font-bold px-3 py-1.5 rounded-full bg-gray-100 dark:bg-gray-800 text-gray-700 dark:text-gray-300">Python</span>
+                                <span class="text-xs font-bold px-3 py-1.5 rounded-full bg-gray-100 dark:bg-gray-800 text-gray-700 dark:text-gray-300">React</span>
+                                <span class="text-xs font-bold px-3 py-1.5 rounded-full bg-gray-100 dark:bg-gray-800 text-gray-700 dark:text-gray-300">QR Tech</span>
                             </div>
-                            <a href="https://thesamarth21-design.github.io/heritage-verse/" target="_blank" class="w-full py-3 rounded-lg bg-gray-100 dark:bg-white/5 hover:bg-electric-blue dark:hover:bg-electric-blue text-gray-800 dark:text-white hover:text-white font-medium transition-colors border border-gray-200 dark:border-white/20 hover:border-transparent flex justify-center items-center gap-2 backdrop-blur-sm group">
-                                View Details <i class="fa-solid fa-arrow-right text-sm group-hover:translate-x-1 transition-transform"></i>
+                            
+                            <a href="https://thesamarth21-design.github.io/heritage-verse/" target="_blank" class="w-full py-4 rounded-full bg-gray-100 dark:bg-gray-800 hover:bg-electric-blue text-gray-900 dark:text-white hover:text-white font-bold transition-all flex justify-center items-center gap-2 group/btn border border-gray-200 dark:border-gray-700 hover:border-transparent">
+                                View Details <i class="fa-solid fa-arrow-right text-sm group-hover/btn:translate-x-1 transition-transform"></i>
                             </a>
                         </div>
                     </div>
 
                     <!-- Placeholder Project 2 -->
-                    <div class="glass-card rounded-2xl overflow-hidden group flex flex-col fade-in shadow-md dark:shadow-none" style="transition-delay: 100ms;">
-                        <div class="h-48 bg-gray-100/80 dark:bg-darker-charcoal/80 border-b border-gray-200 dark:border-white/5 relative overflow-hidden flex items-center justify-center transition-colors">
-                            <i class="fa-solid fa-microchip text-6xl text-vivid-cyan opacity-50 dark:opacity-70 group-hover:scale-125 transition-transform duration-700 drop-shadow-[0_0_10px_rgba(0,207,255,0.4)] dark:drop-shadow-[0_0_10px_rgba(0,207,255,0.8)]"></i>
-                            <div class="absolute top-4 right-4 bg-white/90 dark:bg-dark-charcoal/90 px-3 py-1 rounded-full text-xs font-bold text-gray-800 dark:text-white border border-gray-200 dark:border-white/10 backdrop-blur-md">In Dev</div>
+                    <div class="b-card group flex flex-col fade-in" style="transition-delay: 100ms;">
+                        <div class="h-64 bg-gray-100 dark:bg-gray-800 relative overflow-hidden flex items-center justify-center border-b border-gray-200 dark:border-gray-700 transition-colors">
+                            <i class="fa-solid fa-microchip text-7xl text-vivid-cyan opacity-50 dark:opacity-80 group-hover:scale-125 transition-transform duration-700"></i>
+                            <div class="absolute top-6 right-6 bg-white dark:bg-dark-charcoal px-4 py-1.5 rounded-full text-xs font-bold text-gray-900 dark:text-white border border-gray-200 dark:border-gray-700 shadow-sm uppercase tracking-widest">In Dev</div>
                         </div>
-                        <div class="p-6 flex-1 flex flex-col">
-                            <h3 class="font-display text-xl font-bold mb-2 text-gray-900 dark:text-white">Project Slot 2</h3>
-                            <p class="text-gray-600 dark:text-gray-300 text-sm mb-4 flex-1">This slot is reserved for your next awesome hackathon build or IoT innovation.</p>
-                            <div class="flex flex-wrap gap-2 mb-6">
-                                <span class="text-xs px-2 py-1 rounded bg-vivid-cyan/10 dark:bg-vivid-cyan/20 text-vivid-cyan dark:text-cyan-200 border border-vivid-cyan/20 dark:border-vivid-cyan/40">Hardware</span>
-                                <span class="text-xs px-2 py-1 rounded bg-vivid-cyan/10 dark:bg-vivid-cyan/20 text-vivid-cyan dark:text-cyan-200 border border-vivid-cyan/20 dark:border-vivid-cyan/40">IoT</span>
+                        <div class="p-8 flex-1 flex flex-col bg-white dark:bg-dark-charcoal">
+                            <h3 class="font-display text-2xl font-bold mb-3 text-gray-900 dark:text-white group-hover:text-vivid-cyan transition-colors">Project Slot 2</h3>
+                            <p class="text-gray-600 dark:text-gray-400 text-base mb-8 flex-1 leading-relaxed">This slot is reserved for your next awesome hackathon build or IoT innovation.</p>
+                            
+                            <div class="flex flex-wrap gap-2 mb-8">
+                                <span class="text-xs font-bold px-3 py-1.5 rounded-full bg-gray-100 dark:bg-gray-800 text-gray-700 dark:text-gray-300">Hardware</span>
+                                <span class="text-xs font-bold px-3 py-1.5 rounded-full bg-gray-100 dark:bg-gray-800 text-gray-700 dark:text-gray-300">IoT</span>
                             </div>
-                            <button class="w-full py-3 rounded-lg bg-gray-100 dark:bg-white/5 hover:bg-vivid-cyan dark:hover:bg-vivid-cyan text-gray-800 dark:text-white hover:text-white dark:hover:text-darker-charcoal font-medium transition-colors border border-gray-200 dark:border-white/20 hover:border-transparent flex justify-center items-center gap-2 backdrop-blur-sm group">
+                            
+                            <button class="w-full py-4 rounded-full bg-gray-100 dark:bg-gray-800 hover:bg-vivid-cyan text-gray-900 dark:text-white hover:text-white font-bold transition-all flex justify-center items-center gap-2 group/btn border border-gray-200 dark:border-gray-700 hover:border-transparent">
                                 Coming Soon <i class="fa-solid fa-lock text-sm"></i>
                             </button>
                         </div>
                     </div>
 
                     <!-- Placeholder Project 3 -->
-                    <div class="glass-card rounded-2xl overflow-hidden group flex flex-col fade-in shadow-md dark:shadow-none" style="transition-delay: 200ms;">
-                        <div class="h-48 bg-gray-100/80 dark:bg-darker-charcoal/80 border-b border-gray-200 dark:border-white/5 relative overflow-hidden flex items-center justify-center transition-colors">
-                            <i class="fa-solid fa-code text-6xl text-harvest-green opacity-50 dark:opacity-70 group-hover:scale-125 transition-transform duration-700 drop-shadow-[0_0_10px_rgba(136,176,75,0.4)] dark:drop-shadow-[0_0_10px_rgba(136,176,75,0.8)]"></i>
-                            <div class="absolute top-4 right-4 bg-white/90 dark:bg-dark-charcoal/90 px-3 py-1 rounded-full text-xs font-bold text-gray-800 dark:text-white border border-gray-200 dark:border-white/10 backdrop-blur-md">Concept</div>
+                    <div class="b-card group flex flex-col fade-in" style="transition-delay: 200ms;">
+                        <div class="h-64 bg-gray-100 dark:bg-gray-800 relative overflow-hidden flex items-center justify-center border-b border-gray-200 dark:border-gray-700 transition-colors">
+                            <i class="fa-solid fa-code text-7xl text-harvest-green opacity-50 dark:opacity-80 group-hover:scale-125 transition-transform duration-700"></i>
+                            <div class="absolute top-6 right-6 bg-white dark:bg-dark-charcoal px-4 py-1.5 rounded-full text-xs font-bold text-gray-900 dark:text-white border border-gray-200 dark:border-gray-700 shadow-sm uppercase tracking-widest">Concept</div>
                         </div>
-                        <div class="p-6 flex-1 flex flex-col">
-                            <h3 class="font-display text-xl font-bold mb-2 text-gray-900 dark:text-white">Project Slot 3</h3>
-                            <p class="text-gray-600 dark:text-gray-300 text-sm mb-4 flex-1">This slot is reserved for your next awesome hackathon build or IoT innovation.</p>
-                            <div class="flex flex-wrap gap-2 mb-6">
-                                <span class="text-xs px-2 py-1 rounded bg-harvest-green/10 dark:bg-harvest-green/20 text-harvest-green dark:text-green-200 border border-harvest-green/20 dark:border-harvest-green/40">AI / ML</span>
-                                <span class="text-xs px-2 py-1 rounded bg-harvest-green/10 dark:bg-harvest-green/20 text-harvest-green dark:text-green-200 border border-harvest-green/20 dark:border-harvest-green/40">Cloud</span>
+                        <div class="p-8 flex-1 flex flex-col bg-white dark:bg-dark-charcoal">
+                            <h3 class="font-display text-2xl font-bold mb-3 text-gray-900 dark:text-white group-hover:text-harvest-green transition-colors">Project Slot 3</h3>
+                            <p class="text-gray-600 dark:text-gray-400 text-base mb-8 flex-1 leading-relaxed">This slot is reserved for your next awesome hackathon build or IoT innovation.</p>
+                            
+                            <div class="flex flex-wrap gap-2 mb-8">
+                                <span class="text-xs font-bold px-3 py-1.5 rounded-full bg-gray-100 dark:bg-gray-800 text-gray-700 dark:text-gray-300">AI / ML</span>
+                                <span class="text-xs font-bold px-3 py-1.5 rounded-full bg-gray-100 dark:bg-gray-800 text-gray-700 dark:text-gray-300">Cloud</span>
                             </div>
-                            <button class="w-full py-3 rounded-lg bg-gray-100 dark:bg-white/5 hover:bg-harvest-green dark:hover:bg-harvest-green text-gray-800 dark:text-white hover:text-white font-medium transition-colors border border-gray-200 dark:border-white/20 hover:border-transparent flex justify-center items-center gap-2 backdrop-blur-sm group">
+                            
+                            <button class="w-full py-4 rounded-full bg-gray-100 dark:bg-gray-800 hover:bg-harvest-green text-gray-900 dark:text-white hover:text-white font-bold transition-all flex justify-center items-center gap-2 group/btn border border-gray-200 dark:border-gray-700 hover:border-transparent">
                                 Coming Soon <i class="fa-solid fa-lock text-sm"></i>
                             </button>
                         </div>
@@ -321,54 +333,39 @@
         </section>
     </div>
 
-    <!-- 8. Footer -->
-    <footer class="bg-gray-100 dark:bg-darker-charcoal pt-16 pb-8 border-t border-gray-200 dark:border-white/10 relative z-10 transition-colors duration-300 mt-20">
-        <div class="max-w-7xl mx-auto px-6 lg:px-12">
-            <div class="grid grid-cols-1 md:grid-cols-4 gap-12 mb-12">
+    <!-- Footer -->
+    <footer class="bg-white dark:bg-[#111111] pt-20 pb-10 border-t border-gray-200 dark:border-gray-800 relative z-10 transition-colors duration-300">
+        <div class="max-w-[1400px] mx-auto px-6 lg:px-12">
+            <div class="grid grid-cols-1 md:grid-cols-4 gap-12 mb-16">
                 <div class="md:col-span-2">
-                    <!-- REPLACED TEXT LOGO WITH IMAGE -->
-                    <a href="index.html" class="inline-block mb-4">
-                        <img src="1772605589123.jpg" alt="Catalyst Corps Logo" class="h-12 md:h-16 w-auto bg-white rounded-lg p-1 hover:opacity-90 transition-opacity shadow-sm">
+                    <a href="index.html" class="inline-block mb-6">
+                        <img src="1772605589123.jpg" alt="Catalyst Corps Logo" class="h-12 md:h-16 w-auto bg-gray-100 dark:bg-white rounded-xl p-1.5 hover:opacity-90 transition-opacity shadow-sm">
                     </a>
-                    <p class="text-gray-600 dark:text-gray-400 text-sm max-w-sm">
+                    <p class="text-gray-500 dark:text-gray-400 text-base max-w-sm leading-relaxed">
                         Engineering innovation and solving tomorrow's problems today. We build, we deploy, we conquer.
                     </p>
-                    
-                    <!-- ADD SOCIAL LINKS HERE -->
-                    <div class="flex gap-4 mt-8 pt-8 border-t border-gray-200 dark:border-white/10 max-w-sm">
-                        <a href="https://github.com/TheSamarth21-design" target="_blank" class="w-12 h-12 rounded-full bg-gray-100 dark:bg-white/5 flex items-center justify-center text-gray-600 dark:text-gray-300 hover:bg-electric-blue dark:hover:bg-electric-blue hover:text-white transition-all border border-gray-200 dark:border-white/10 hover:border-transparent hover:shadow-[0_0_15px_rgba(0,120,215,0.4)] dark:hover:shadow-[0_0_15px_rgba(0,120,215,0.6)] backdrop-blur-sm">
-                            <i class="fa-brands fa-github text-xl"></i>
-                        </a>
-                        <a href="https://linkedin.com/in/YOUR_LINKEDIN_ID" target="_blank" class="w-12 h-12 rounded-full bg-gray-100 dark:bg-white/5 flex items-center justify-center text-gray-600 dark:text-gray-300 hover:bg-electric-blue dark:hover:bg-electric-blue hover:text-white transition-all border border-gray-200 dark:border-white/10 hover:border-transparent hover:shadow-[0_0_15px_rgba(0,120,215,0.4)] dark:hover:shadow-[0_0_15px_rgba(0,120,215,0.6)] backdrop-blur-sm">
-                            <i class="fa-brands fa-linkedin-in text-xl"></i>
-                        </a>
-                        <a href="https://instagram.com/YOUR_INSTAGRAM_ID" target="_blank" class="w-12 h-12 rounded-full bg-gray-100 dark:bg-white/5 flex items-center justify-center text-gray-600 dark:text-gray-300 hover:bg-electric-blue dark:hover:bg-vivid-cyan hover:text-white dark:hover:text-darker-charcoal transition-all border border-gray-200 dark:border-white/10 hover:border-transparent hover:shadow-[0_0_15px_rgba(0,120,215,0.4)] dark:hover:shadow-[0_0_15px_rgba(0,207,255,0.6)] backdrop-blur-sm">
-                            <i class="fa-brands fa-instagram text-xl"></i>
-                        </a>
-                    </div>
-
                 </div>
                 <div>
-                    <h4 class="font-bold mb-4 text-gray-900 dark:text-white">Quick Links</h4>
-                    <ul class="space-y-2 text-sm text-gray-600 dark:text-gray-400">
+                    <h4 class="font-bold text-lg mb-6 text-gray-900 dark:text-white font-display uppercase tracking-widest">Navigation</h4>
+                    <ul class="space-y-4 text-base text-gray-500 dark:text-gray-400 font-medium">
                         <li><a href="index.html#about" class="hover:text-electric-blue dark:hover:text-vivid-cyan transition-colors">About Us</a></li>
                         <li><a href="projects.html" class="hover:text-electric-blue dark:hover:text-vivid-cyan transition-colors">Projects</a></li>
                         <li><a href="gallery.html" class="hover:text-electric-blue dark:hover:text-vivid-cyan transition-colors">Gallery</a></li>
-                        <li><a href="vision.html" class="hover:text-electric-blue dark:hover:text-vivid-cyan transition-colors">Vision</a></li>
+                        <li><a href="shop.html" class="hover:text-electric-blue dark:hover:text-vivid-cyan transition-colors">Store</a></li>
                     </ul>
                 </div>
                 <div>
-                    <h4 class="font-bold mb-4 text-gray-900 dark:text-white">Legal</h4>
-                    <ul class="space-y-2 text-sm text-gray-600 dark:text-gray-400">
-                        <li><a href="#" class="hover:text-electric-blue dark:hover:text-vivid-cyan transition-colors">Privacy Policy</a></li>
-                        <li><a href="#" class="hover:text-electric-blue dark:hover:text-vivid-cyan transition-colors">Terms of Service</a></li>
+                    <h4 class="font-bold text-lg mb-6 text-gray-900 dark:text-white font-display uppercase tracking-widest">Legal</h4>
+                    <ul class="space-y-4 text-base text-gray-500 dark:text-gray-400 font-medium">
+                        <li><a href="privacy.html" class="hover:text-electric-blue dark:hover:text-vivid-cyan transition-colors">Privacy Policy</a></li>
+                        <li><a href="terms.html" class="hover:text-electric-blue dark:hover:text-vivid-cyan transition-colors">Terms of Service</a></li>
                     </ul>
                 </div>
             </div>
-            <div class="border-t border-gray-200 dark:border-white/10 pt-8 flex flex-col md:flex-row justify-between items-center gap-4 text-sm text-gray-500">
-                <p>&copy; 2024 Catalyst Corps. All rights reserved.</p>
+            <div class="border-t border-gray-200 dark:border-gray-800 pt-8 flex flex-col md:flex-row justify-between items-center gap-4 text-sm text-gray-400 font-medium">
+                <p>&copy; 2026 Catalyst Corps. All rights reserved.</p>
                 <div class="flex gap-4">
-                    <span class="flex items-center gap-1"><i class="fa-solid fa-code text-electric-blue"></i> with passion</span>
+                    <span class="flex items-center gap-2"><i class="fa-solid fa-bolt text-electric-blue"></i> Engineered for the future</span>
                 </div>
             </div>
         </div>
@@ -376,9 +373,6 @@
 
     <!-- Scripts -->
     <script>
-        // --------------------------------------------------------
-        // Theme Toggle Logic
-        // --------------------------------------------------------
         const initTheme = () => {
             const savedTheme = localStorage.getItem('theme');
             if (savedTheme === 'light') {
@@ -397,21 +391,15 @@
         };
 
         initTheme();
-        
         document.getElementById('theme-toggle').addEventListener('click', toggleTheme);
         document.getElementById('theme-toggle-mobile').addEventListener('click', toggleTheme);
 
-        // --------------------------------------------------------
-        // Premium 3D Background (Torus Knot Core + Particles)
-        // --------------------------------------------------------
         let sceneFog;
-
         const init3DBackground = () => {
             const container = document.getElementById('canvas-container');
             const scene = new THREE.Scene();
-            
             const isDark = document.documentElement.classList.contains('dark');
-            sceneFog = new THREE.FogExp2(isDark ? 0x1a1a1a : 0xf8fafc, 0.015);
+            sceneFog = new THREE.FogExp2(isDark ? 0x111111 : 0xf9fafb, 0.015);
             scene.fog = sceneFog;
 
             const camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
@@ -425,122 +413,82 @@
             const coreGroup = new THREE.Group();
             scene.add(coreGroup);
 
-            // --- 1. The Tech Core (Torus Knot) ---
             const knotGeo = new THREE.TorusKnotGeometry(8, 2.5, 200, 32);
-            const colorPrimary = new THREE.Color(0x00CFFF);
+            const colorPrimary = new THREE.Color(0x00CFFF); 
             const colorSecondary = new THREE.Color(0x0078D7);
 
             const knotMat = new THREE.MeshBasicMaterial({
-                color: colorPrimary,
-                wireframe: true,
-                transparent: true,
-                opacity: 0.15,
-                blending: THREE.AdditiveBlending
+                color: colorPrimary, wireframe: true, transparent: true,
+                opacity: 0.1, blending: THREE.AdditiveBlending
             });
             const knotMesh = new THREE.Mesh(knotGeo, knotMat);
             coreGroup.add(knotMesh);
 
-            // Inner Core
             const innerGeo = new THREE.IcosahedronGeometry(6, 1);
             const innerMat = new THREE.MeshBasicMaterial({
-                color: colorSecondary,
-                wireframe: true,
-                transparent: true,
-                opacity: 0.2,
-                blending: THREE.AdditiveBlending
+                color: colorSecondary, wireframe: true, transparent: true,
+                opacity: 0.15, blending: THREE.AdditiveBlending
             });
             const innerMesh = new THREE.Mesh(innerGeo, innerMat);
             coreGroup.add(innerMesh);
 
-            // --- 2. Particle System ---
             const particlesGeo = new THREE.BufferGeometry();
-            const particleCount = 900;
+            const particleCount = 700; 
             const posArray = new Float32Array(particleCount * 3);
-            
-            for(let i = 0; i < particleCount * 3; i++) {
-                posArray[i] = (Math.random() - 0.5) * 120;
-            }
-            
+            for(let i = 0; i < particleCount * 3; i++) posArray[i] = (Math.random() - 0.5) * 140;
             particlesGeo.setAttribute('position', new THREE.BufferAttribute(posArray, 3));
             
             const canvas = document.createElement('canvas');
             canvas.width = 16; canvas.height = 16;
             const ctx = canvas.getContext('2d');
-            ctx.beginPath();
-            ctx.arc(8, 8, 8, 0, Math.PI * 2);
-            ctx.fillStyle = '#ffffff';
-            ctx.fill();
+            ctx.beginPath(); ctx.arc(8, 8, 8, 0, Math.PI * 2); ctx.fillStyle = '#ffffff'; ctx.fill();
             const texture = new THREE.CanvasTexture(canvas);
 
             const particlesMat = new THREE.PointsMaterial({
-                size: 0.35,
-                map: texture,
-                transparent: true,
-                opacity: 0.5,
-                color: 0x88B04B,
-                blending: THREE.AdditiveBlending,
-                depthWrite: false
+                size: 0.3, map: texture, transparent: true, opacity: 0.4,
+                color: 0x88B04B, blending: THREE.AdditiveBlending, depthWrite: false
             });
-            
             const particleMesh = new THREE.Points(particlesGeo, particlesMat);
             scene.add(particleMesh);
 
             window.update3DTheme = (isDark) => {
                 if(sceneFog) {
-                    sceneFog.color.setHex(isDark ? 0x1a1a1a : 0xf8fafc);
+                    sceneFog.color.setHex(isDark ? 0x111111 : 0xf9fafb);
                     knotMat.blending = isDark ? THREE.AdditiveBlending : THREE.NormalBlending;
-                    knotMat.opacity = isDark ? 0.15 : 0.3;
+                    knotMat.opacity = isDark ? 0.1 : 0.2;
                     innerMat.blending = isDark ? THREE.AdditiveBlending : THREE.NormalBlending;
-                    innerMat.opacity = isDark ? 0.2 : 0.4;
+                    innerMat.opacity = isDark ? 0.15 : 0.25;
                     particlesMat.blending = isDark ? THREE.AdditiveBlending : THREE.NormalBlending;
-                    particlesMat.color.setHex(isDark ? 0x88B04B : 0x2B7A0B);
+                    particlesMat.color.setHex(isDark ? 0x88B04B : 0x2B7A0B); 
                 }
             };
-
             window.update3DTheme(isDark);
 
-            let mouseX = 0;
-            let mouseY = 0;
-            let scrollY = window.scrollY;
-            const windowHalfX = window.innerWidth / 2;
-            const windowHalfY = window.innerHeight / 2;
+            let mouseX = 0, mouseY = 0, scrollY = window.scrollY;
+            const windowHalfX = window.innerWidth / 2, windowHalfY = window.innerHeight / 2;
 
-            document.addEventListener('mousemove', (event) => {
-                mouseX = (event.clientX - windowHalfX);
-                mouseY = (event.clientY - windowHalfY);
-            });
-
-            window.addEventListener('scroll', () => {
-                scrollY = window.scrollY;
-            });
+            document.addEventListener('mousemove', (e) => { mouseX = (e.clientX - windowHalfX); mouseY = (e.clientY - windowHalfY); });
+            window.addEventListener('scroll', () => { scrollY = window.scrollY; });
 
             const clock = new THREE.Clock();
-
             const animate = () => {
                 requestAnimationFrame(animate);
                 const elapsedTime = clock.getElapsedTime();
 
-                coreGroup.rotation.y += 0.002;
-                coreGroup.rotation.x += 0.001;
+                coreGroup.rotation.y += 0.0015; coreGroup.rotation.x += 0.0005;
+                innerMesh.scale.set(1 + Math.sin(elapsedTime * 2) * 0.03, 1 + Math.sin(elapsedTime * 2) * 0.03, 1 + Math.sin(elapsedTime * 2) * 0.03);
 
-                const scale = 1 + Math.sin(elapsedTime * 2) * 0.05;
-                innerMesh.scale.set(scale, scale, scale);
-
-                particleMesh.rotation.y = elapsedTime * 0.05;
+                particleMesh.rotation.y = elapsedTime * 0.03;
                 const positions = particleMesh.geometry.attributes.position.array;
-                for(let i = 1; i < particleCount * 3; i+=3) {
-                   positions[i] += Math.sin(elapsedTime + positions[i-1]) * 0.01;
-                }
+                for(let i = 1; i < particleCount * 3; i+=3) positions[i] += Math.sin(elapsedTime + positions[i-1]) * 0.005;
                 particleMesh.geometry.attributes.position.needsUpdate = true;
 
                 camera.position.x += (mouseX * 0.01 - camera.position.x) * 0.05;
-                const scrollEffect = scrollY * 0.015;
-                camera.position.y += (-mouseY * 0.01 - camera.position.y - scrollEffect) * 0.05;
+                camera.position.y += (-mouseY * 0.01 - camera.position.y - (scrollY * 0.015)) * 0.05;
                 
                 camera.lookAt(scene.position);
                 renderer.render(scene, camera);
             };
-
             animate();
 
             window.addEventListener('resize', () => {
@@ -552,42 +500,26 @@
 
         window.addEventListener('DOMContentLoaded', init3DBackground);
 
-        // --------------------------------------------------------
-        // UI Navigation Logic
-        // --------------------------------------------------------
+        // Mobile Menu
         const mobileMenuBtn = document.getElementById('mobile-menu-btn');
         const mobileMenu = document.getElementById('mobile-menu');
         const mobileLinks = document.querySelectorAll('.mobile-link');
 
-        mobileMenuBtn.addEventListener('click', () => {
-            mobileMenu.classList.toggle('hidden');
-        });
+        mobileMenuBtn.addEventListener('click', () => mobileMenu.classList.toggle('hidden'));
+        mobileLinks.forEach(link => link.addEventListener('click', () => mobileMenu.classList.add('hidden')));
 
-        mobileLinks.forEach(link => {
-            link.addEventListener('click', () => {
-                mobileMenu.classList.add('hidden');
-            });
-        });
-
+        // Navbar Scroll Effect
         const navbar = document.getElementById('navbar');
         window.addEventListener('scroll', () => {
             if (window.scrollY > 50) {
-                navbar.classList.add('nav-scrolled');
-                navbar.classList.remove('py-4');
-                navbar.classList.add('py-2');
+                navbar.classList.add('nav-scrolled'); navbar.classList.remove('py-6'); navbar.classList.add('py-4');
             } else {
-                navbar.classList.remove('nav-scrolled');
-                navbar.classList.add('py-4');
-                navbar.classList.remove('py-2');
+                navbar.classList.remove('nav-scrolled'); navbar.classList.add('py-6'); navbar.classList.remove('py-4');
             }
         });
 
-        const observerOptions = {
-            root: null,
-            rootMargin: '0px',
-            threshold: 0.1
-        };
-
+        // Intersection Observer
+        const observerOptions = { root: null, rootMargin: '0px', threshold: 0.1 };
         const observer = new IntersectionObserver((entries, observer) => {
             entries.forEach(entry => {
                 if (entry.isIntersecting) {
@@ -597,9 +529,7 @@
             });
         }, observerOptions);
 
-        document.querySelectorAll('.fade-in').forEach((el) => {
-            observer.observe(el);
-        });
+        document.querySelectorAll('.fade-in').forEach((el) => observer.observe(el));
     </script>
 </body>
 </html>
