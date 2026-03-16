@@ -3,12 +3,12 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Catalyst Corps | Store (Cloud Connected)</title>
+    <title>Catalyst Corps | Projects</title>
     
     <!-- Google Fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800&family=Space+Grotesk:wght@400;600;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800&family=Space+Grotesk:wght@400;700;900&display=swap" rel="stylesheet">
     
     <!-- FontAwesome Icons -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
@@ -30,8 +30,8 @@
                         'harvest-green': '#88B04B',
                         'electric-blue': '#0078D7',
                         'vivid-cyan': '#00CFFF',
-                        'dark-charcoal': '#2E2E2E',
-                        'darker-charcoal': '#1a1a1a',
+                        'dark-charcoal': '#181818',
+                        'darker-charcoal': '#111111',
                     },
                     fontFamily: {
                         sans: ['Outfit', 'sans-serif'],
@@ -42,1016 +42,493 @@
         }
     </script>
 
-    <!-- Firebase Compat Libraries (Solves the blank page issue) -->
-    <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-app-compat.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-auth-compat.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore-compat.js"></script>
-
-    <!-- Navigation & Core Styling -->
+    <!-- Behance-style Styling -->
     <style>
         :root {
             --eco-green: #2B7A0B;
             --harvest-green: #88B04B;
             --electric-blue: #0078D7;
             --vivid-cyan: #00CFFF;
-            --dark-charcoal: #2E2E2E;
         }
 
-        body { overflow-x: hidden; }
+        body {
+            overflow-x: hidden;
+            background-color: #f9fafb;
+        }
+        
+        html.dark body {
+            background-color: #111111;
+        }
 
-        /* 3D Background Container */
+        /* 3D Background Container - Pushed back slightly */
         #canvas-container {
             position: fixed;
             top: 0; left: 0; width: 100vw; height: 100vh;
-            z-index: -2; pointer-events: none;
-            background: radial-gradient(circle at center, rgba(0,120,215,0.05) 0%, transparent 70%);
+            z-index: -2; pointer-events: none; 
+            opacity: 0.6;
         }
 
         /* Gradient Text */
         .text-gradient-blue {
             background: linear-gradient(135deg, var(--vivid-cyan), var(--electric-blue));
-            -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+        
+        .text-gradient-green {
+            background: linear-gradient(135deg, var(--harvest-green), var(--eco-green));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
         }
 
-        /* Glassmorphism Cards */
-        .glass-card {
-            background: rgba(255, 255, 255, 0.65);
-            backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px);
-            border: 1px solid rgba(0, 0, 0, 0.05);
-            transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+        /* BEHANCE STYLE CARDS */
+        .b-card {
+            background: #ffffff;
+            border-radius: 16px;
+            overflow: hidden;
+            transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
+            box-shadow: 0 4px 20px -2px rgba(0, 0, 0, 0.05);
+            border: 1px solid rgba(0,0,0,0.05);
         }
-        html.dark .glass-card {
-            background: rgba(46, 46, 46, 0.5);
-            border: 1px solid rgba(0, 207, 255, 0.15);
+
+        html.dark .b-card {
+            background: #181818;
+            border: 1px solid #2a2a2a;
+            box-shadow: 0 10px 30px -5px rgba(0, 0, 0, 0.4);
         }
-        .glass-card:hover {
-            border-color: var(--electric-blue);
-            box-shadow: 0 10px 30px -10px rgba(0, 120, 215, 0.2);
+
+        .b-card:hover {
+            transform: translateY(-8px);
+            box-shadow: 0 25px 35px -5px rgba(0, 120, 215, 0.15);
+            border-color: rgba(0, 207, 255, 0.3);
         }
-        html.dark .glass-card:hover {
-            border-color: var(--vivid-cyan);
-            box-shadow: 0 10px 30px -10px rgba(0, 207, 255, 0.3);
+
+        html.dark .b-card:hover {
+            box-shadow: 0 25px 35px -5px rgba(0, 207, 255, 0.15);
+            border-color: rgba(0, 207, 255, 0.4);
         }
 
         /* Custom Buttons */
         .btn-primary {
-            background: linear-gradient(135deg, var(--electric-blue), var(--vivid-cyan));
-            transition: all 0.3s ease; position: relative; z-index: 1; overflow: hidden; color: white !important;
+            background: var(--electric-blue);
+            transition: all 0.3s ease;
+            color: white !important;
+            border-radius: 50px;
+            font-weight: 700;
         }
-        .btn-primary::before {
-            content: ''; position: absolute; top: 0; left: 0; right: 0; bottom: 0;
-            background: linear-gradient(135deg, var(--vivid-cyan), var(--electric-blue));
-            z-index: -1; transition: opacity 0.3s ease; opacity: 0;
+        .btn-primary:hover {
+            background: var(--vivid-cyan);
+            box-shadow: 0 8px 25px rgba(0, 207, 255, 0.35);
+            transform: translateY(-3px);
         }
-        .btn-primary:hover::before { opacity: 1; }
-        .btn-primary:hover { box-shadow: 0 0 20px rgba(0, 207, 255, 0.4); }
 
         .btn-secondary {
-            background: transparent; border: 2px solid var(--vivid-cyan);
-            color: var(--electric-blue); transition: all 0.3s ease;
+            background: transparent;
+            border: 2px solid var(--electric-blue);
+            color: var(--electric-blue);
+            transition: all 0.3s ease;
+            border-radius: 50px;
+            font-weight: 700;
         }
-        html.dark .btn-secondary { color: var(--vivid-cyan); }
+        html.dark .btn-secondary { 
+            border-color: var(--vivid-cyan);
+            color: var(--vivid-cyan); 
+        }
         .btn-secondary:hover {
-            background: rgba(0, 207, 255, 0.1); box-shadow: 0 0 15px rgba(0, 207, 255, 0.2);
+            background: var(--electric-blue);
+            color: white !important;
+            box-shadow: 0 8px 25px rgba(0, 120, 215, 0.35);
+            transform: translateY(-3px);
+        }
+        html.dark .btn-secondary:hover {
+            background: var(--vivid-cyan);
+            box-shadow: 0 8px 25px rgba(0, 207, 255, 0.35);
+            color: #111111 !important;
         }
 
-        /* Scrollbar styling */
-        ::-webkit-scrollbar { width: 6px; }
-        ::-webkit-scrollbar-track { background: transparent; }
-        ::-webkit-scrollbar-thumb { background: rgba(0, 207, 255, 0.3); border-radius: 10px; }
-        ::-webkit-scrollbar-thumb:hover { background: rgba(0, 207, 255, 0.5); }
+        .btn-green {
+            background: var(--harvest-green);
+            transition: all 0.3s ease;
+            color: white !important;
+            border-radius: 50px;
+            font-weight: 700;
+        }
+        .btn-green:hover {
+            background: var(--eco-green);
+            box-shadow: 0 8px 20px rgba(136, 176, 75, 0.4);
+            transform: translateY(-2px);
+        }
 
-        /* Animations */
-        .fade-in { opacity: 0; transform: translateY(30px); transition: opacity 0.8s ease-out, transform 0.8s ease-out; }
-        .fade-in.visible { opacity: 1; transform: translateY(0); }
+        /* Animations on Scroll */
+        .fade-in {
+            opacity: 0;
+            transform: translateY(40px);
+            transition: opacity 0.8s ease-out, transform 0.8s ease-out;
+        }
+        .fade-in.visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
         
+        /* Navigation styling */
         .nav-scrolled {
-            background: rgba(255, 255, 255, 0.9); backdrop-filter: blur(15px);
+            background: rgba(255, 255, 255, 0.98);
+            backdrop-filter: blur(10px);
             border-bottom: 1px solid rgba(0,0,0,0.05);
+            box-shadow: 0 4px 20px rgba(0,0,0,0.03);
         }
+
         html.dark .nav-scrolled {
-            background: rgba(26, 26, 26, 0.85); border-bottom: 1px solid rgba(255,255,255,0.05);
+            background: rgba(17, 17, 17, 0.98);
+            border-bottom: 1px solid rgba(255,255,255,0.05);
+            box-shadow: 0 4px 20px rgba(0,0,0,0.3);
         }
-
-        /* Slide-out Drawers */
-        .side-drawer { transition: transform 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275); }
-        .drawer-open { transform: translateX(0) !important; }
-
-        /* Custom Checkbox & Radio */
-        .custom-checkbox { accent-color: var(--vivid-cyan); width: 1.2rem; height: 1.2rem; cursor: pointer; }
-        .custom-radio { accent-color: var(--electric-blue); width: 1.2rem; height: 1.2rem; cursor: pointer; }
-        
-        /* Hide number input arrows */
-        input[type="number"]::-webkit-inner-spin-button, input[type="number"]::-webkit-outer-spin-button { -webkit-appearance: none; margin: 0; }
-        input[type="number"] { -moz-appearance: textfield; }
-        
-        /* Wishlist Heart Animation */
-        .heart-icon { transition: transform 0.2s cubic-bezier(0.175, 0.885, 0.32, 1.275), color 0.2s; cursor: pointer; }
-        .heart-icon:hover { transform: scale(1.2); }
-        .heart-active { color: #ef4444 !important; font-weight: 900; }
     </style>
 </head>
-<body class="antialiased selection:bg-vivid-cyan selection:text-white bg-gray-50 dark:bg-dark-charcoal text-gray-900 dark:text-white transition-colors duration-300">
+<body class="antialiased selection:bg-vivid-cyan selection:text-white text-gray-900 dark:text-white transition-colors duration-300">
 
     <!-- 3D Background Canvas -->
     <div id="canvas-container"></div>
 
     <!-- Navigation -->
-    <nav id="navbar" class="fixed w-full z-50 transition-all duration-300 py-4 px-6 lg:px-12">
-        <div class="max-w-7xl mx-auto flex justify-between items-center">
-            <!-- REPLACED TEXT LOGO WITH IMAGE -->
+    <nav id="navbar" class="fixed w-full z-50 transition-all duration-300 py-6 px-6 lg:px-12">
+        <div class="max-w-[1400px] mx-auto flex justify-between items-center">
             <a href="index.html" class="flex items-center group cursor-pointer">
-                <img src="1772605589123.jpg" alt="Catalyst Corps Logo" class="h-10 md:h-12 w-auto bg-white rounded-lg p-1 transition-transform duration-300 group-hover:scale-105 shadow-sm">
+                <img src="1772605589123.jpg" alt="Catalyst Corps Logo" class="h-12 md:h-14 w-auto bg-white rounded-xl p-1 transition-transform duration-300 group-hover:scale-105 shadow-md">
             </a>
             
             <!-- Desktop Menu -->
-            <div class="hidden md:flex items-center gap-6 lg:gap-8 font-medium">
-                <a href="index.html#about" class="text-gray-700 dark:text-gray-200 hover:text-vivid-cyan transition-colors drop-shadow-md">About</a>
-                <a href="projects.html" class="text-gray-700 dark:text-gray-200 hover:text-vivid-cyan transition-colors drop-shadow-md">Projects</a>
-                <a href="gallery.html" class="text-gray-700 dark:text-gray-200 hover:text-vivid-cyan transition-colors drop-shadow-md">Gallery</a>
-                <a href="vision.html" class="text-gray-700 dark:text-gray-200 hover:text-vivid-cyan transition-colors drop-shadow-md">Vision</a>
-                <a href="#" class="text-vivid-cyan transition-colors drop-shadow-md">Store</a>
+            <div class="hidden md:flex items-center gap-8 font-medium">
+                <a href="index.html#about" class="text-gray-700 dark:text-gray-300 hover:text-electric-blue dark:hover:text-vivid-cyan transition-colors text-base">About</a>
+                <a href="projects.html" class="text-gray-900 dark:text-white font-bold border-b-2 border-vivid-cyan pb-1 text-base">Projects</a>
+                <a href="gallery.html" class="text-gray-700 dark:text-gray-300 hover:text-electric-blue dark:hover:text-vivid-cyan transition-colors text-base">Gallery</a>
+                <a href="vision.html" class="text-gray-700 dark:text-gray-300 hover:text-electric-blue dark:hover:text-vivid-cyan transition-colors text-base">Vision</a>
+                <a href="shop.html" class="text-gray-700 dark:text-gray-300 hover:text-electric-blue dark:hover:text-vivid-cyan transition-colors text-base">Store</a>
+                
+                <div class="h-6 w-px bg-gray-300 dark:bg-gray-700 mx-2"></div>
                 
                 <!-- Theme Toggle Button -->
-                <button id="theme-toggle" onclick="toggleTheme()" class="text-gray-500 dark:text-gray-300 hover:text-electric-blue transition-colors focus:outline-none text-xl w-8 h-8 flex items-center justify-center rounded-full bg-gray-200/50 dark:bg-white/10 ml-2">
+                <button id="theme-toggle" class="text-gray-500 dark:text-gray-400 hover:text-electric-blue dark:hover:text-vivid-cyan transition-colors focus:outline-none text-xl w-10 h-10 flex items-center justify-center rounded-full bg-gray-100 dark:bg-gray-800">
                     <i id="theme-icon-dark" class="fa-solid fa-moon hidden dark:block"></i>
                     <i id="theme-icon-light" class="fa-solid fa-sun block dark:hidden"></i>
                 </button>
 
-                <!-- Auth/User Icon -->
-                <button onclick="openAuthModal()" id="nav-user-btn" class="text-gray-700 dark:text-gray-200 hover:text-electric-blue transition-colors text-xl">
-                    <i class="fa-regular fa-circle-user"></i>
-                </button>
-
-                <!-- Wishlist Icon -->
-                <button onclick="toggleWishlistDrawer()" class="relative text-gray-700 dark:text-gray-200 hover:text-red-500 transition-colors text-xl ml-2">
-                    <i class="fa-regular fa-heart"></i>
-                    <span id="wishlist-badge" class="absolute -top-2 -right-2 bg-red-500 text-white text-xs font-bold w-5 h-5 flex items-center justify-center rounded-full shadow-md scale-0 transition-transform">0</span>
-                </button>
-
-                <!-- Cart Icon -->
-                <button onclick="toggleCart()" class="relative text-gray-700 dark:text-gray-200 hover:text-vivid-cyan transition-colors text-xl ml-2">
-                    <i class="fa-solid fa-cart-shopping"></i>
-                    <span id="cart-badge" class="absolute -top-2 -right-2 bg-vivid-cyan text-white text-xs font-bold w-5 h-5 flex items-center justify-center rounded-full shadow-md scale-0 transition-transform">0</span>
-                </button>
+                <a href="index.html#contact" class="btn-primary px-8 py-3 text-sm tracking-wide">Contact Us</a>
             </div>
 
             <!-- Mobile Toggles -->
             <div class="md:hidden flex items-center gap-4">
-                <button onclick="toggleWishlistDrawer()" class="relative text-gray-800 dark:text-white hover:text-red-500 text-xl">
-                    <i class="fa-regular fa-heart"></i>
-                    <span id="wishlist-badge-mobile" class="absolute -top-2 -right-2 bg-red-500 text-white text-xs font-bold w-5 h-5 flex items-center justify-center rounded-full scale-0">0</span>
+                <button id="theme-toggle-mobile" class="text-gray-600 dark:text-gray-300 hover:text-vivid-cyan transition-colors focus:outline-none text-xl">
+                    <i class="fa-solid fa-moon hidden dark:block mobile-dark-icon"></i>
+                    <i class="fa-solid fa-sun block dark:hidden mobile-light-icon"></i>
                 </button>
-                <button onclick="toggleCart()" class="relative text-gray-800 dark:text-white hover:text-vivid-cyan text-xl">
-                    <i class="fa-solid fa-cart-shopping"></i>
-                    <span id="cart-badge-mobile" class="absolute -top-2 -right-2 bg-vivid-cyan text-white text-xs font-bold w-5 h-5 flex items-center justify-center rounded-full scale-0">0</span>
-                </button>
-                <button onclick="document.getElementById('mobile-menu').classList.toggle('hidden')" class="text-2xl text-gray-800 dark:text-white focus:outline-none">
-                    <i class="fa-solid fa-bars"></i>
+                <button id="mobile-menu-btn" class="text-2xl text-gray-800 dark:text-white focus:outline-none">
+                    <i class="fa-solid fa-bars-staggered"></i>
                 </button>
             </div>
         </div>
         
         <!-- Mobile Menu -->
-        <div id="mobile-menu" class="hidden absolute top-full left-0 w-full bg-white/95 dark:bg-darker-charcoal/95 backdrop-blur-md border-b border-gray-200 dark:border-white/10 flex flex-col items-center py-6 gap-6 shadow-2xl">
-            <a href="index.html#about" class="text-gray-800 dark:text-gray-200 hover:text-vivid-cyan transition-colors font-medium">About</a>
-            <a href="projects.html" class="text-gray-800 dark:text-gray-200 hover:text-vivid-cyan transition-colors font-medium">Projects</a>
-            <a href="gallery.html" class="text-gray-800 dark:text-gray-200 hover:text-vivid-cyan transition-colors font-medium">Gallery</a>
-            <a href="#" class="text-vivid-cyan transition-colors font-medium">Store</a>
-            <button onclick="openAuthModal(); document.getElementById('mobile-menu').classList.add('hidden');" id="mobile-auth-btn" class="text-electric-blue dark:text-vivid-cyan font-bold border border-vivid-cyan px-6 py-2 rounded-full">Login / Sign Up</button>
+        <div id="mobile-menu" class="hidden absolute top-full left-0 w-full bg-white dark:bg-darker-charcoal border-b border-gray-200 dark:border-gray-800 flex flex-col items-center py-8 gap-6 shadow-2xl">
+            <a href="index.html#about" class="text-gray-800 dark:text-gray-200 hover:text-vivid-cyan transition-colors font-bold text-lg mobile-link">About</a>
+            <a href="projects.html" class="text-vivid-cyan transition-colors font-bold text-lg mobile-link">Projects</a>
+            <a href="gallery.html" class="text-gray-800 dark:text-gray-200 hover:text-vivid-cyan transition-colors font-bold text-lg mobile-link">Gallery</a>
+            <a href="vision.html" class="text-gray-800 dark:text-gray-200 hover:text-vivid-cyan transition-colors font-bold text-lg mobile-link">Vision</a>
+            <a href="index.html#contact" class="text-gray-800 dark:text-gray-200 hover:text-vivid-cyan transition-colors font-bold text-lg mobile-link">Contact Us</a>
+            <a href="shop.html" class="text-gray-700 dark:text-gray-200 hover:text-vivid-cyan transition-colors font-bold text-lg mobile-link">Store</a>
         </div>
     </nav>
 
-    <!-- WRAPPER FOR STORE PAGE -->
-    <div id="page-store">
+    <!-- WRAPPER FOR PROJECTS PAGE -->
+    <div id="page-projects">
         
-        <!-- Store Hero Section -->
-        <section class="pt-32 pb-10 relative overflow-hidden">
-            <div class="max-w-7xl mx-auto px-6 lg:px-12 relative z-10 text-center fade-in">
-                <span class="text-electric-blue dark:text-vivid-cyan font-semibold tracking-wider uppercase text-sm mb-2 block drop-shadow-sm">The Shop</span>
-                <h1 class="font-display text-4xl md:text-5xl font-bold mb-6 drop-shadow-sm dark:drop-shadow-lg text-gray-900 dark:text-white">Catalyst <span class="text-gradient-blue">Armory</span></h1>
-                <p class="text-lg text-gray-600 dark:text-gray-300 max-w-2xl mx-auto mb-8 drop-shadow-sm">Professional-grade hardware kits and components for your next engineering build.</p>
-                
-                <!-- Search Bar -->
-                <div class="max-w-xl mx-auto relative glass-card rounded-full flex items-center overflow-hidden border border-gray-300 dark:border-white/20 focus-within:border-vivid-cyan transition-colors shadow-lg">
-                    <i class="fa-solid fa-search absolute left-5 text-gray-500 dark:text-gray-400"></i>
-                    <input type="text" id="searchInput" oninput="applyFilters()" placeholder="Search for ESP32, Sensors, Kits..." class="w-full bg-transparent py-4 pl-12 pr-4 text-gray-900 dark:text-white focus:outline-none placeholder-gray-500 dark:placeholder-gray-400">
-                    <button onclick="applyFilters()" class="btn-primary h-full px-6 font-semibold absolute right-0 rounded-r-full">Search</button>
+        <!-- Page Header (Behance Style) -->
+        <section class="pt-40 pb-16 relative overflow-hidden z-10">
+            <div class="max-w-[1400px] mx-auto px-6 lg:px-12 flex flex-col items-center text-center fade-in">
+                <div class="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-gray-200 dark:bg-gray-800 text-gray-800 dark:text-gray-200 text-xs font-bold tracking-widest uppercase mb-8 shadow-sm">
                 </div>
+                
+                <h1 class="font-display text-6xl md:text-8xl lg:text-[100px] font-black mb-6 tracking-tighter text-gray-900 dark:text-white leading-none drop-shadow-sm">
+                    Our Projects &<br />
+                    <span class="text-gradient-blue">Solutions.</span>
+                </h1>
+                <p class="text-xl md:text-2xl text-gray-600 dark:text-gray-400 max-w-3xl mx-auto font-light leading-relaxed mt-6">
+                    Deep dive into the products and prototypes engineered by Catalyst Corps.
+                </p>
             </div>
         </section>
 
-        <!-- E-Commerce Layout: Sidebar + Grid -->
-        <section class="pb-24 relative bg-transparent">
-            <div class="max-w-7xl mx-auto px-6 lg:px-12 relative z-10 flex flex-col lg:flex-row gap-8">
-                
-                <!-- Left Sidebar: Filters (25%) -->
-                <aside class="w-full lg:w-1/4 fade-in">
-                    <div class="glass-card rounded-2xl p-6 sticky top-24">
-                        <div class="flex justify-between items-center mb-4 border-b border-gray-200 dark:border-white/10 pb-2 cursor-pointer lg:cursor-default select-none" onclick="toggleMobileFilters()">
-                            <h3 class="font-display text-xl font-bold">Filters</h3>
-                            <i id="mobile-filter-icon" class="fa-solid fa-chevron-down lg:hidden transition-transform duration-300"></i>
+        <!-- Solutions / Projects Section Grid -->
+        <section id="projects" class="pb-32 relative z-10">
+            <div class="max-w-[1400px] mx-auto px-6 lg:px-12">
+                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-10">
+                    
+                    <!-- 🟢 PROJECT 1: HERITAGE VERSE -->
+                    <div class="b-card group flex flex-col fade-in">
+                        <div class="h-64 bg-gray-100 dark:bg-gray-800 relative overflow-hidden flex items-center justify-center border-b border-gray-200 dark:border-gray-700 transition-colors">
+                            <i class="fa-solid fa-landmark text-7xl text-electric-blue opacity-50 dark:opacity-80 group-hover:scale-125 transition-transform duration-700"></i>
+                            <div class="absolute top-6 right-6 bg-white dark:bg-dark-charcoal px-4 py-1.5 rounded-full text-xs font-bold text-gray-900 dark:text-white border border-gray-200 dark:border-gray-700 shadow-sm uppercase tracking-widest">Live</div>
                         </div>
-                        
-                        <div id="filter-container" class="hidden lg:block">
-                            <!-- Category Filter -->
-                            <div class="mb-6 border-b border-gray-200 dark:border-white/10 pb-4">
-                                <h4 class="font-semibold text-electric-blue dark:text-vivid-cyan cursor-pointer flex justify-between items-center select-none" onclick="toggleFilter('filter-categories', 'icon-categories')">
-                                    Categories <i id="icon-categories" class="fa-solid fa-chevron-up transition-transform duration-300"></i>
-                                </h4>
-                                <div id="filter-categories" class="space-y-2 text-sm text-gray-700 dark:text-gray-300 transition-all duration-300 overflow-hidden max-h-96 opacity-100 mt-3">
-                                    <label class="flex items-center gap-3"><input type="checkbox" class="custom-checkbox cat-filter" value="IoT" onchange="applyFilters()"> IoT & Smart Home</label>
-                                    <label class="flex items-center gap-3"><input type="checkbox" class="custom-checkbox cat-filter" value="Robotics" onchange="applyFilters()"> Robotics</label>
-                                    <label class="flex items-center gap-3"><input type="checkbox" class="custom-checkbox cat-filter" value="Automation" onchange="applyFilters()"> Automation</label>
-                                    <label class="flex items-center gap-3"><input type="checkbox" class="custom-checkbox cat-filter" value="Health" onchange="applyFilters()"> Health & Bio</label>
-                                    <label class="flex items-center gap-3"><input type="checkbox" class="custom-checkbox cat-filter" value="AgriTech" onchange="applyFilters()"> AgriTech & Green</label>
-                                </div>
+                        <div class="p-8 flex-1 flex flex-col bg-white dark:bg-dark-charcoal">
+                            <h3 class="font-display text-2xl font-bold mb-3 text-gray-900 dark:text-white group-hover:text-electric-blue transition-colors">Heritage Verse</h3>
+                            <p class="text-gray-600 dark:text-gray-400 text-base mb-8 flex-1 leading-relaxed">An interactive platform that places QR codes at heritage sites, allowing visitors to scan and visualize historical events from that exact location in real-time.</p>
+                            
+                            <div class="flex flex-wrap gap-2 mb-8">
+                                <span class="text-xs font-bold px-3 py-1.5 rounded-full bg-gray-100 dark:bg-gray-800 text-gray-700 dark:text-gray-300">Python</span>
+                                <span class="text-xs font-bold px-3 py-1.5 rounded-full bg-gray-100 dark:bg-gray-800 text-gray-700 dark:text-gray-300">React</span>
+                                <span class="text-xs font-bold px-3 py-1.5 rounded-full bg-gray-100 dark:bg-gray-800 text-gray-700 dark:text-gray-300">QR Tech</span>
                             </div>
-
-                            <!-- Difficulty Filter -->
-                            <div class="mb-6 border-b border-gray-200 dark:border-white/10 pb-4">
-                                <h4 class="font-semibold text-electric-blue dark:text-vivid-cyan cursor-pointer flex justify-between items-center select-none" onclick="toggleFilter('filter-difficulty', 'icon-difficulty')">
-                                    Difficulty <i id="icon-difficulty" class="fa-solid fa-chevron-up transition-transform duration-300"></i>
-                                </h4>
-                                <div id="filter-difficulty" class="space-y-2 text-sm text-gray-700 dark:text-gray-300 transition-all duration-300 overflow-hidden max-h-96 opacity-100 mt-3">
-                                    <label class="flex items-center gap-3"><input type="checkbox" class="custom-checkbox diff-filter" value="Beginner" onchange="applyFilters()"> Beginner Friendly</label>
-                                    <label class="flex items-center gap-3"><input type="checkbox" class="custom-checkbox diff-filter" value="Intermediate" onchange="applyFilters()"> Intermediate</label>
-                                    <label class="flex items-center gap-3"><input type="checkbox" class="custom-checkbox diff-filter" value="Advanced" onchange="applyFilters()"> Advanced Pro</label>
-                                </div>
-                            </div>
-
-                            <!-- Price Range -->
-                            <div>
-                                <h4 class="font-semibold text-electric-blue dark:text-vivid-cyan cursor-pointer flex justify-between items-center select-none" onclick="toggleFilter('filter-price', 'icon-price')">
-                                    Max Price <i id="icon-price" class="fa-solid fa-chevron-up transition-transform duration-300"></i>
-                                </h4>
-                                <div id="filter-price" class="transition-all duration-300 overflow-hidden max-h-96 opacity-100 mt-4">
-                                    <input type="range" id="price-slider" min="0" max="5000" value="5000" step="100" class="w-full accent-vivid-cyan" oninput="applyFilters()">
-                                    <div class="flex justify-between text-xs mt-2 font-bold text-gray-700 dark:text-gray-300" id="price-display">
-                                        ₹0 - ₹5000
-                                    </div>
-                                </div>
-                            </div>
+                            
+                            <a href="https://thesamarth21-design.github.io/heritage-verse/" target="_blank" class="w-full py-4 rounded-full bg-gray-100 dark:bg-gray-800 hover:bg-electric-blue text-gray-900 dark:text-white hover:text-white font-bold transition-all flex justify-center items-center gap-2 group/btn border border-gray-200 dark:border-gray-700 hover:border-transparent">
+                                View Details <i class="fa-solid fa-arrow-right text-sm group-hover/btn:translate-x-1 transition-transform"></i>
+                            </a>
                         </div>
                     </div>
-                </aside>
 
-                <!-- Right Content: Product Grid (75%) -->
-                <div class="w-full lg:w-3/4">
-                    
-                    <!-- Sort Header -->
-                    <div class="flex justify-between items-center mb-6 fade-in">
-                        <p class="text-sm text-gray-600 dark:text-gray-400">Showing <span id="product-count" class="font-bold text-gray-900 dark:text-white">20</span> products</p>
-                        <select id="sort-select" onchange="applyFilters()" class="bg-gray-100/80 dark:bg-darker-charcoal/80 border border-gray-300 dark:border-white/10 rounded-lg px-4 py-2 text-sm text-gray-900 dark:text-white focus:outline-none focus:border-vivid-cyan backdrop-blur-sm">
-                            <option value="featured">Sort by: Featured</option>
-                            <option value="price-asc">Price: Low to High</option>
-                            <option value="price-desc">Price: High to Low</option>
-                            <option value="rating">Top Rated</option>
-                        </select>
+                    <!-- Placeholder Project 2 -->
+                    <div class="b-card group flex flex-col fade-in" style="transition-delay: 100ms;">
+                        <div class="h-64 bg-gray-100 dark:bg-gray-800 relative overflow-hidden flex items-center justify-center border-b border-gray-200 dark:border-gray-700 transition-colors">
+                            <i class="fa-solid fa-microchip text-7xl text-vivid-cyan opacity-50 dark:opacity-80 group-hover:scale-125 transition-transform duration-700"></i>
+                            <div class="absolute top-6 right-6 bg-white dark:bg-dark-charcoal px-4 py-1.5 rounded-full text-xs font-bold text-gray-900 dark:text-white border border-gray-200 dark:border-gray-700 shadow-sm uppercase tracking-widest">In Dev</div>
+                        </div>
+                        <div class="p-8 flex-1 flex flex-col bg-white dark:bg-dark-charcoal">
+                            <h3 class="font-display text-2xl font-bold mb-3 text-gray-900 dark:text-white group-hover:text-vivid-cyan transition-colors">Project Slot 2</h3>
+                            <p class="text-gray-600 dark:text-gray-400 text-base mb-8 flex-1 leading-relaxed">This slot is reserved for your next awesome hackathon build or IoT innovation.</p>
+                            
+                            <div class="flex flex-wrap gap-2 mb-8">
+                                <span class="text-xs font-bold px-3 py-1.5 rounded-full bg-gray-100 dark:bg-gray-800 text-gray-700 dark:text-gray-300">Hardware</span>
+                                <span class="text-xs font-bold px-3 py-1.5 rounded-full bg-gray-100 dark:bg-gray-800 text-gray-700 dark:text-gray-300">IoT</span>
+                            </div>
+                            
+                            <button class="w-full py-4 rounded-full bg-gray-100 dark:bg-gray-800 hover:bg-vivid-cyan text-gray-900 dark:text-white hover:text-white font-bold transition-all flex justify-center items-center gap-2 group/btn border border-gray-200 dark:border-gray-700 hover:border-transparent">
+                                Coming Soon <i class="fa-solid fa-lock text-sm"></i>
+                            </button>
+                        </div>
                     </div>
 
-                    <!-- Product Grid (Populated by JS) -->
-                    <div id="product-grid" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
-                        <!-- Products injected here -->
+                    <!-- Placeholder Project 3 -->
+                    <div class="b-card group flex flex-col fade-in" style="transition-delay: 200ms;">
+                        <div class="h-64 bg-gray-100 dark:bg-gray-800 relative overflow-hidden flex items-center justify-center border-b border-gray-200 dark:border-gray-700 transition-colors">
+                            <i class="fa-solid fa-code text-7xl text-harvest-green opacity-50 dark:opacity-80 group-hover:scale-125 transition-transform duration-700"></i>
+                            <div class="absolute top-6 right-6 bg-white dark:bg-dark-charcoal px-4 py-1.5 rounded-full text-xs font-bold text-gray-900 dark:text-white border border-gray-200 dark:border-gray-700 shadow-sm uppercase tracking-widest">Concept</div>
+                        </div>
+                        <div class="p-8 flex-1 flex flex-col bg-white dark:bg-dark-charcoal">
+                            <h3 class="font-display text-2xl font-bold mb-3 text-gray-900 dark:text-white group-hover:text-harvest-green transition-colors">Project Slot 3</h3>
+                            <p class="text-gray-600 dark:text-gray-400 text-base mb-8 flex-1 leading-relaxed">This slot is reserved for your next awesome hackathon build or IoT innovation.</p>
+                            
+                            <div class="flex flex-wrap gap-2 mb-8">
+                                <span class="text-xs font-bold px-3 py-1.5 rounded-full bg-gray-100 dark:bg-gray-800 text-gray-700 dark:text-gray-300">AI / ML</span>
+                                <span class="text-xs font-bold px-3 py-1.5 rounded-full bg-gray-100 dark:bg-gray-800 text-gray-700 dark:text-gray-300">Cloud</span>
+                            </div>
+                            
+                            <button class="w-full py-4 rounded-full bg-gray-100 dark:bg-gray-800 hover:bg-harvest-green text-gray-900 dark:text-white hover:text-white font-bold transition-all flex justify-center items-center gap-2 group/btn border border-gray-200 dark:border-gray-700 hover:border-transparent">
+                                Coming Soon <i class="fa-solid fa-lock text-sm"></i>
+                            </button>
+                        </div>
                     </div>
-                    
-                    <div id="no-results-msg" class="hidden text-center py-12 text-gray-500 dark:text-gray-400 fade-in w-full col-span-full">
-                        <i class="fa-solid fa-ghost text-5xl mb-4 opacity-50"></i>
-                        <h3 class="text-xl font-bold font-display">No items found</h3>
-                        <p>Try adjusting your search or filters.</p>
-                    </div>
+
                 </div>
             </div>
         </section>
     </div>
 
-    <!-- ========================================== -->
-    <!-- SLIDE-OUT CART DRAWER                      -->
-    <!-- ========================================== -->
-    <div id="side-overlay" onclick="closeAllDrawers()" class="fixed inset-0 bg-black/50 backdrop-blur-sm z-[90] hidden opacity-0 transition-opacity duration-300"></div>
-    
-    <div id="cart-drawer" class="side-drawer fixed inset-y-0 right-0 w-full max-w-md bg-white dark:bg-[#1a1a1a] shadow-2xl z-[100] transform translate-x-full border-l border-gray-200 dark:border-white/10 flex flex-col">
-        <div class="px-6 py-5 border-b border-gray-200 dark:border-white/10 flex justify-between items-center bg-gray-50/50 dark:bg-black/20">
-            <h2 class="font-display text-2xl font-bold text-gray-900 dark:text-white flex items-center gap-3">
-                <i class="fa-solid fa-cart-shopping text-vivid-cyan"></i> Your Cart
-            </h2>
-            <button onclick="closeAllDrawers()" class="text-gray-500 hover:text-vivid-cyan text-xl w-8 h-8 rounded-full"><i class="fa-solid fa-xmark"></i></button>
-        </div>
-        <div id="cart-items" class="flex-1 overflow-y-auto p-6 space-y-4"></div>
-        <div class="px-6 py-6 border-t border-gray-200 dark:border-white/10 bg-gray-50 dark:bg-[#1a1a1a]">
-            <div class="flex justify-between items-center mb-4 text-gray-700 dark:text-gray-300">
-                <span class="font-medium">Subtotal</span>
-                <span id="cart-subtotal" class="font-display font-bold text-2xl text-gray-900 dark:text-white">₹0.00</span>
-            </div>
-            <button onclick="openCheckout()" class="w-full btn-primary py-4 rounded-xl font-bold text-white text-lg shadow-lg hover:shadow-vivid-cyan/30">
-                Proceed to Checkout <i class="fa-solid fa-arrow-right ml-2"></i>
-            </button>
-        </div>
-    </div>
-
-    <!-- ========================================== -->
-    <!-- SLIDE-OUT WISHLIST DRAWER                  -->
-    <!-- ========================================== -->
-    <div id="wishlist-drawer" class="side-drawer fixed inset-y-0 right-0 w-full max-w-md bg-white dark:bg-[#1a1a1a] shadow-2xl z-[100] transform translate-x-full border-l border-gray-200 dark:border-white/10 flex flex-col">
-        <div class="px-6 py-5 border-b border-gray-200 dark:border-white/10 flex justify-between items-center bg-gray-50/50 dark:bg-black/20">
-            <h2 class="font-display text-2xl font-bold text-gray-900 dark:text-white flex items-center gap-3">
-                <i class="fa-solid fa-heart text-red-500"></i> Wishlist
-            </h2>
-            <button onclick="closeAllDrawers()" class="text-gray-500 hover:text-red-500 text-xl w-8 h-8 rounded-full"><i class="fa-solid fa-xmark"></i></button>
-        </div>
-        <div id="wishlist-items" class="flex-1 overflow-y-auto p-6 space-y-4"></div>
-    </div>
-
-    <!-- ========================================== -->
-    <!-- AUTHENTICATION MODAL (LOGIN/SIGNUP)        -->
-    <!-- ========================================== -->
-    <div id="auth-modal" class="fixed inset-0 z-[120] flex items-center justify-center bg-black/80 backdrop-blur-xl hidden opacity-0 transition-opacity duration-300 p-4">
-        <div class="bg-white dark:bg-dark-charcoal rounded-2xl w-full max-w-md shadow-2xl border border-gray-200 dark:border-electric-blue/30 p-8 transform scale-95 transition-transform duration-300 relative text-center" id="auth-content">
-            <button onclick="closeAuthModal()" class="absolute top-4 right-4 text-gray-500 hover:text-vivid-cyan"><i class="fa-solid fa-xmark text-xl"></i></button>
-            <div class="w-16 h-16 rounded-full bg-electric-blue/10 text-electric-blue flex items-center justify-center text-3xl mx-auto mb-4 border border-electric-blue/30">
-                <i class="fa-solid fa-user-astronaut"></i>
-            </div>
-            <h2 class="font-display text-3xl font-bold text-gray-900 dark:text-white mb-2">Join Catalyst</h2>
-            <p class="text-gray-600 dark:text-gray-400 mb-6 text-sm">Save your wishlist, track orders, and build faster.</p>
-            
-            <input type="email" id="auth-email" placeholder="Email Address" class="w-full bg-gray-50 dark:bg-black/50 border border-gray-300 dark:border-white/10 rounded-lg px-4 py-3 text-gray-900 dark:text-white focus:border-electric-blue focus:outline-none mb-4">
-            <input type="password" id="auth-pass" placeholder="Password" class="w-full bg-gray-50 dark:bg-black/50 border border-gray-300 dark:border-white/10 rounded-lg px-4 py-3 text-gray-900 dark:text-white focus:border-electric-blue focus:outline-none mb-6">
-            
-            <button onclick="handleAuth()" id="auth-submit-btn" class="w-full btn-primary py-3 rounded-lg font-bold text-white shadow-lg mb-4">Sign In / Sign Up</button>
-            <p class="text-xs text-gray-500">By continuing, you agree to our Terms of Service.</p>
-        </div>
-    </div>
-
-    <!-- ========================================== -->
-    <!-- QUICK VIEW MODAL (PRODUCT DETAILS)         -->
-    <!-- ========================================== -->
-    <div id="quick-view-modal" class="fixed inset-0 z-[110] flex items-center justify-center bg-black/60 backdrop-blur-md hidden opacity-0 transition-opacity duration-300 p-4">
-        <div class="bg-white dark:bg-dark-charcoal rounded-2xl w-full max-w-4xl max-h-[90vh] overflow-y-auto shadow-2xl border border-gray-200 dark:border-vivid-cyan/30 transform scale-95 transition-transform duration-300 relative flex flex-col md:flex-row" id="quick-view-content">
-            <button onclick="closeQuickView()" class="absolute top-4 right-4 z-10 text-gray-500 hover:text-vivid-cyan bg-white/50 dark:bg-black/50 backdrop-blur-sm w-8 h-8 rounded-full flex items-center justify-center"><i class="fa-solid fa-xmark"></i></button>
-            <!-- Image Area -->
-            <div class="w-full md:w-2/5 bg-gray-100 dark:bg-black/50 p-8 flex items-center justify-center border-b md:border-b-0 md:border-r border-gray-200 dark:border-white/10 relative">
-                <span id="qv-tag" class="absolute top-4 left-4 bg-vivid-cyan text-white text-xs font-bold px-2 py-1 rounded-md shadow-md">Tag</span>
-                <i id="qv-icon" class="fa-solid fa-microchip text-9xl text-electric-blue drop-shadow-[0_0_15px_rgba(0,120,215,0.4)]"></i>
-            </div>
-            <!-- Content Area -->
-            <div class="w-full md:w-3/5 p-8 flex flex-col">
-                <div class="flex justify-between items-start mb-2">
-                    <span id="qv-difficulty" class="text-xs font-semibold text-harvest-green bg-harvest-green/10 px-2 py-1 rounded w-max">Level</span>
-                    <button id="qv-wishlist-btn" class="text-gray-400 hover:text-red-500 text-xl heart-icon"><i class="fa-regular fa-heart"></i></button>
-                </div>
-                <h2 id="qv-title" class="font-display text-3xl font-bold text-gray-900 dark:text-white mb-2">Product Title</h2>
-                <div class="flex items-center gap-3 mb-4">
-                    <div id="qv-rating" class="text-yellow-400 text-sm"></div>
-                    <span class="text-sm text-gray-500">Student Reviews</span>
-                </div>
-                <div id="qv-price" class="text-3xl font-bold text-vivid-cyan mb-6">₹0.00</div>
-                <p id="qv-desc" class="text-gray-600 dark:text-gray-300 mb-6 leading-relaxed">Description.</p>
-                <div class="mb-8 flex-1">
-                    <h4 class="font-bold text-gray-900 dark:text-white mb-3 border-b border-gray-200 dark:border-white/10 pb-2">Components Included:</h4>
-                    <ul id="qv-components" class="space-y-2 text-sm text-gray-600 dark:text-gray-400 list-disc pl-5"></ul>
-                </div>
-                <div class="flex gap-4">
-                    <div class="border border-gray-300 dark:border-white/20 rounded-lg flex items-center px-4 w-32">
-                        <button onclick="changeQvQty(-1)" class="text-gray-500 hover:text-vivid-cyan p-2 text-lg font-bold">-</button>
-                        <input type="number" id="qv-qty" value="1" class="w-full text-center bg-transparent focus:outline-none dark:text-white font-bold" readonly>
-                        <button onclick="changeQvQty(1)" class="text-gray-500 hover:text-vivid-cyan p-2 text-lg font-bold">+</button>
-                    </div>
-                    <button class="flex-1 btn-primary py-3 rounded-lg font-bold text-white text-lg shadow-md" onclick="addCurrentToCart()">
-                        Add to Cart <i class="fa-solid fa-cart-plus ml-2"></i>
-                    </button>
-                </div>
-            </div>
-        </div>
-    </div>
-
-    <!-- ========================================== -->
-    <!-- CHECKOUT MODAL (ADVANCED)                  -->
-    <!-- ========================================== -->
-    <div id="checkout-modal" class="fixed inset-0 z-[120] flex items-center justify-center bg-black/80 backdrop-blur-xl hidden opacity-0 transition-opacity duration-300 p-4 overflow-y-auto">
-        <div class="bg-white dark:bg-[#1a1a1a] rounded-2xl w-full max-w-4xl shadow-2xl border border-vivid-cyan/30 transform scale-95 transition-transform duration-300 relative flex flex-col md:flex-row my-8" id="checkout-content">
-            <button onclick="closeCheckout()" class="absolute top-4 right-4 text-gray-500 hover:text-vivid-cyan z-10 bg-white/50 dark:bg-black/50 rounded-full w-8 h-8 flex items-center justify-center"><i class="fa-solid fa-xmark"></i></button>
-            
-            <!-- Checkout Form -->
-            <div class="w-full md:w-3/5 p-8 border-b md:border-b-0 md:border-r border-gray-200 dark:border-white/10">
-                <h2 class="font-display text-2xl font-bold text-gray-900 dark:text-white mb-6">Checkout details</h2>
-                <form onsubmit="processPayment(event)">
-                    <h3 class="font-semibold text-vivid-cyan mb-3 text-sm uppercase tracking-wider">Shipping Info</h3>
-                    <div class="grid grid-cols-2 gap-4 mb-4">
-                        <input type="text" required placeholder="First Name" class="bg-gray-50 dark:bg-black/50 border border-gray-300 dark:border-white/10 rounded-lg px-4 py-2 w-full text-gray-900 dark:text-white focus:outline-none focus:border-vivid-cyan">
-                        <input type="text" required placeholder="Last Name" class="bg-gray-50 dark:bg-black/50 border border-gray-300 dark:border-white/10 rounded-lg px-4 py-2 w-full text-gray-900 dark:text-white focus:outline-none focus:border-vivid-cyan">
-                    </div>
-                    <input type="email" required placeholder="Email Address" class="bg-gray-50 dark:bg-black/50 border border-gray-300 dark:border-white/10 rounded-lg px-4 py-2 w-full text-gray-900 dark:text-white focus:outline-none focus:border-vivid-cyan mb-4">
-                    <textarea required placeholder="Full Delivery Address" rows="2" class="bg-gray-50 dark:bg-black/50 border border-gray-300 dark:border-white/10 rounded-lg px-4 py-2 w-full text-gray-900 dark:text-white focus:outline-none focus:border-vivid-cyan mb-8"></textarea>
-
-                    <h3 class="font-semibold text-vivid-cyan mb-3 text-sm uppercase tracking-wider">Payment Method</h3>
-                    <div class="space-y-3 mb-8">
-                        <label class="flex items-center gap-3 p-3 border border-gray-200 dark:border-white/10 rounded-lg cursor-pointer hover:border-vivid-cyan transition-colors bg-gray-50 dark:bg-black/30">
-                            <input type="radio" name="payment" value="upi" class="custom-radio" checked> 
-                            <i class="fa-brands fa-google-pay text-2xl text-gray-700 dark:text-gray-300"></i> <span class="font-medium">UPI / QR Scan</span>
-                        </label>
-                        <label class="flex items-center gap-3 p-3 border border-gray-200 dark:border-white/10 rounded-lg cursor-pointer hover:border-vivid-cyan transition-colors bg-gray-50 dark:bg-black/30">
-                            <input type="radio" name="payment" value="card" class="custom-radio"> 
-                            <i class="fa-regular fa-credit-card text-xl text-gray-700 dark:text-gray-300"></i> <span class="font-medium">Credit / Debit Card</span>
-                        </label>
-                        <label class="flex items-center gap-3 p-3 border border-gray-200 dark:border-white/10 rounded-lg cursor-pointer hover:border-vivid-cyan transition-colors bg-gray-50 dark:bg-black/30">
-                            <input type="radio" name="payment" value="cod" class="custom-radio"> 
-                            <i class="fa-solid fa-truck-fast text-xl text-gray-700 dark:text-gray-300"></i> <span class="font-medium">Cash on Delivery</span>
-                        </label>
-                    </div>
-                    
-                    <button type="submit" id="pay-btn" class="w-full btn-primary py-4 rounded-xl font-bold text-white text-lg shadow-lg">
-                        Place Order <i class="fa-solid fa-lock ml-2"></i>
-                    </button>
-                </form>
-            </div>
-            
-            <!-- Order Summary -->
-            <div class="w-full md:w-2/5 p-8 bg-gray-50 dark:bg-black/20 rounded-r-2xl flex flex-col">
-                <h3 class="font-display text-xl font-bold text-gray-900 dark:text-white mb-6">Order Summary</h3>
-                <div id="checkout-items-list" class="space-y-4 mb-6 flex-1 overflow-y-auto max-h-64 border-b border-gray-200 dark:border-white/10 pb-4">
-                    <!-- Injected by JS -->
-                </div>
-                <div class="space-y-2 text-sm text-gray-600 dark:text-gray-400 mb-4">
-                    <div class="flex justify-between"><span>Subtotal</span> <span id="co-subtotal">₹0.00</span></div>
-                    <div class="flex justify-between"><span>Shipping</span> <span class="text-vivid-cyan">Free</span></div>
-                    <div class="flex justify-between"><span>Taxes (Included)</span> <span>₹0.00</span></div>
-                </div>
-                <div class="flex justify-between items-center text-xl font-bold text-gray-900 dark:text-white pt-4 border-t border-gray-200 dark:border-white/10">
-                    <span>Total</span> <span id="co-total" class="text-electric-blue dark:text-vivid-cyan">₹0.00</span>
-                </div>
-            </div>
-        </div>
-    </div>
-
-    <!-- 8. Footer -->
-    <footer class="bg-gray-100 dark:bg-darker-charcoal pt-16 pb-8 border-t border-gray-200 dark:border-white/10 relative z-10 transition-colors duration-300 mt-12">
-        <div class="max-w-7xl mx-auto px-6 lg:px-12">
-            <div class="grid grid-cols-1 md:grid-cols-4 gap-12 mb-12">
+    <!-- Footer -->
+    <footer class="bg-white dark:bg-[#111111] pt-20 pb-10 border-t border-gray-200 dark:border-gray-800 relative z-10 transition-colors duration-300">
+        <div class="max-w-[1400px] mx-auto px-6 lg:px-12">
+            <div class="grid grid-cols-1 md:grid-cols-4 gap-12 mb-16">
                 <div class="md:col-span-2">
-                    <a href="index.html" class="inline-block mb-4">
-                        <img src="1772605589123.jpg" alt="Catalyst Corps Logo" class="h-12 md:h-16 w-auto bg-white rounded-lg p-1 hover:opacity-90 transition-opacity shadow-sm">
+                    <a href="index.html" class="inline-block mb-6">
+                        <img src="1772605589123.jpg" alt="Catalyst Corps Logo" class="h-12 md:h-16 w-auto bg-gray-100 dark:bg-white rounded-xl p-1.5 hover:opacity-90 transition-opacity shadow-sm">
                     </a>
-                    <p class="text-gray-600 dark:text-gray-400 text-sm max-w-sm">
+                    <p class="text-gray-500 dark:text-gray-400 text-base max-w-sm leading-relaxed">
                         Engineering innovation and solving tomorrow's problems today. We build, we deploy, we conquer.
                     </p>
                 </div>
                 <div>
-                    <h4 class="font-bold mb-4 text-gray-900 dark:text-white">Quick Links</h4>
-                    <ul class="space-y-2 text-sm text-gray-600 dark:text-gray-400">
-                        <li><a href="projects.html" class="hover:text-vivid-cyan transition-colors">Projects</a></li>
-                        <li><a href="#" class="hover:text-vivid-cyan transition-colors">Store</a></li>
-                        <li><a href="gallery.html" class="hover:text-vivid-cyan transition-colors">Gallery</a></li>
+                    <h4 class="font-bold text-lg mb-6 text-gray-900 dark:text-white font-display uppercase tracking-widest">Navigation</h4>
+                    <ul class="space-y-4 text-base text-gray-500 dark:text-gray-400 font-medium">
+                        <li><a href="index.html#about" class="hover:text-electric-blue dark:hover:text-vivid-cyan transition-colors">About Us</a></li>
+                        <li><a href="projects.html" class="hover:text-electric-blue dark:hover:text-vivid-cyan transition-colors">Projects</a></li>
+                        <li><a href="gallery.html" class="hover:text-electric-blue dark:hover:text-vivid-cyan transition-colors">Gallery</a></li>
+                        <li><a href="shop.html" class="hover:text-electric-blue dark:hover:text-vivid-cyan transition-colors">Store</a></li>
                     </ul>
                 </div>
                 <div>
-                    <h4 class="font-bold mb-4 text-gray-900 dark:text-white">Store Policies</h4>
-                    <ul class="space-y-2 text-sm text-gray-600 dark:text-gray-400">
-                        <li><a href="#" class="hover:text-vivid-cyan transition-colors">Shipping Information</a></li>
-                        <li><a href="#" class="hover:text-vivid-cyan transition-colors">Returns & Refunds</a></li>
-                        <li><a href="#" class="hover:text-vivid-cyan transition-colors">Terms of Service</a></li>
+                    <h4 class="font-bold text-lg mb-6 text-gray-900 dark:text-white font-display uppercase tracking-widest">Legal</h4>
+                    <ul class="space-y-4 text-base text-gray-500 dark:text-gray-400 font-medium">
+                        <li><a href="privacy.html" class="hover:text-electric-blue dark:hover:text-vivid-cyan transition-colors">Privacy Policy</a></li>
+                        <li><a href="terms.html" class="hover:text-electric-blue dark:hover:text-vivid-cyan transition-colors">Terms of Service</a></li>
                     </ul>
                 </div>
             </div>
-            <div class="border-t border-gray-200 dark:border-white/10 pt-8 flex flex-col md:flex-row justify-between items-center gap-4 text-sm text-gray-500">
+            <div class="border-t border-gray-200 dark:border-gray-800 pt-8 flex flex-col md:flex-row justify-between items-center gap-4 text-sm text-gray-400 font-medium">
                 <p>&copy; 2026 Catalyst Corps. All rights reserved.</p>
+                <div class="flex gap-4">
+                    <span class="flex items-center gap-2"><i class="fa-solid fa-bolt text-electric-blue"></i> Engineered for the future</span>
+                </div>
             </div>
         </div>
     </footer>
 
-    <!-- Scripts: Pure JS without module imports to prevent CORS blocking -->
+    <!-- Scripts -->
     <script>
-        // =========================================================
-        // ADD YOUR FIREBASE KEYS EXACTLY IN THE BOX BELOW
-        // =========================================================
-        const firebaseConfig = {
-            apiKey: "AIzaSyAd1ivx7WReAj1WKgeWzeaK5H6mpmcqplw",
-            authDomain: "catalyst-corps-store.firebaseapp.com",
-            projectId: "catalyst-corps-store"
-        };
-        // =========================================================
-
-        const appId = 'catalyst-store';
-
-        let app, auth, db;
-        try {
-            // Using Compat libraries
-            app = firebase.initializeApp(firebaseConfig);
-            auth = firebase.auth();
-            db = firebase.firestore();
-        } catch(e) { console.log("Firebase starting in local mode without cloud saves."); }
-
-        let currentUserId = null;
-        let userLoggedIn = false;
-        
-        let cart = [];
-        let wishlist = [];
-
-        // --- 1. PRODUCT DATABASE ---
-        const productsDB = [
-            { id: 'p1', cat: 'IoT', tag: 'IoT', diff: 'Beginner', diffColor: 'harvest-green', icon: 'fa-house-signal', iconColor: 'electric-blue', rating: 4.8, title: 'IoT Smart Home Hub', price: 1499, desc: 'Control 4 household appliances remotely using WiFi and a smartphone app. Perfect first IoT project.', comp: ['1x NodeMCU ESP8266', '1x 4-Channel Relay Module', 'Jumper Wires', 'Breadboard'] },
-            { id: 'p2', cat: 'Robotics', tag: 'Robotics', diff: 'Intermediate', diffColor: 'vivid-cyan', icon: 'fa-robot', iconColor: 'harvest-green', rating: 4.9, title: 'Obstacle Avoiding Bot', price: 1899, desc: 'Autonomous rover that uses ultrasonic sensors to detect and avoid collisions in real-time.', comp: ['1x Arduino UNO R3', '1x L298N Motor Driver', '1x HC-SR04 Ultrasonic', '2x DC Motors & Wheels', '1x Acrylic Chassis'] },
-            { id: 'p3', cat: 'Automation', tag: 'Automation', diff: 'Intermediate', diffColor: 'vivid-cyan', icon: 'fa-id-card', iconColor: 'vivid-cyan', rating: 4.7, title: 'RFID Access System', price: 1199, desc: 'Smart door lock and attendance system using RFID tags and an LCD display interface.', comp: ['1x Arduino UNO R3', '1x RC522 RFID Module', '3x RFID Tags', '1x I2C LCD Display', '1x Servo Motor'] },
-            { id: 'p4', cat: 'IoT', tag: 'IoT', diff: 'Intermediate', diffColor: 'vivid-cyan', icon: 'fa-cloud-sun', iconColor: 'harvest-green', rating: 4.6, title: 'Live AQI & Weather Station', price: 1299, desc: 'Monitor temp, humidity, and Air Quality (AQI) and push data to a ThingSpeak dashboard.', comp: ['1x NodeMCU ESP8266', '1x DHT11 Sensor', '1x MQ135 Gas Sensor', '1x OLED Display'] },
-            { id: 'p5', cat: 'Health', tag: 'Biometrics', diff: 'Advanced', diffColor: 'electric-blue', icon: 'fa-fingerprint', iconColor: 'electric-blue', rating: 5.0, title: 'Biometric Security Vault', price: 2499, desc: 'Advanced optical fingerprint scanner integrated with a solenoid lock for high-security applications.', comp: ['1x Arduino UNO', '1x R307 Fingerprint Sensor', '1x Solenoid Lock', '1x Relay Module'] },
-            { id: 'p6', cat: 'AgriTech', tag: 'AgriTech', diff: 'Intermediate', diffColor: 'vivid-cyan', icon: 'fa-seedling', iconColor: 'harvest-green', rating: 4.8, title: 'Smart Agriculture IoT', price: 1599, desc: 'Monitors soil moisture and automatically triggers a water pump, with web-based logging.', comp: ['1x ESP32 Board', '1x Soil Moisture Sensor', '1x 5V Water Pump', 'Relay & Tubing'] },
-            { id: 'p7', cat: 'Robotics', tag: 'Robotics', diff: 'Beginner', diffColor: 'harvest-green', icon: 'fa-car', iconColor: 'electric-blue', rating: 4.5, title: 'Bluetooth RC Rover', price: 1699, desc: 'Build your own remote-controlled car that you can drive using a Bluetooth Android app.', comp: ['1x Arduino UNO', '1x HC-05 Bluetooth', '1x 4WD Chassis', '1x Motor Driver'] },
-            { id: 'p8', cat: 'Health', tag: 'Health', diff: 'Advanced', diffColor: 'electric-blue', icon: 'fa-heart-pulse', iconColor: 'vivid-cyan', rating: 4.9, title: 'IoT SpO2 & BPM Monitor', price: 1850, desc: 'Clinical-style project to measure blood oxygen and heart rate, logging data to the cloud.', comp: ['1x NodeMCU ESP8266', '1x MAX30100 Pulse Oximeter', '1x I2C OLED Screen'] },
-            { id: 'p9', cat: 'Automation', tag: 'Automation', diff: 'Beginner', diffColor: 'harvest-green', icon: 'fa-trash-can', iconColor: 'eco-green', rating: 4.4, title: 'Touchless Smart Dustbin', price: 1350, desc: 'Automatically opens the lid when motion is detected. A great first mechanical project.', comp: ['1x Arduino Nano', '1x SG90 Servo Motor', '1x Ultrasonic Sensor', 'Battery Pack'] },
-            { id: 'p10', cat: 'IoT', tag: 'Tracking', diff: 'Advanced', diffColor: 'electric-blue', icon: 'fa-location-dot', iconColor: 'electric-blue', rating: 4.9, title: 'GPS Vehicle Tracker', price: 3299, desc: 'Real-time GPS mapping device. Sends location data coordinates via SMS using a GSM module.', comp: ['1x Arduino UNO', '1x NEO-6M GPS Module', '1x SIM900A GSM Module', 'Antennas'] },
-            { id: 'p11', cat: 'Robotics', tag: 'Robotics', diff: 'Beginner', diffColor: 'harvest-green', icon: 'fa-route', iconColor: 'vivid-cyan', rating: 4.6, title: 'Line Follower Robot', price: 1450, desc: 'The classic college competition project. Uses IR sensors to navigate complex black line tracks.', comp: ['1x Arduino Nano', '2x IR Sensors', '1x 2WD Chassis', '1x L298N Driver'] },
-            { id: 'p12', cat: 'IoT', tag: 'IoT', diff: 'Intermediate', diffColor: 'vivid-cyan', icon: 'fa-microphone', iconColor: 'harvest-green', rating: 4.5, title: 'Voice Controlled Hub', price: 1100, desc: 'Integrate with Google Assistant or Alexa to turn your room lights on/off with your voice.', comp: ['1x NodeMCU ESP8266', '1x 2-Channel Relay', 'Jumper Wires'] },
-            { id: 'p13', cat: 'Automation', tag: 'Electronics', diff: 'Intermediate', diffColor: 'vivid-cyan', icon: 'fa-satellite-dish', iconColor: 'electric-blue', rating: 4.7, title: 'Sonar Radar Simulator', price: 1400, desc: 'Sweeping ultrasonic sensor that plots detected objects visually on a Processing IDE computer screen.', comp: ['1x Arduino UNO', '1x SG90 Servo', '1x Ultrasonic Sensor', 'Mounting Bracket'] },
-            { id: 'p14', cat: 'Robotics', tag: 'Robotics', diff: 'Advanced', diffColor: 'electric-blue', icon: 'fa-fire-extinguisher', iconColor: 'vivid-cyan', rating: 4.8, title: 'Fire Fighting Robot', price: 2699, desc: 'Detects flames autonomously and uses a built-in water pump to extinguish them. Heavy-duty chassis.', comp: ['1x Arduino UNO', '3x Flame Sensors', '1x Water Pump & Relay', '4WD Chassis'] },
-            { id: 'p15', cat: 'AgriTech', tag: 'Green Tech', diff: 'Intermediate', diffColor: 'vivid-cyan', icon: 'fa-solar-panel', iconColor: 'eco-green', rating: 4.9, title: 'Dual-Axis Solar Tracker', price: 1950, desc: 'Automatically rotates a small solar panel using LDRs to follow the maximum light source for peak efficiency.', comp: ['1x Arduino Nano', '4x LDR Sensors', '2x Servo Motors', '1x Solar Panel'] },
-            { id: 'p16', cat: 'Health', tag: 'Health', diff: 'Advanced', diffColor: 'electric-blue', icon: 'fa-person-falling', iconColor: 'electric-blue', rating: 4.8, title: 'IoT Fall Detection Kit', price: 1750, desc: 'Wearable device prototype calculating XYZ axis acceleration. Triggers SOS alerts on sudden impacts.', comp: ['1x ESP32 Dev Board', '1x MPU6050 Accelerometer', '1x Buzzer', 'Battery Socket'] },
-            { id: 'p17', cat: 'AgriTech', tag: 'AgriTech', diff: 'Beginner', diffColor: 'harvest-green', icon: 'fa-droplet', iconColor: 'vivid-cyan', rating: 4.5, title: 'Auto Plant Waterer', price: 899, desc: 'Simplest hardware introduction. Reads soil dry states and runs a mini water pump automatically.', comp: ['1x Arduino UNO', '1x Soil Sensor', '1x Mini Water Pump', '1x Relay'] },
-            { id: 'p18', cat: 'Automation', tag: 'Smart City', diff: 'Intermediate', diffColor: 'vivid-cyan', icon: 'fa-square-parking', iconColor: 'harvest-green', rating: 4.7, title: 'Smart Parking System', price: 1650, desc: 'Manages entry/exit boom barriers and displays available slot counts on a cloud dashboard.', comp: ['1x NodeMCU ESP8266', '2x IR Sensors', '1x SG90 Servo', '1x OLED Display'] },
-            { id: 'p19', cat: 'Robotics', tag: 'Robotics', diff: 'Advanced', diffColor: 'electric-blue', icon: 'fa-wheelchair', iconColor: 'electric-blue', rating: 4.9, title: 'Gesture Control Wheelchair', price: 2100, desc: 'Dual-board project. Control a motorized chassis using hand tilts via RF communication.', comp: ['2x Arduino Nano', '1x MPU6050', '2x nRF24L01 Transceivers', 'Motor Driver'] },
-            { id: 'p20', cat: 'IoT', tag: 'IoT', diff: 'Beginner', diffColor: 'harvest-green', icon: 'fa-clock', iconColor: 'vivid-cyan', rating: 4.8, title: 'IoT Web Weather Clock', price: 1250, desc: 'Pulls live internet time and weather API data to display beautifully on a desktop OLED screen.', comp: ['1x NodeMCU ESP8266', '1x 0.96 inch OLED Display', 'Jumper Wires'] }
-        ];
-
-        // --- 2. AUTHENTICATION LOGIC ---
-        const initAuth = async () => {
-            if(!auth) return;
-            try {
-                await auth.signInAnonymously();
-            } catch(e) { console.warn("Cloud auth bypassed."); }
-        };
-
-        if(auth) {
-            auth.onAuthStateChanged(async (user) => {
-                if (user) {
-                    currentUserId = user.uid;
-                    userLoggedIn = !user.isAnonymous; 
-                    checkAuthUI();
-                    
-                    // Fetch existing cloud data
-                    if(db && userLoggedIn) {
-                        try {
-                            const cSnap = await db.collection('artifacts').doc(appId).collection('users').doc(currentUserId).collection('userData').doc('cart').get();
-                            if (cSnap.exists) { cart = cSnap.data().items || []; updateCartUI(); }
-                            const wSnap = await db.collection('artifacts').doc(appId).collection('users').doc(currentUserId).collection('userData').doc('wishlist').get();
-                            if (wSnap.exists) { wishlist = wSnap.data().items || []; updateWishlistUI(); window.applyFilters(); }
-                        } catch(e) { console.error("Could not sync cloud data.", e); }
-                    }
-                } else {
-                    currentUserId = null; userLoggedIn = false; checkAuthUI();
-                }
-            });
-        }
-
-        window.handleAuth = async () => {
-            const email = document.getElementById('auth-email').value;
-            const pass = document.getElementById('auth-pass').value;
-            const btn = document.getElementById('auth-submit-btn');
-            
-            if(!email || !pass) return alert("Please enter email and password");
-            if(!auth) return alert("Firebase not configured! This is a UI demo only.");
-
-            btn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i>';
-            try {
-                await auth.signInWithEmailAndPassword(email, pass);
-                alert("Successfully logged into cloud account!");
-                window.closeAuthModal();
-            } catch(e) {
-                if(e.code === 'auth/user-not-found' || e.code === 'auth/invalid-credential') {
-                    try {
-                        await auth.createUserWithEmailAndPassword(email, pass);
-                        alert("New cloud account created!");
-                        window.closeAuthModal();
-                    } catch(err) { alert(err.message); }
-                } else { alert(e.message); }
-            }
-            btn.innerHTML = 'Sign In / Sign Up';
-        };
-
-        function checkAuthUI() {
-            const btn = document.getElementById('nav-user-btn');
-            const mBtn = document.getElementById('mobile-auth-btn');
-            if(userLoggedIn) {
-                btn.innerHTML = '<i class="fa-solid fa-circle-check text-vivid-cyan"></i>';
-                btn.title = "Logout";
-                if(mBtn) mBtn.innerText = "Logout";
+        const initTheme = () => {
+            const savedTheme = localStorage.getItem('theme');
+            if (savedTheme === 'light') {
+                document.documentElement.classList.remove('dark');
             } else {
-                btn.innerHTML = '<i class="fa-regular fa-circle-user"></i>';
-                btn.title = "Login";
-                if(mBtn) mBtn.innerText = "Login / Sign Up";
-            }
-        }
-
-        window.openAuthModal = async () => {
-            if(userLoggedIn && auth) {
-                if(confirm("Do you want to logout?")) {
-                    await auth.signOut();
-                    cart = []; wishlist = []; 
-                    updateCartUI(); updateWishlistUI(); window.applyFilters();
-                    initAuth(); // Re-auth anonymously
-                }
-                return;
-            }
-            document.getElementById('auth-modal').classList.remove('hidden'); 
-            setTimeout(() => { document.getElementById('auth-modal').classList.add('opacity-100'); document.getElementById('auth-content').classList.remove('scale-95'); }, 10);
-        };
-
-        window.closeAuthModal = () => {
-            document.getElementById('auth-modal').classList.remove('opacity-100'); 
-            document.getElementById('auth-content').classList.add('scale-95'); 
-            setTimeout(() => document.getElementById('auth-modal').classList.add('hidden'), 300);
-        };
-
-        // --- 3. DATABASE SAVING LOGIC ---
-        async function syncCloudCart() {
-            if(db && userLoggedIn && currentUserId) {
-                try { await db.collection('artifacts').doc(appId).collection('users').doc(currentUserId).collection('userData').doc('cart').set({ items: cart }); } 
-                catch(e) {}
-            }
-        }
-        
-        async function syncCloudWishlist() {
-            if(db && userLoggedIn && currentUserId) {
-                try { await db.collection('artifacts').doc(appId).collection('users').doc(currentUserId).collection('userData').doc('wishlist').set({ items: wishlist }); } 
-                catch(e) {}
-            }
-        }
-
-        // --- 4. RENDER & FILTER LOGIC ---
-        window.renderProducts = (items) => {
-            const grid = document.getElementById('product-grid');
-            if(items.length === 0) {
-                grid.innerHTML = '';
-                document.getElementById('no-results-msg').classList.remove('hidden');
-                return;
-            }
-            document.getElementById('no-results-msg').classList.add('hidden');
-            
-            grid.innerHTML = items.map((p, i) => {
-                const inWish = wishlist.includes(p.id);
-                const heartClass = inWish ? 'fa-solid heart-active' : 'fa-regular';
-                
-                return `
-                <div class="glass-card product-card rounded-2xl overflow-hidden group flex flex-col fade-in" style="transition-delay: ${(i%3)*100}ms">
-                    <div class="h-48 bg-gray-100/50 dark:bg-black/40 relative overflow-hidden flex items-center justify-center p-4">
-                        <span class="absolute top-3 left-3 bg-${p.diffColor === 'harvest-green' ? 'vivid-cyan' : p.iconColor} text-white text-xs font-bold px-2 py-1 rounded-md z-10 shadow-md">${p.tag}</span>
-                        <button onclick="toggleWishlist('${p.id}')" class="absolute top-3 right-3 z-10 text-gray-400 hover:text-red-500 text-xl heart-icon">
-                            <i id="heart-${p.id}" class="${heartClass} fa-heart"></i>
-                        </button>
-                        <i class="fa-solid ${p.icon} text-6xl text-${p.iconColor} group-hover:scale-110 transition-transform duration-500 drop-shadow-lg"></i>
-                    </div>
-                    <div class="p-5 flex flex-col flex-1">
-                        <div class="flex justify-between items-start mb-1">
-                            <span class="text-xs font-semibold text-${p.diffColor} bg-${p.diffColor}/10 px-2 py-0.5 rounded">${p.diff}</span>
-                            <div class="text-yellow-400 text-xs"><i class="fa-solid fa-star"></i> ${p.rating}</div>
-                        </div>
-                        <h3 class="font-display font-bold text-lg text-gray-900 dark:text-white leading-tight mb-1 line-clamp-1">${p.title}</h3>
-                        <p class="text-sm text-gray-500 dark:text-gray-400 line-clamp-2 mb-4 flex-1">${p.desc}</p>
-                        <div class="text-xl font-bold text-electric-blue dark:text-vivid-cyan mb-4">₹${p.price.toFixed(2)}</div>
-                        <div class="grid grid-cols-2 gap-2 mt-auto">
-                            <button onclick="openQuickView('${p.id}')" class="btn-secondary py-2 rounded-lg text-sm font-semibold flex justify-center items-center">Details</button>
-                            <button onclick="addToCart('${p.id}')" class="btn-primary py-2 rounded-lg text-sm font-semibold flex justify-center items-center gap-2"><i class="fa-solid fa-cart-plus"></i> Add</button>
-                        </div>
-                    </div>
-                </div>`;
-            }).join('');
-
-            document.querySelectorAll('.fade-in').forEach(el => observer.observe(el));
-        };
-
-        window.applyFilters = () => {
-            const query = document.getElementById('searchInput').value.toLowerCase();
-            const maxPrice = document.getElementById('price-slider').value;
-            const sortVal = document.getElementById('sort-select').value;
-            const checkedCats = Array.from(document.querySelectorAll('.cat-filter:checked')).map(cb => cb.value);
-            const checkedDiffs = Array.from(document.querySelectorAll('.diff-filter:checked')).map(cb => cb.value);
-
-            document.getElementById('price-display').innerText = `₹0 - ₹${maxPrice}`;
-
-            let filtered = productsDB.filter(p => {
-                const mSearch = p.title.toLowerCase().includes(query) || p.desc.toLowerCase().includes(query) || p.tag.toLowerCase().includes(query);
-                const mCat = checkedCats.length === 0 || checkedCats.includes(p.cat);
-                const mDiff = checkedDiffs.length === 0 || checkedDiffs.includes(p.diff);
-                const mPrice = p.price <= maxPrice;
-                return mSearch && mCat && mDiff && mPrice;
-            });
-
-            if(sortVal === 'price-asc') filtered.sort((a,b) => a.price - b.price);
-            if(sortVal === 'price-desc') filtered.sort((a,b) => b.price - a.price);
-            if(sortVal === 'rating') filtered.sort((a,b) => b.rating - a.rating);
-
-            document.getElementById('product-count').innerText = filtered.length;
-            window.renderProducts(filtered);
-        };
-
-        // --- 5. WISHLIST LOGIC ---
-        window.toggleWishlist = (id) => {
-            const index = wishlist.indexOf(id);
-            if(index > -1) wishlist.splice(index, 1);
-            else wishlist.push(id);
-            
-            syncCloudWishlist();
-            updateWishlistUI();
-            
-            const icon = document.getElementById(`heart-${id}`);
-            const qvIcon = document.getElementById(`qv-heart-${id}`);
-            if(icon) {
-                if(index > -1) { icon.classList.replace('fa-solid','fa-regular'); icon.classList.remove('heart-active'); }
-                else { icon.classList.replace('fa-regular','fa-solid'); icon.classList.add('heart-active'); }
-            }
-            if(qvIcon) {
-                if(index > -1) { qvIcon.classList.replace('fa-solid','fa-regular'); qvIcon.classList.remove('heart-active'); }
-                else { qvIcon.classList.replace('fa-regular','fa-solid'); qvIcon.classList.add('heart-active'); }
+                document.documentElement.classList.add('dark');
             }
         };
 
-        function updateWishlistUI() {
-            const container = document.getElementById('wishlist-items');
-            const badges = [document.getElementById('wishlist-badge'), document.getElementById('wishlist-badge-mobile')];
-            
-            if (wishlist.length === 0) {
-                container.innerHTML = `<div class="text-center text-gray-500 dark:text-gray-400 mt-10"><i class="fa-regular fa-heart text-4xl mb-3 opacity-50"></i><p>Your wishlist is empty.</p></div>`;
-                badges.forEach(b => { b.innerText = "0"; b.classList.add('scale-0'); });
-            } else {
-                container.innerHTML = wishlist.map(id => {
-                    const item = productsDB.find(p => p.id === id);
-                    if(!item) return '';
-                    return `
-                    <div class="flex items-center gap-4 bg-gray-50 dark:bg-white/5 p-3 rounded-xl border border-gray-200 dark:border-white/10">
-                        <div class="w-12 h-12 bg-gray-200 dark:bg-black/50 rounded-lg flex items-center justify-center text-${item.iconColor}"><i class="fa-solid ${item.icon}"></i></div>
-                        <div class="flex-1">
-                            <h4 class="text-sm font-bold text-gray-900 dark:text-white line-clamp-1">${item.title}</h4>
-                            <div class="font-bold text-electric-blue dark:text-vivid-cyan mt-1">₹${item.price.toFixed(2)}</div>
-                        </div>
-                        <div class="flex flex-col gap-2">
-                            <button onclick="addToCart('${item.id}'); toggleWishlistDrawer();" class="bg-vivid-cyan text-white text-xs px-2 py-1 rounded"><i class="fa-solid fa-cart-plus"></i></button>
-                            <button onclick="toggleWishlist('${item.id}')" class="text-gray-400 hover:text-red-500 text-xs text-right"><i class="fa-solid fa-trash"></i></button>
-                        </div>
-                    </div>`;
-                }).join('');
-                badges.forEach(b => { b.innerText = wishlist.length; b.classList.remove('scale-0'); });
-            }
-        }
-
-        // --- 6. CART LOGIC ---
-        window.addToCart = (id, qtyToAdd = 1) => {
-            const prod = productsDB.find(p => p.id === id);
-            if(!prod) return;
-            const existingItem = cart.find(item => item.id === id);
-            if (existingItem) existingItem.qty += qtyToAdd;
-            else cart.push({ id, name: prod.title, price: prod.price, icon: prod.icon, qty: qtyToAdd });
-            
-            syncCloudCart(); updateCartUI();
-            const badges = [document.getElementById('cart-badge'), document.getElementById('cart-badge-mobile')];
-            badges.forEach(b => { b.classList.remove('scale-0'); b.classList.add('scale-110'); setTimeout(() => b.classList.remove('scale-110'), 200); });
-        };
-
-        window.removeFromCart = (id) => { cart = cart.filter(item => item.id !== id); syncCloudCart(); updateCartUI(); };
-
-        window.changeCartQty = (id, change) => {
-            const item = cart.find(i => i.id === id);
-            if (item) {
-                item.qty += change;
-                if (item.qty <= 0) window.removeFromCart(id);
-                else { syncCloudCart(); updateCartUI(); }
-            }
-        };
-
-        function updateCartUI() {
-            const container = document.getElementById('cart-items');
-            const totalEl = document.getElementById('cart-subtotal');
-            const checkoutList = document.getElementById('checkout-items-list');
-            const badges = [document.getElementById('cart-badge'), document.getElementById('cart-badge-mobile')];
-            
-            let total = 0; let totalItems = 0;
-            
-            if (cart.length === 0) {
-                container.innerHTML = `<div class="text-center text-gray-500 dark:text-gray-400 mt-10"><i class="fa-solid fa-box-open text-4xl mb-3 opacity-50"></i><p>Your armory is currently empty.</p></div>`;
-                checkoutList.innerHTML = `<p class="text-gray-500 text-center">No items.</p>`;
-                badges.forEach(b => { b.innerText = "0"; b.classList.add('scale-0'); });
-            } else {
-                container.innerHTML = cart.map(item => {
-                    total += item.price * item.qty; totalItems += item.qty;
-                    return `
-                    <div class="flex items-center gap-4 bg-gray-50 dark:bg-white/5 p-3 rounded-xl border border-gray-200 dark:border-white/10">
-                        <div class="w-12 h-12 bg-gray-200 dark:bg-black/50 rounded-lg flex items-center justify-center text-vivid-cyan"><i class="fa-solid ${item.icon}"></i></div>
-                        <div class="flex-1">
-                            <h4 class="text-sm font-bold text-gray-900 dark:text-white line-clamp-1">${item.name}</h4>
-                            <div class="text-xs text-gray-500 dark:text-gray-400 mt-1 flex items-center gap-3">
-                                <div class="flex items-center bg-gray-200 dark:bg-white/10 rounded-md overflow-hidden">
-                                    <button onclick="changeCartQty('${item.id}', -1)" class="w-6 h-6 flex items-center justify-center hover:bg-gray-300 dark:hover:bg-white/20 transition-colors">-</button>
-                                    <span class="w-6 text-center font-bold text-gray-900 dark:text-white">${item.qty}</span>
-                                    <button onclick="changeCartQty('${item.id}', 1)" class="w-6 h-6 flex items-center justify-center hover:bg-gray-300 dark:hover:bg-white/20 transition-colors">+</button>
-                                </div>
-                                <span>× ₹${item.price.toFixed(2)}</span>
-                            </div>
-                        </div>
-                        <div class="font-bold text-electric-blue dark:text-vivid-cyan">₹${(item.price * item.qty).toFixed(2)}</div>
-                        <button onclick="removeFromCart('${item.id}')" class="text-red-500 hover:text-red-400 p-2"><i class="fa-solid fa-trash"></i></button>
-                    </div>`;
-                }).join('');
-                
-                checkoutList.innerHTML = cart.map(item => `<div class="flex justify-between text-sm text-gray-700 dark:text-gray-300"><span>${item.qty}x ${item.name}</span><span class="font-bold">₹${(item.price * item.qty).toFixed(2)}</span></div>`).join('');
-                badges.forEach(b => { b.innerText = totalItems; b.classList.remove('scale-0'); });
-            }
-            totalEl.innerText = `₹${total.toFixed(2)}`;
-            document.getElementById('co-subtotal').innerText = `₹${total.toFixed(2)}`;
-            document.getElementById('co-total').innerText = `₹${total.toFixed(2)}`;
-        }
-
-        // --- 7. DRAWERS & MODALS ---
-        window.toggleCart = () => {
-            document.getElementById('wishlist-drawer').classList.remove('drawer-open');
-            const drawer = document.getElementById('cart-drawer');
-            const overlay = document.getElementById('side-overlay');
-            drawer.classList.toggle('drawer-open');
-            if(drawer.classList.contains('drawer-open')) { overlay.classList.remove('hidden'); setTimeout(() => overlay.classList.add('opacity-100'), 10); }
-            else { overlay.classList.remove('opacity-100'); setTimeout(() => overlay.classList.add('hidden'), 300); }
-        };
-
-        window.toggleWishlistDrawer = () => {
-            document.getElementById('cart-drawer').classList.remove('drawer-open');
-            const drawer = document.getElementById('wishlist-drawer');
-            const overlay = document.getElementById('side-overlay');
-            drawer.classList.toggle('drawer-open');
-            if(drawer.classList.contains('drawer-open')) { overlay.classList.remove('hidden'); setTimeout(() => overlay.classList.add('opacity-100'), 10); }
-            else { overlay.classList.remove('opacity-100'); setTimeout(() => overlay.classList.add('hidden'), 300); }
-        };
-
-        window.closeAllDrawers = () => {
-            document.getElementById('cart-drawer').classList.remove('drawer-open');
-            document.getElementById('wishlist-drawer').classList.remove('drawer-open');
-            const overlay = document.getElementById('side-overlay');
-            overlay.classList.remove('opacity-100'); setTimeout(() => overlay.classList.add('hidden'), 300);
-        };
-
-        // Quick View
-        let currentQV = null;
-        window.openQuickView = (id) => {
-            const p = productsDB.find(x => x.id === id); if(!p) return;
-            currentQV = p;
-            
-            document.getElementById('qv-tag').innerText = p.tag;
-            document.getElementById('qv-title').innerText = p.title;
-            document.getElementById('qv-price').innerText = `₹${p.price.toFixed(2)}`;
-            document.getElementById('qv-desc').innerText = p.desc;
-            document.getElementById('qv-difficulty').innerText = p.diff;
-            document.getElementById('qv-icon').className = `fa-solid ${p.icon} text-9xl text-${p.iconColor} drop-shadow-[0_0_15px_rgba(0,120,215,0.4)]`;
-            
-            document.getElementById('qv-rating').innerHTML = `<i class="fa-solid fa-star"></i>`.repeat(Math.floor(p.rating)) + (p.rating%1>0 ? `<i class="fa-solid fa-star-half-stroke"></i>`:'');
-            
-            const inWish = wishlist.includes(p.id);
-            const wBtn = document.getElementById('qv-wishlist-btn');
-            wBtn.innerHTML = `<i id="qv-heart-${p.id}" class="${inWish ? 'fa-solid heart-active' : 'fa-regular'} fa-heart"></i>`;
-            wBtn.onclick = () => window.toggleWishlist(p.id);
-
-            document.getElementById('qv-qty').value = 1;
-            document.getElementById('qv-components').innerHTML = p.comp.map(c => `<li>${c}</li>`).join('');
-
-            const m = document.getElementById('quick-view-modal'); const c = document.getElementById('quick-view-content');
-            m.classList.remove('hidden'); setTimeout(() => { m.classList.add('opacity-100'); c.classList.remove('scale-95'); }, 10);
-        };
-        
-        window.changeQvQty = (change) => {
-            const input = document.getElementById('qv-qty');
-            let val = parseInt(input.value) + change;
-            if (val < 1) val = 1; input.value = val;
-        };
-        
-        window.addCurrentToCart = () => {
-            if(!currentQV) return;
-            window.addToCart(currentQV.id, parseInt(document.getElementById('qv-qty').value) || 1);
-            window.closeQuickView();
-        };
-        
-        window.closeQuickView = () => {
-            const m = document.getElementById('quick-view-modal'); const c = document.getElementById('quick-view-content');
-            m.classList.remove('opacity-100'); c.classList.add('scale-95'); setTimeout(() => m.classList.add('hidden'), 300);
-        };
-
-        // Checkout
-        window.openCheckout = () => {
-            if(cart.length === 0) { alert("Your cart is empty!"); return; }
-            if(!userLoggedIn) { window.closeAllDrawers(); window.openAuthModal(); return; } // Force login before checkout
-            window.closeAllDrawers();
-            const m = document.getElementById('checkout-modal'); const c = document.getElementById('checkout-content');
-            m.classList.remove('hidden'); setTimeout(() => { m.classList.add('opacity-100'); c.classList.remove('scale-95'); }, 10);
-        };
-        
-        window.closeCheckout = () => {
-            const m = document.getElementById('checkout-modal'); const c = document.getElementById('checkout-content');
-            m.classList.remove('opacity-100'); c.classList.add('scale-95'); setTimeout(() => m.classList.add('hidden'), 300);
-        };
-        
-        window.processPayment = async (e) => {
-            e.preventDefault();
-            const btn = document.getElementById('pay-btn');
-            const original = btn.innerHTML;
-            btn.innerHTML = 'Connecting to Secure Cloud Gateway... <i class="fa-solid fa-spinner fa-spin ml-2"></i>';
-            
-            try {
-                if(db && currentUserId) {
-                    await db.collection('artifacts').doc(appId).collection('users').doc(currentUserId).collection('orders').add({
-                        items: cart,
-                        total: cart.reduce((t, i) => t + i.price * i.qty, 0),
-                        status: 'Processing',
-                        date: new Date().toISOString()
-                    });
-                }
-                
-                setTimeout(() => {
-                    alert("Order Successful! It has been logged in the cloud database.");
-                    cart = []; syncCloudCart(); updateCartUI();
-                    btn.innerHTML = original;
-                    window.closeCheckout();
-                }, 1500);
-            } catch(error) {
-                alert("Database Error processing order.");
-                btn.innerHTML = original;
-            }
-        };
-
-        // UI toggles
-        window.toggleTheme = () => {
+        const toggleTheme = () => {
             const isDark = document.documentElement.classList.toggle('dark');
             localStorage.setItem('theme', isDark ? 'dark' : 'light');
-            if(typeof window.update3DTheme === 'function') window.update3DTheme(isDark);
-        };
-        const initTheme = () => {
-            if (localStorage.getItem('theme') === 'light') document.documentElement.classList.remove('dark');
-            else document.documentElement.classList.add('dark');
-        };
-        
-        window.toggleMobileFilters = () => {
-            if (window.innerWidth >= 1024) return;
-            document.getElementById('filter-container').classList.toggle('hidden');
-            document.getElementById('mobile-filter-icon').classList.toggle('rotate-180');
-        };
-        window.toggleFilter = (sId, iId) => {
-            const section = document.getElementById(sId); const icon = document.getElementById(iId);
-            if (section.classList.contains('max-h-0')) {
-                section.classList.remove('max-h-0', 'opacity-0', 'mt-0'); section.classList.add('max-h-96', 'opacity-100', 'mt-3');
-                icon.classList.remove('rotate-180'); if(sId === 'filter-price') section.classList.add('mt-4');
-            } else {
-                section.classList.remove('max-h-96', 'opacity-100', 'mt-3', 'mt-4'); section.classList.add('max-h-0', 'opacity-0', 'mt-0');
-                icon.classList.add('rotate-180');
+            if(typeof window.update3DTheme === 'function') {
+                window.update3DTheme(isDark);
             }
         };
 
-        // --- 8. INITIALIZATION & OBSERVERS ---
-        const observer = new IntersectionObserver((entries) => {
-            entries.forEach(e => { if (e.isIntersecting) { e.target.classList.add('visible'); observer.unobserve(e.target); } });
-        }, { threshold: 0.1 });
+        initTheme();
+        document.getElementById('theme-toggle').addEventListener('click', toggleTheme);
+        document.getElementById('theme-toggle-mobile').addEventListener('click', toggleTheme);
 
+        let sceneFog;
         const init3DBackground = () => {
             const container = document.getElementById('canvas-container');
             const scene = new THREE.Scene();
             const isDark = document.documentElement.classList.contains('dark');
-            let sceneFog = new THREE.FogExp2(isDark ? 0x1a1a1a : 0xf8fafc, 0.015); scene.fog = sceneFog;
-            const camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000); camera.position.z = 30;
-            const renderer = new THREE.WebGLRenderer({ alpha: true, antialias: true }); renderer.setSize(window.innerWidth, window.innerHeight); container.appendChild(renderer.domElement);
-            
-            const coreGroup = new THREE.Group(); scene.add(coreGroup);
+            sceneFog = new THREE.FogExp2(isDark ? 0x111111 : 0xf9fafb, 0.015);
+            scene.fog = sceneFog;
+
+            const camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
+            camera.position.z = 30;
+
+            const renderer = new THREE.WebGLRenderer({ alpha: true, antialias: true });
+            renderer.setSize(window.innerWidth, window.innerHeight);
+            renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+            container.appendChild(renderer.domElement);
+
+            const coreGroup = new THREE.Group();
+            scene.add(coreGroup);
+
             const knotGeo = new THREE.TorusKnotGeometry(8, 2.5, 200, 32);
-            const knotMat = new THREE.MeshBasicMaterial({ color: 0x00CFFF, wireframe: true, transparent: true, opacity: 0.15, blending: THREE.AdditiveBlending });
-            const knotMesh = new THREE.Mesh(knotGeo, knotMat); coreGroup.add(knotMesh);
-            
-            const particlesGeo = new THREE.BufferGeometry(); const posArray = new Float32Array(900 * 3);
-            for(let i=0; i<2700; i++) posArray[i] = (Math.random() - 0.5) * 120;
+            const colorPrimary = new THREE.Color(0x00CFFF); 
+            const colorSecondary = new THREE.Color(0x0078D7);
+
+            const knotMat = new THREE.MeshBasicMaterial({
+                color: colorPrimary, wireframe: true, transparent: true,
+                opacity: 0.1, blending: THREE.AdditiveBlending
+            });
+            const knotMesh = new THREE.Mesh(knotGeo, knotMat);
+            coreGroup.add(knotMesh);
+
+            const innerGeo = new THREE.IcosahedronGeometry(6, 1);
+            const innerMat = new THREE.MeshBasicMaterial({
+                color: colorSecondary, wireframe: true, transparent: true,
+                opacity: 0.15, blending: THREE.AdditiveBlending
+            });
+            const innerMesh = new THREE.Mesh(innerGeo, innerMat);
+            coreGroup.add(innerMesh);
+
+            const particlesGeo = new THREE.BufferGeometry();
+            const particleCount = 700; 
+            const posArray = new Float32Array(particleCount * 3);
+            for(let i = 0; i < particleCount * 3; i++) posArray[i] = (Math.random() - 0.5) * 140;
             particlesGeo.setAttribute('position', new THREE.BufferAttribute(posArray, 3));
-            const particlesMat = new THREE.PointsMaterial({ size: 0.35, transparent: true, opacity: 0.5, color: 0x88B04B, blending: THREE.AdditiveBlending });
-            const particleMesh = new THREE.Points(particlesGeo, particlesMat); scene.add(particleMesh);
+            
+            const canvas = document.createElement('canvas');
+            canvas.width = 16; canvas.height = 16;
+            const ctx = canvas.getContext('2d');
+            ctx.beginPath(); ctx.arc(8, 8, 8, 0, Math.PI * 2); ctx.fillStyle = '#ffffff'; ctx.fill();
+            const texture = new THREE.CanvasTexture(canvas);
+
+            const particlesMat = new THREE.PointsMaterial({
+                size: 0.3, map: texture, transparent: true, opacity: 0.4,
+                color: 0x88B04B, blending: THREE.AdditiveBlending, depthWrite: false
+            });
+            const particleMesh = new THREE.Points(particlesGeo, particlesMat);
+            scene.add(particleMesh);
 
             window.update3DTheme = (isDark) => {
                 if(sceneFog) {
-                    sceneFog.color.setHex(isDark ? 0x1a1a1a : 0xf8fafc);
+                    sceneFog.color.setHex(isDark ? 0x111111 : 0xf9fafb);
                     knotMat.blending = isDark ? THREE.AdditiveBlending : THREE.NormalBlending;
+                    knotMat.opacity = isDark ? 0.1 : 0.2;
+                    innerMat.blending = isDark ? THREE.AdditiveBlending : THREE.NormalBlending;
+                    innerMat.opacity = isDark ? 0.15 : 0.25;
                     particlesMat.blending = isDark ? THREE.AdditiveBlending : THREE.NormalBlending;
-                    particlesMat.color.setHex(isDark ? 0x88B04B : 0x2B7A0B);
+                    particlesMat.color.setHex(isDark ? 0x88B04B : 0x2B7A0B); 
                 }
             };
+            window.update3DTheme(isDark);
 
+            let mouseX = 0, mouseY = 0, scrollY = window.scrollY;
+            const windowHalfX = window.innerWidth / 2, windowHalfY = window.innerHeight / 2;
+
+            document.addEventListener('mousemove', (e) => { mouseX = (e.clientX - windowHalfX); mouseY = (e.clientY - windowHalfY); });
+            window.addEventListener('scroll', () => { scrollY = window.scrollY; });
+
+            const clock = new THREE.Clock();
             const animate = () => {
                 requestAnimationFrame(animate);
-                coreGroup.rotation.y += 0.002; coreGroup.rotation.x += 0.001;
-                particleMesh.rotation.y += 0.001;
+                const elapsedTime = clock.getElapsedTime();
+
+                coreGroup.rotation.y += 0.0015; coreGroup.rotation.x += 0.0005;
+                innerMesh.scale.set(1 + Math.sin(elapsedTime * 2) * 0.03, 1 + Math.sin(elapsedTime * 2) * 0.03, 1 + Math.sin(elapsedTime * 2) * 0.03);
+
+                particleMesh.rotation.y = elapsedTime * 0.03;
+                const positions = particleMesh.geometry.attributes.position.array;
+                for(let i = 1; i < particleCount * 3; i+=3) positions[i] += Math.sin(elapsedTime + positions[i-1]) * 0.005;
+                particleMesh.geometry.attributes.position.needsUpdate = true;
+
+                camera.position.x += (mouseX * 0.01 - camera.position.x) * 0.05;
+                camera.position.y += (-mouseY * 0.01 - camera.position.y - (scrollY * 0.015)) * 0.05;
+                
+                camera.lookAt(scene.position);
                 renderer.render(scene, camera);
-            }; animate();
+            };
+            animate();
+
+            window.addEventListener('resize', () => {
+                camera.aspect = window.innerWidth / window.innerHeight;
+                camera.updateProjectionMatrix();
+                renderer.setSize(window.innerWidth, window.innerHeight);
+            });
         };
 
-        // Ensures everything loads correctly without DOM race conditions
-        const bootStore = () => {
-            initTheme();
-            init3DBackground();
-            initAuth();
-            window.renderProducts(productsDB);
-            checkAuthUI();
-            updateCartUI();
-            updateWishlistUI();
-        };
+        window.addEventListener('DOMContentLoaded', init3DBackground);
 
-        if (document.readyState === 'loading') {
-            document.addEventListener('DOMContentLoaded', bootStore);
-        } else {
-            bootStore();
-        }
+        // Mobile Menu
+        const mobileMenuBtn = document.getElementById('mobile-menu-btn');
+        const mobileMenu = document.getElementById('mobile-menu');
+        const mobileLinks = document.querySelectorAll('.mobile-link');
+
+        mobileMenuBtn.addEventListener('click', () => mobileMenu.classList.toggle('hidden'));
+        mobileLinks.forEach(link => link.addEventListener('click', () => mobileMenu.classList.add('hidden')));
+
+        // Navbar Scroll Effect
+        const navbar = document.getElementById('navbar');
+        window.addEventListener('scroll', () => {
+            if (window.scrollY > 50) {
+                navbar.classList.add('nav-scrolled'); navbar.classList.remove('py-6'); navbar.classList.add('py-4');
+            } else {
+                navbar.classList.remove('nav-scrolled'); navbar.classList.add('py-6'); navbar.classList.remove('py-4');
+            }
+        });
+
+        // Intersection Observer
+        const observerOptions = { root: null, rootMargin: '0px', threshold: 0.1 };
+        const observer = new IntersectionObserver((entries, observer) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.classList.add('visible');
+                    observer.unobserve(entry.target);
+                }
+            });
+        }, observerOptions);
+
+        document.querySelectorAll('.fade-in').forEach((el) => observer.observe(el));
     </script>
 </body>
 </html>
